@@ -30,9 +30,9 @@ const Login = ({ onLogin }) => {
 
       if (data.status === 'success') {
         localStorage.setItem('userName', data.user || 'User');
-        onLogin(); // Redirect to Dashboard
+        onLogin(); 
       } else {
-        setError('Authentication failed. Please try again.');
+        setError(data.detail || 'Authentication failed. Please try again.');
       }
     } catch (err) {
       console.error(err);
@@ -55,8 +55,8 @@ const Login = ({ onLogin }) => {
         </div>
 
         <div className="flex bg-slate-100 p-1 rounded-xl mb-6">
-          <button onClick={() => setIsLogin(true)} className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${isLogin ? 'bg-white shadow text-slate-800' : 'text-slate-500'}`}>Sign In</button>
-          <button onClick={() => setIsLogin(false)} className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${!isLogin ? 'bg-white shadow text-slate-800' : 'text-slate-500'}`}>Create Account</button>
+          <button type="button" onClick={() => setIsLogin(true)} className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${isLogin ? 'bg-white shadow text-slate-800' : 'text-slate-500'}`}>Sign In</button>
+          <button type="button" onClick={() => setIsLogin(false)} className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${!isLogin ? 'bg-white shadow text-slate-800' : 'text-slate-500'}`}>Create Account</button>
         </div>
 
         {error && (
@@ -71,8 +71,15 @@ const Login = ({ onLogin }) => {
               <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Full Name</label>
               <div className="relative">
                 <User className="absolute left-3 top-3 text-slate-400" size={18} />
-                <input type="text" placeholder="Hikaru" className="w-full pl-10 p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 transition-all" 
-                  value={formData.fullName} onChange={e => setFormData({...formData, fullName: e.target.value})} />
+                <input 
+                  type="text" 
+                  name="fullName" 
+                  autoComplete="name" 
+                  placeholder="Hikaru" 
+                  className="w-full pl-10 p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 transition-all" 
+                  value={formData.fullName} 
+                  onChange={e => setFormData({...formData, fullName: e.target.value})} 
+                />
               </div>
             </div>
           )}
@@ -81,8 +88,15 @@ const Login = ({ onLogin }) => {
             <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Email Address</label>
             <div className="relative">
               <Mail className="absolute left-3 top-3 text-slate-400" size={18} />
-              <input type="email" placeholder="user@example.com" className="w-full pl-10 p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 transition-all" 
-                value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
+              <input 
+                type="email" 
+                name="email" 
+                autoComplete="username" 
+                placeholder="user@example.com" 
+                className="w-full pl-10 p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 transition-all" 
+                value={formData.email} 
+                onChange={e => setFormData({...formData, email: e.target.value})} 
+              />
             </div>
           </div>
 
@@ -90,8 +104,15 @@ const Login = ({ onLogin }) => {
             <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Password</label>
             <div className="relative">
               <Lock className="absolute left-3 top-3 text-slate-400" size={18} />
-              <input type="password" placeholder="•••" className="w-full pl-10 p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 transition-all" 
-                value={formData.password} onChange={e => setFormData({...formData, password: e.target.value})} />
+              <input 
+                type="password" 
+                name="password" 
+                autoComplete={isLogin ? "current-password" : "new-password"} 
+                placeholder="•••" 
+                className="w-full pl-10 p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 transition-all" 
+                value={formData.password} 
+                onChange={e => setFormData({...formData, password: e.target.value})} 
+              />
             </div>
           </div>
 
