@@ -1,93 +1,121 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageSquare, X, Send } from 'lucide-react';
+import { MessageSquare, X, Send, Loader2, Sparkles } from 'lucide-react';
 
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { text: "Hi! I'm your AI Assistant. Need help with your resume or interview prep?", isBot: true }
+    { role: 'assistant', text: "Hi! I'm your AI Assistant. Need help with your resume or interview prep?" }
   ]);
-  const [input, setInput] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
-  const endRef = useRef(null);
+  const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const messagesEndRef = useRef(null);
 
-  const sendMessage = async () => {
-    if (!input.trim()) return;
-    
-    const userMsg = { text: input, isBot: false };
-    setMessages(prev => [...prev, userMsg]);
-    setInput("");
-    setIsTyping(true);
-
-    try {
-      const res = await fetch('http://localhost:5000/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userMsg.text })
-      });
-      const data = await res.json();
-      
-      setMessages(prev => [...prev, { text: data.reply, isBot: true }]);
-    } catch (err) {
-      setMessages(prev => [...prev, { text: "Sorry, I couldn't reach the server.", isBot: true }]);
-    } finally {
-      setIsTyping(false);
-    }
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    scrollToBottom();
+  }, [messages, isOpen]);
+
+  const sendMessage = async () => {
+    if (!input.trim()) return;
+
+    const userMessage = input;
+    setInput('');
+    // Add user message to UI immediately
+    setMessages(prev => [...prev, { role: 'user', text: userMessage }]);
+    setLoading(true);
+
+    try {
+      // 🚀 THE FIX: Sending exactly what the backend expects
+      const response = await fetch('http://localhost:8000/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message: userMessage }), 
+      });
+
+      const data = await response.json();
+
+      if (data.reply) {
+        setMessages(prev => [...prev, { role: 'assistant', text: data.reply }]);
+      } else {
+        setMessages(prev => [...prev, { role: 'assistant', text: "I'm having trouble thinking right now." }]);
+      }
+    } catch (error) {
+      console.error("Chat Error:", error);
+      setMessages(prev => [...prev, { role: 'assistant', text: "Sorry, I couldn't reach the server. Is it running?" }]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end font-sans">
+    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
       
-      {/* CHAT WINDOW */}
+      {/* Chat Window */}
       {isOpen && (
-        <div className="bg-white w-80 h-96 rounded-2xl shadow-2xl border border-slate-200 flex flex-col mb-4 overflow-hidden animate-fade-in-up">
+        <div className="bg-white w-80 h-96 rounded-2xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden mb-4 animate-in slide-in-from-bottom-10 fade-in duration-300">
+          
           {/* Header */}
-          <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-4 flex justify-between items-center text-white">
+          <div className="bg-indigo-600 p-4 flex justify-between items-center text-white">
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-              <span className="font-bold">AI Assistant</span>
+              <Sparkles size={18} />
+              <h3 className="font-bold">AI Assistant</h3>
             </div>
-            <button onClick={() => setIsOpen(false)} className="hover:bg-white/20 p-1 rounded-full"><X size={16} /></button>
+            <button onClick={() => setIsOpen(false)} className="hover:bg-indigo-500 p-1 rounded transition-colors">
+              <X size={18} />
+            </button>
           </div>
 
-          {/* Messages */}
-          <div className="flex-1 p-4 overflow-y-auto bg-slate-50 space-y-3">
-            {messages.map((m, i) => (
-              <div key={i} className={`flex ${m.isBot ? 'justify-start' : 'justify-end'}`}>
-                <div className={`max-w-[80%] p-3 rounded-2xl text-sm ${m.isBot ? 'bg-white border border-slate-200 text-slate-700' : 'bg-indigo-600 text-white'}`}>
-                  {m.text}
+          {/* Messages Area */}
+          <div className="flex-1 overflow-y-auto p-4 bg-slate-50 space-y-3">
+            {messages.map((msg, idx) => (
+              <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                <div className={`max-w-[80%] p-3 rounded-xl text-sm ${msg.role === 'user' ? 'bg-indigo-600 text-white rounded-tr-none' : 'bg-white border border-slate-200 text-slate-700 rounded-tl-none shadow-sm'}`}>
+                  {msg.text}
                 </div>
               </div>
             ))}
-            {isTyping && <div className="text-xs text-slate-400 ml-2">AI is typing...</div>}
-            <div ref={endRef}></div>
+            {loading && (
+              <div className="flex justify-start">
+                <div className="bg-white border border-slate-200 p-3 rounded-xl rounded-tl-none shadow-sm flex gap-2 items-center text-slate-400 text-xs">
+                  <Loader2 className="animate-spin" size={14} /> Thinking...
+                </div>
+              </div>
+            )}
+            <div ref={messagesEndRef} />
           </div>
 
-          {/* Input */}
+          {/* Input Area */}
           <div className="p-3 bg-white border-t border-slate-100 flex gap-2">
             <input 
-              className="flex-1 bg-slate-100 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              placeholder="Ask me anything..."
+              type="text" 
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+              placeholder="Ask me anything..." 
+              className="flex-1 bg-slate-100 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
             />
-            <button onClick={sendMessage} className="bg-indigo-600 text-white p-2 rounded-full hover:bg-indigo-700 transition-colors">
-              <Send size={16} />
+            <button 
+              onClick={sendMessage} 
+              disabled={loading || !input.trim()}
+              className="bg-indigo-600 hover:bg-indigo-700 text-white p-2 rounded-lg transition-colors disabled:opacity-50"
+            >
+              <Send size={18} />
             </button>
           </div>
         </div>
       )}
 
-      {/* FAB BUTTON */}
+      {/* Toggle Button */}
       <button 
-        onClick={() => setIsOpen(!isOpen)}
-        className="bg-slate-900 text-white p-4 rounded-full shadow-lg hover:scale-110 transition-transform flex items-center gap-2"
+        onClick={() => setIsOpen(!isOpen)} 
+        className="bg-indigo-600 hover:bg-indigo-700 text-white w-14 h-14 rounded-full shadow-xl flex items-center justify-center transition-all hover:scale-110 active:scale-95"
       >
-        <MessageSquare size={24} />
+        {isOpen ? <X size={24} /> : <MessageSquare size={24} />}
       </button>
     </div>
   );

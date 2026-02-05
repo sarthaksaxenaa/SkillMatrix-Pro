@@ -12,7 +12,9 @@ import random
 # 1. IMPORT MOTOR
 from motor.motor_asyncio import AsyncIOMotorClient
 
-print("\n\n🔥 STARTING BACKEND SERVER...") # Look for this line in logs!
+print("\n\n" + "="*50)
+print("🔥 STARTING BACKEND SERVER - NEW VERSION LOADED 🔥")
+print("="*50 + "\n")
 
 app = FastAPI()
 
@@ -30,14 +32,20 @@ genai.configure(api_key=GEMINI_API_KEY)
 
 # --- 2. CONNECT TO LOCAL MONGODB ---
 MONGO_URL = "mongodb://localhost:27017"
-try:
-    print("⏳ Connecting to MongoDB...")
-    client = AsyncIOMotorClient(MONGO_URL)
-    db = client.skillmatrix_db
-    users_collection = db.users
-    print("✅ Connected to local MongoDB successfully!")
-except Exception as e:
-    print(f"⚠️ MongoDB Connection Failed: {e}")
+
+# We use an event handler to ensure connection happens ON STARTUP
+@app.on_event("startup")
+async def startup_db_client():
+    try:
+        print("⏳ Attempting to connect to MongoDB...")
+        app.mongodb_client = AsyncIOMotorClient(MONGO_URL)
+        app.db = app.mongodb_client.skillmatrix_db
+        app.users_collection = app.db.users
+        # Test the connection
+        await app.db.command("ping")
+        print("✅ SUCCESS: Connected to local MongoDB!")
+    except Exception as e:
+        print(f"❌ ERROR: MongoDB Connection Failed: {e}")
 
 # --- AI SETUP ---
 model = None
@@ -87,18 +95,18 @@ def home(): return {"status": "Active"}
 @app.post("/signup")
 async def signup(data: SignupRequest):
     # Check if user exists
-    if await users_collection.find_one({"email": data.email}):
+    if await app.users_collection.find_one({"email": data.email}):
         raise HTTPException(status_code=400, detail="Email taken")
     
     # Save to MongoDB
-    await users_collection.insert_one(data.dict())
+    await app.users_collection.insert_one(data.dict())
     print(f"👤 User saved: {data.email}") # Debug print
     return {"status": "success", "user": data.fullName}
 
 @app.post("/login")
 async def login(data: LoginRequest):
     # Find user in MongoDB
-    user = await users_collection.find_one({"email": data.email})
+    user = await app.users_collection.find_one({"email": data.email})
     if not user or user["password"] != data.password:
         raise HTTPException(status_code=401, detail="Invalid credentials")
     return {"status": "success", "user": user["fullName"], "token": "mongo-token"}
