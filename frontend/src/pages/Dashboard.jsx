@@ -4,6 +4,9 @@ import {
 } from 'recharts';
 import { Upload, FileText, Zap, BookOpen, Youtube, Trophy, ChevronRight, Search, Target, LogOut, Mic, Briefcase, FileSearch, History, Trash2, Clock, CheckCircle2 } from 'lucide-react';
 
+// --- 1. IMPORT THE NEW CHART COMPONENT ---
+import SkillsChart from '../components/SkillsChart';
+
 const COMMON_ROLES = [
   "Software Engineer", "Frontend Developer", "Backend Developer", "Full Stack Developer",
   "Data Scientist", "Data Analyst", "Product Manager", "UI/UX Designer", "DevOps Engineer",
@@ -350,6 +353,10 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
                   </div>
                 </div>
               </div>
+
+              {/* --- 2. ADDED THE SKILLS CHART HERE --- */}
+              <SkillsChart />
+
               <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2 mt-4"><BookOpen className="text-indigo-600" /> Missing Basic Skills (Action Plan)</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {analysisData.missing_basic_skills && analysisData.missing_basic_skills.map((item, i) => (

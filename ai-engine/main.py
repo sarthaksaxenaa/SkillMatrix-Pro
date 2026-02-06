@@ -13,7 +13,7 @@ import random
 from motor.motor_asyncio import AsyncIOMotorClient
 
 print("\n\n" + "="*50)
-print("🔥 STARTING BACKEND SERVER - NEW VERSION LOADED 🔥")
+print("🔥 STARTING BACKEND SERVER - MODEL FIX LOADED 🔥")
 print("="*50 + "\n")
 
 app = FastAPI()
@@ -47,14 +47,34 @@ async def startup_db_client():
     except Exception as e:
         print(f"❌ ERROR: MongoDB Connection Failed: {e}")
 
-# --- AI SETUP ---
+# --- AI SETUP (FORCE WORKING MODEL) ---
 model = None
 try:
-    for m in genai.list_models():
-        if 'generateContent' in m.supported_generation_methods:
-            model = genai.GenerativeModel(m.name); break
-    if not model: model = genai.GenerativeModel('gemini-pro')
-except: model = genai.GenerativeModel('gemini-pro')
+    print("🔎 Scanning for available AI models...")
+    available_models = [m.name for m in genai.list_models() if 'generateContent' in m.supported_generation_methods]
+    print(f"📋 Found Models: {available_models}")
+
+    # PRIORITY LIST: Try these in order
+    target_models = ['models/gemini-1.5-flash', 'models/gemini-2.0-flash-exp', 'models/gemini-1.5-pro']
+    
+    selected_name = None
+    for target in target_models:
+        if target in available_models:
+            selected_name = target
+            break
+    
+    # If no specific match, just take the first one that works
+    if not selected_name and available_models:
+        selected_name = available_models[0]
+
+    if selected_name:
+        model = genai.GenerativeModel(selected_name)
+        print(f"✅ SUCCESS: Using AI Model -> {selected_name}")
+    else:
+        print("❌ CRITICAL: No compatible AI models found for this API key.")
+
+except Exception as e:
+    print(f"⚠️ Model Setup Error: {e}")
 
 # --- MODELS ---
 class LoginRequest(BaseModel):
@@ -111,11 +131,22 @@ async def login(data: LoginRequest):
         raise HTTPException(status_code=401, detail="Invalid credentials")
     return {"status": "success", "user": user["fullName"], "token": "mongo-token"}
 
-# --- CHATBOT ---
+# --- CHATBOT (DEBUG VERSION) ---
 @app.post("/chat")
 async def chat(data: ChatRequest):
-    try: return {"reply": model.generate_content(data.message).text.strip()}
-    except: return {"reply": "Connection error."}
+    print(f"💬 Chat received: {data.message}") 
+    
+    try:
+        if not model:
+            return {"reply": "System Error: No AI model is loaded. Check server logs."}
+            
+        response = model.generate_content(data.message)
+        print("✅ AI Replied successfully")
+        return {"reply": response.text.strip()}
+    
+    except Exception as e:
+        print(f"❌ AI ERROR: {e}") 
+        return {"reply": f"AI Error: {str(e)}"}
 
 # --- RESUME ANALYZER ---
 @app.post("/api/analyze-resume")
@@ -141,15 +172,16 @@ async def analyze(file: UploadFile = File(...), job_role: str = Form(...)):
     }
 
     try:
-        prompt = f"""Act as a Coach. Role: {job_role}. Resume: "{text[:2000]}". Output JSON: {{ "roast": "...", "readiness_score": 75, "skill_importance_data": [{{"skill": "A", "importance": 80}}] }}"""
-        res = model.generate_content(prompt)
-        parsed = json.loads(re.search(r'\{.*\}', res.text, re.DOTALL).group(0))
-        
-        if parsed.get("skill_importance_data"): final.update(parsed)
-        else: 
-            temp = final["skill_importance_data"]
-            final.update(parsed)
-            final["skill_importance_data"] = temp
+        if model:
+            prompt = f"""Act as a Coach. Role: {job_role}. Resume: "{text[:2000]}". Output JSON: {{ "roast": "...", "readiness_score": 75, "skill_importance_data": [{{"skill": "A", "importance": 80}}] }}"""
+            res = model.generate_content(prompt)
+            parsed = json.loads(re.search(r'\{.*\}', res.text, re.DOTALL).group(0))
+            
+            if parsed.get("skill_importance_data"): final.update(parsed)
+            else: 
+                temp = final["skill_importance_data"]
+                final.update(parsed)
+                final["skill_importance_data"] = temp
             
     except: pass
 
@@ -158,7 +190,10 @@ async def analyze(file: UploadFile = File(...), job_role: str = Form(...)):
 # --- INTERVIEW ---
 @app.post("/get-question")
 async def get_q(data: QuestionRequest):
-    try: return {"question": model.generate_content(f"One short technical interview question for {data.job_role}. Max 20 words.").text.strip()}
+    try: 
+        if model:
+            return {"question": model.generate_content(f"One short technical interview question for {data.job_role}. Max 20 words.").text.strip()}
+        return {"question": "Tell me about yourself."}
     except: return {"question": "Tell me about yourself."}
 
 @app.post("/grade-answer")
