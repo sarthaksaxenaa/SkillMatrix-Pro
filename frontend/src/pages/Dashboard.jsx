@@ -3,8 +3,6 @@ import {
   PieChart, Pie, Cell, BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid
 } from 'recharts';
 import { Upload, FileText, Zap, BookOpen, Youtube, Trophy, ChevronRight, Search, Target, LogOut, Mic, Briefcase, FileSearch, History, Trash2, Clock, CheckCircle2 } from 'lucide-react';
-
-// --- 1. IMPORT THE NEW CHART COMPONENT ---
 import SkillsChart from '../components/SkillsChart';
 
 const COMMON_ROLES = [
@@ -144,62 +142,77 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
   const openVideo = (query) => window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`, '_blank');
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-900 flex">
-      <aside className="w-64 bg-white border-r border-slate-200 hidden md:flex flex-col p-6 fixed h-full z-10">
-        <div className="flex items-center gap-2 mb-10">
-          <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg shadow-lg flex items-center justify-center text-white font-bold">SM</div>
-          <span className="text-xl font-bold text-slate-800">SkillMatrix</span>
+    <div className="min-h-screen font-sans text-slate-900 flex selection:bg-indigo-100 selection:text-indigo-700">
+      
+      {/* --- SIDEBAR (GLASSMORPHISM APPLIED) --- */}
+      <aside className="w-64 glass border-r border-slate-200/50 hidden md:flex flex-col p-6 fixed h-full z-20">
+        <div className="flex items-center gap-3 mb-10 pl-2">
+          <div className="w-10 h-10 bg-gradient-to-tr from-indigo-600 to-violet-600 rounded-xl shadow-lg shadow-indigo-200 flex items-center justify-center text-white font-black text-xl">S</div>
+          <span className="text-2xl font-extrabold text-slate-800 tracking-tight">Skill<span className="text-indigo-600">Matrix</span></span>
         </div>
         
-        <nav className="space-y-2 flex-1">
-          <button onClick={() => setViewState('input')} className={`w-full flex items-center gap-3 p-3 rounded-xl font-medium transition-colors ${viewState === 'input' || viewState === 'results' || viewState === 'analyzing' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-500 hover:bg-slate-50'}`}>
+        <nav className="space-y-3 flex-1">
+          <button onClick={() => setViewState('input')} className={`w-full flex items-center gap-3 p-3 rounded-xl font-bold transition-all ${viewState === 'input' || viewState === 'results' || viewState === 'analyzing' ? 'bg-indigo-50/80 text-indigo-700 shadow-sm border border-indigo-100' : 'text-slate-500 hover:bg-white/50 hover:text-slate-700'}`}>
             <Target size={20} /> Career Coach
           </button>
-          <button onClick={() => setViewState('history')} className={`w-full flex items-center gap-3 p-3 rounded-xl font-medium transition-colors ${viewState === 'history' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-500 hover:bg-slate-50'}`}>
+          <button onClick={() => setViewState('history')} className={`w-full flex items-center gap-3 p-3 rounded-xl font-bold transition-all ${viewState === 'history' ? 'bg-indigo-50/80 text-indigo-700 shadow-sm border border-indigo-100' : 'text-slate-500 hover:bg-white/50 hover:text-slate-700'}`}>
             <History size={20} /> My Resumes
           </button>
-          <button onClick={() => setViewState('interviews')} className={`w-full flex items-center gap-3 p-3 rounded-xl font-medium transition-colors ${viewState === 'interviews' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-500 hover:bg-slate-50'}`}>
+          <button onClick={() => setViewState('interviews')} className={`w-full flex items-center gap-3 p-3 rounded-xl font-bold transition-all ${viewState === 'interviews' ? 'bg-indigo-50/80 text-indigo-700 shadow-sm border border-indigo-100' : 'text-slate-500 hover:bg-white/50 hover:text-slate-700'}`}>
             <Zap size={20} /> Interviews
           </button>
         </nav>
 
-        <button onClick={onLogout} className="flex items-center gap-2 text-red-500 text-sm font-medium hover:text-red-700 mt-auto">
+        <button onClick={onLogout} className="flex items-center gap-2 text-red-500 text-sm font-bold hover:text-red-700 mt-auto pl-3 opacity-70 hover:opacity-100 transition-opacity">
           <LogOut size={16} /> Sign Out
         </button>
       </aside>
 
       <main className="flex-1 md:ml-64 p-8 transition-all">
         <div className="max-w-6xl mx-auto">
-          <div className="flex justify-between items-center mb-8">
+          
+          {/* --- HEADER (GRADIENT TEXT) --- */}
+          <div className="flex justify-between items-center mb-10">
             <div>
-              <h1 className="text-3xl font-bold text-slate-800">
-                {viewState === 'interviews' ? 'Interview Arena ⚔️' : viewState === 'history' ? 'Resume History 📂' : 'Career Coach 🚀'}
+              <h1 className="text-4xl font-black text-slate-800 tracking-tight mb-2">
+                {viewState === 'interviews' ? <span className="text-gradient">Interview Arena</span> : 
+                 viewState === 'history' ? <span className="text-gradient">Your Journey</span> : 
+                 <span>Career <span className="text-gradient">Coach</span></span>}
               </h1>
-              <p className="text-slate-500">
-                {viewState === 'interviews' ? 'Select your challenge mode.' : viewState === 'history' ? 'Review your past analyses.' : 'Your personalized roadmap to getting hired.'}
+              <p className="text-slate-500 font-medium text-lg">
+                {viewState === 'interviews' ? 'Sharpen your skills with AI mock interviews.' : 
+                 viewState === 'history' ? 'Track your progress over time.' : 
+                 'Let\'s build your path to that dream job.'}
               </p>
             </div>
-            <div className="text-right">
-              <p className="text-sm font-bold text-slate-400">LOGGED IN AS</p>
-              <p className="font-bold text-indigo-600">{userName}</p>
+            <div className="text-right hidden sm:block">
+              <p className="text-xs font-bold text-slate-400 tracking-widest uppercase mb-1">LOGGED IN AS</p>
+              <div className="bg-white px-4 py-2 rounded-full border border-slate-200 shadow-sm font-bold text-indigo-600 flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                {userName}
+              </div>
             </div>
           </div>
 
+          {/* --- INPUT VIEW (GLASS CARD) --- */}
           {viewState === 'input' && (
-            <div className="bg-white p-10 rounded-3xl shadow-xl border border-slate-100 text-center max-w-2xl mx-auto mt-10 animate-fade-in-up">
-              <div className="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6 text-indigo-600">
-                <Target size={32} />
+            <div className="glass-card p-10 text-center max-w-2xl mx-auto mt-10 animate-fade-in-up relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 to-purple-500"></div>
+              
+              <div className="w-20 h-20 bg-indigo-50 rounded-2xl flex items-center justify-center mx-auto mb-6 text-indigo-600 shadow-inner">
+                <Target size={36} />
               </div>
-              <h2 className="text-2xl font-bold text-slate-800 mb-2">Let's check your eligibility</h2>
-              <p className="text-slate-500 mb-8">Enter your dream role and upload your resume.</p>
-              <div className="space-y-4 text-left relative"> 
+              <h2 className="text-3xl font-bold text-slate-800 mb-2">Check Eligibility</h2>
+              <p className="text-slate-500 mb-8 text-lg">Enter your dream role and upload your resume to get started.</p>
+              
+              <div className="space-y-6 text-left relative"> 
                 <div className="relative">
-                  <label className="block text-sm font-bold text-slate-700 mb-2">TARGET ROLE</label>
-                  <input type="text" value={targetRole} onChange={handleRoleChange} onFocus={() => targetRole && setShowSuggestions(true)} placeholder="e.g. SDE-1, Data Analyst, React Developer..." className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none font-medium" />
+                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Target Job Role</label>
+                  <input type="text" value={targetRole} onChange={handleRoleChange} onFocus={() => targetRole && setShowSuggestions(true)} placeholder="e.g. SDE-1, Data Analyst..." className="w-full p-4 font-bold text-lg" />
                   {showSuggestions && roleSuggestions.length > 0 && (
-                    <div className="absolute top-full left-0 right-0 bg-white border border-slate-200 rounded-xl mt-2 shadow-2xl z-50 max-h-60 overflow-y-auto">
+                    <div className="absolute top-full left-0 right-0 glass mt-2 shadow-2xl z-50 max-h-60 overflow-y-auto rounded-xl border border-slate-100">
                       {roleSuggestions.map((role, i) => (
-                        <div key={i} onClick={() => selectRole(role)} className="p-3 hover:bg-indigo-50 cursor-pointer text-slate-700 font-medium border-b border-slate-50">
+                        <div key={i} onClick={() => selectRole(role)} className="p-3 hover:bg-indigo-50 cursor-pointer text-slate-700 font-medium border-b border-slate-50 last:border-0">
                           {role}
                         </div>
                       ))}
@@ -207,24 +220,25 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
                   )}
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-slate-700 mb-2">UPLOAD RESUME (PDF)</label>
-                  <div className="border-2 border-dashed border-slate-300 rounded-xl p-8 text-center cursor-pointer hover:bg-slate-50 transition-colors relative">
+                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Resume (PDF)</label>
+                  <div className="border-2 border-dashed border-slate-300 rounded-xl p-8 text-center cursor-pointer hover:bg-slate-50 hover:border-indigo-300 transition-all relative bg-slate-50/50">
                     <input type="file" accept=".pdf" onChange={(e) => setFile(e.target.files[0])} className="absolute inset-0 opacity-0 cursor-pointer" />
-                    <FileText className="mx-auto text-slate-400 mb-2" />
-                    <p className="text-slate-600 font-medium">{file ? file.name : "Click to select file"}</p>
+                    <FileText className="mx-auto text-slate-400 mb-2" size={32} />
+                    <p className="text-slate-600 font-bold">{file ? <span className="text-indigo-600">{file.name}</span> : "Click to select PDF"}</p>
                   </div>
                 </div>
-                <button onClick={handleAnalyze} className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-xl font-bold text-lg shadow-lg hover:scale-[1.02] transition-transform mt-4">
-                  Analyze Now
+                <button onClick={handleAnalyze} className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-xl font-bold text-lg shadow-lg shadow-indigo-200 hover:scale-[1.01] hover:shadow-xl transition-all mt-4">
+                  Analyze Profile
                 </button>
               </div>
             </div>
           )}
 
+          {/* --- HISTORY VIEW --- */}
           {viewState === 'history' && (
             <div className="animate-fade-in max-w-4xl mx-auto">
               {resumeHistory.length === 0 ? (
-                <div className="text-center py-20 bg-slate-100 rounded-3xl">
+                <div className="text-center py-20 glass-card">
                    <History size={48} className="mx-auto text-slate-300 mb-4" />
                    <h3 className="text-xl font-bold text-slate-600">No History Yet</h3>
                    <p className="text-slate-400 mt-2">Analyze a resume to save it here automatically.</p>
@@ -233,14 +247,14 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
               ) : (
                 <div className="grid gap-4">
                   {resumeHistory.map((item) => (
-                    <div key={item.id} onClick={() => loadHistoryItem(item)} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md hover:border-indigo-200 transition-all cursor-pointer flex items-center justify-between group">
-                      <div className="flex items-center gap-4">
-                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-bold text-lg ${item.score >= 80 ? 'bg-green-100 text-green-700' : item.score >= 50 ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700'}`}>
+                    <div key={item.id} onClick={() => loadHistoryItem(item)} className="glass-card p-6 cursor-pointer flex items-center justify-between group hover:border-indigo-300">
+                      <div className="flex items-center gap-5">
+                        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center font-black text-xl shadow-inner ${item.score >= 80 ? 'bg-green-100 text-green-600' : item.score >= 50 ? 'bg-amber-100 text-amber-600' : 'bg-red-100 text-red-600'}`}>
                           {item.score}
                         </div>
                         <div>
                           <h3 className="font-bold text-slate-800 text-lg">{item.role}</h3>
-                          <div className="flex items-center gap-3 text-sm text-slate-400">
+                          <div className="flex items-center gap-3 text-sm text-slate-400 font-medium">
                              <span className="flex items-center gap-1"><FileText size={14}/> {item.fileName}</span>
                              <span className="flex items-center gap-1"><Clock size={14}/> {item.date}</span>
                           </div>
@@ -257,72 +271,78 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
             </div>
           )}
 
+          {/* --- INTERVIEWS VIEW --- */}
           {viewState === 'interviews' && (
             <div className="animate-fade-in grid grid-cols-1 md:grid-cols-3 gap-8 mt-10">
-              <div className="bg-white p-8 rounded-3xl shadow-lg border border-slate-100 hover:shadow-2xl hover:border-indigo-200 transition-all group cursor-pointer" onClick={() => { if(!file) return alert("Please upload a resume in the Career Coach tab first!"); onStartInterview(targetRole || 'Software Engineer', 'text'); }}>
-                <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 mb-6 group-hover:scale-110 transition-transform"><FileSearch size={32} /></div>
+              <div className="glass-card p-8 group cursor-pointer relative overflow-hidden" onClick={() => { if(!file) return alert("Please upload a resume in the Career Coach tab first!"); onStartInterview(targetRole || 'Software Engineer', 'text'); }}>
+                <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity"><FileSearch size={100} /></div>
+                <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 mb-6 group-hover:scale-110 transition-transform shadow-sm"><FileSearch size={32} /></div>
                 <h3 className="text-xl font-bold text-slate-800 mb-2">Resume-Based</h3>
-                <p className="text-slate-500 mb-6 text-sm">Deep dive into your specific projects, experience, and claimed skills.</p>
+                <p className="text-slate-500 mb-6 text-sm font-medium leading-relaxed">Deep dive into your specific projects, experience, and claimed skills.</p>
                 <button className="text-blue-600 font-bold flex items-center gap-2 group-hover:gap-4 transition-all">Start Resume Mock <ChevronRight size={16} /></button>
               </div>
-              <div className="bg-white p-8 rounded-3xl shadow-lg border border-slate-100 hover:shadow-2xl hover:border-indigo-200 transition-all group cursor-pointer" onClick={() => { const role = targetRole || prompt("Enter the field you want to practice:", "Software Engineer"); if(role) onStartInterview(role, 'text'); }}>
-                <div className="w-16 h-16 bg-purple-50 rounded-2xl flex items-center justify-center text-purple-600 mb-6 group-hover:scale-110 transition-transform"><Briefcase size={32} /></div>
+
+              <div className="glass-card p-8 group cursor-pointer relative overflow-hidden" onClick={() => { const role = targetRole || prompt("Enter the field you want to practice:", "Software Engineer"); if(role) onStartInterview(role, 'text'); }}>
+                <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity"><Briefcase size={100} /></div>
+                <div className="w-16 h-16 bg-purple-50 rounded-2xl flex items-center justify-center text-purple-600 mb-6 group-hover:scale-110 transition-transform shadow-sm"><Briefcase size={32} /></div>
                 <h3 className="text-xl font-bold text-slate-800 mb-2">Field-Based</h3>
-                <p className="text-slate-500 mb-6 text-sm">Standard industry questions for your target role. Perfect for testing theory.</p>
+                <p className="text-slate-500 mb-6 text-sm font-medium leading-relaxed">Standard industry questions for your target role. Perfect for testing theory.</p>
                 <button className="text-purple-600 font-bold flex items-center gap-2 group-hover:gap-4 transition-all">Start Field Mock <ChevronRight size={16} /></button>
               </div>
-              <div className="bg-gradient-to-br from-indigo-900 to-slate-900 p-8 rounded-3xl shadow-xl text-white hover:shadow-2xl hover:scale-[1.02] transition-all group cursor-pointer border border-indigo-700" onClick={() => onStartInterview(targetRole || 'Software Engineer', 'voice')}>
-                <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-indigo-400 mb-6 group-hover:bg-white/20 transition-colors"><Mic size={32} /></div>
-                <h3 className="text-xl font-bold text-white mb-2">Pro Voice Interview</h3>
-                <p className="text-indigo-200 mb-6 text-sm">Real-time voice conversation combining resume details AND field knowledge.</p>
-                <button className="text-white font-bold flex items-center gap-2 group-hover:gap-4 transition-all bg-indigo-600 px-4 py-2 rounded-lg">Start Speaking <Zap size={16} /></button>
+
+              <div className="bg-gradient-to-br from-indigo-900 to-slate-900 p-8 rounded-3xl shadow-xl text-white hover:shadow-2xl hover:scale-[1.02] transition-all group cursor-pointer border border-indigo-700/50 relative overflow-hidden" onClick={() => onStartInterview(targetRole || 'Software Engineer', 'voice')}>
+                <div className="absolute inset-0 bg-grid-white/[0.05] bg-[length:20px_20px]"></div>
+                <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-indigo-300 mb-6 group-hover:bg-white/20 transition-colors backdrop-blur-sm"><Mic size={32} /></div>
+                <h3 className="text-xl font-bold text-white mb-2 relative z-10">Pro Voice Interview</h3>
+                <p className="text-indigo-200 mb-6 text-sm font-medium leading-relaxed relative z-10">Real-time voice conversation combining resume details AND field knowledge.</p>
+                <button className="text-white font-bold flex items-center gap-2 group-hover:gap-4 transition-all bg-indigo-600 px-4 py-2 rounded-xl relative z-10 shadow-lg shadow-indigo-900/50">Start Speaking <Zap size={16} /></button>
               </div>
             </div>
           )}
 
-          {/* === SMART LOADING SCREEN === */}
+          {/* --- LOADING SCREEN --- */}
           {viewState === 'analyzing' && (
             <div className="flex flex-col items-center justify-center h-[60vh] animate-fade-in">
               <div className="relative">
-                 <div className="w-24 h-24 border-4 border-slate-100 rounded-full mb-8"></div>
+                 <div className="w-24 h-24 border-4 border-slate-200 rounded-full mb-8 opacity-50"></div>
                  <div className="w-24 h-24 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin absolute top-0 left-0"></div>
                  <div className="absolute inset-0 flex items-center justify-center mb-8">
                     <Target className="text-indigo-600 animate-pulse" size={32} />
                  </div>
               </div>
               
-              <h2 className="text-2xl font-bold text-slate-800 mb-4">
+              <h2 className="text-3xl font-bold text-slate-800 mb-6">
                 {LOADING_STEPS[loadingStepIndex]}
               </h2>
               
-              <div className="flex flex-col gap-3 w-64">
+              <div className="flex flex-col gap-3 w-72 glass-card p-6">
                 {LOADING_STEPS.map((step, i) => (
                    <div key={i} className={`flex items-center gap-3 text-sm transition-all duration-500 ${i <= loadingStepIndex ? 'opacity-100 translate-x-0' : 'opacity-30 -translate-x-4'}`}>
-                      {i < loadingStepIndex ? <CheckCircle2 size={16} className="text-green-500"/> : 
+                      {i < loadingStepIndex ? <CheckCircle2 size={18} className="text-green-500"/> : 
                        i === loadingStepIndex ? <div className="w-4 h-4 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin"/> :
                        <div className="w-4 h-4 rounded-full border border-slate-300"/>}
-                      <span className={i === loadingStepIndex ? "font-bold text-indigo-700" : "text-slate-500"}>{step}</span>
+                      <span className={i === loadingStepIndex ? "font-bold text-indigo-700" : "text-slate-500 font-medium"}>{step}</span>
                    </div>
                 ))}
               </div>
             </div>
           )}
 
+          {/* --- RESULTS VIEW (GLASS CARDS) --- */}
           {viewState === 'results' && analysisData && (
             <div className="animate-fade-in space-y-8">
-              <div className="bg-gradient-to-r from-orange-100 to-amber-100 border border-orange-200 p-6 rounded-2xl flex items-start gap-4">
-                <div className="text-3xl">🔥</div>
+              <div className="bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-100 p-6 rounded-2xl flex items-start gap-4 shadow-sm">
+                <div className="text-4xl">🔥</div>
                 <div>
-                  <h3 className="font-bold text-orange-800 text-sm uppercase tracking-wide mb-1">Reality Check (Friendly Roast)</h3>
-                  <p className="text-orange-900 font-medium text-lg italic">"{analysisData.roast}"</p>
+                  <h3 className="font-bold text-orange-800 text-xs uppercase tracking-widest mb-1">Reality Check (Friendly Roast)</h3>
+                  <p className="text-orange-900 font-medium text-lg italic leading-relaxed">"{analysisData.roast}"</p>
                 </div>
               </div>
+
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="bg-white p-6 rounded-3xl shadow-lg border border-slate-100 flex flex-col items-center">
-                  
-                  {/* --- FIXED LABEL HERE --- */}
-                  <h3 className="text-slate-500 font-medium mb-4 uppercase tracking-wider text-xs">Role Readiness Score</h3>
-                  
+                {/* Readiness Score */}
+                <div className="glass-card p-6 flex flex-col items-center justify-center">
+                  <h3 className="text-slate-400 font-bold mb-4 uppercase tracking-widest text-xs">Role Readiness</h3>
                   <div className="w-48 h-48 relative">
                     <ResponsiveContainer width="100%" height="100%">
                       <PieChart>
@@ -332,18 +352,20 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
                         </Pie>
                       </PieChart>
                     </ResponsiveContainer>
-                    <div className="absolute inset-0 flex items-center justify-center text-4xl font-black text-indigo-600">{analysisData.readiness_score}%</div>
+                    <div className="absolute inset-0 flex items-center justify-center text-5xl font-black text-indigo-600 tracking-tighter">{analysisData.readiness_score}%</div>
                   </div>
                 </div>
-                <div className="bg-white p-6 rounded-3xl shadow-lg border border-slate-100 lg:col-span-2">
-                  <h3 className="font-bold text-slate-700 mb-4">Global Competition Standing</h3>
+
+                {/* Bar Chart */}
+                <div className="glass-card p-6 lg:col-span-2">
+                  <h3 className="font-bold text-slate-700 mb-6">Global Competition Standing</h3>
                   <div className="h-64">
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={[{ name: 'You', score: analysisData.global_standing?.you || 0 }, { name: 'Average', score: analysisData.global_standing?.average || 60 }, { name: 'Top Tier', score: analysisData.global_standing?.top_performer || 90 }]} layout="vertical" margin={{ left: 20 }}>
                         <XAxis type="number" hide />
-                        <YAxis dataKey="name" type="category" width={80} tick={{fontSize: 14, fontWeight: 'bold'}} />
-                        <Tooltip cursor={{fill: 'transparent'}} />
-                        <Bar dataKey="score" radius={[0, 10, 10, 0]} barSize={40}>
+                        <YAxis dataKey="name" type="category" width={80} tick={{fontSize: 14, fontWeight: 'bold', fill: '#64748b'}} />
+                        <Tooltip cursor={{fill: 'transparent'}} contentStyle={{borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)'}} />
+                        <Bar dataKey="score" radius={[0, 8, 8, 0]} barSize={32}>
                            <Cell fill={BAR_COLORS[0]} />
                            <Cell fill={BAR_COLORS[1]} />
                            <Cell fill={BAR_COLORS[2]} />
@@ -354,43 +376,50 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
                 </div>
               </div>
 
-              {/* --- 2. ADDED THE SKILLS CHART HERE --- */}
+              {/* --- NEW SKILLS CHART --- */}
               <SkillsChart />
 
-              <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2 mt-4"><BookOpen className="text-indigo-600" /> Missing Basic Skills (Action Plan)</h3>
+              <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-3 mt-8">
+                <BookOpen className="text-indigo-600" /> Missing Basic Skills <span className="text-sm font-medium text-slate-400 bg-slate-100 px-3 py-1 rounded-full">Action Plan</span>
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {analysisData.missing_basic_skills && analysisData.missing_basic_skills.map((item, i) => (
-                  <div key={i} className="bg-white p-6 rounded-2xl shadow-md border border-slate-100 hover:shadow-xl transition-shadow">
-                    <h4 className="font-bold text-lg text-slate-800 mb-4">{item.skill}</h4>
-                    <div className="space-y-3">
-                      <button onClick={() => openNotes(item.notes_topic)} className="w-full flex items-center justify-center gap-2 py-2 rounded-lg bg-green-50 text-green-700 font-bold hover:bg-green-100 transition-colors text-sm"><FileText size={16} /> Read Notes</button>
-                      <button onClick={() => openVideo(item.video_topic)} className="w-full flex items-center justify-center gap-2 py-2 rounded-lg bg-red-50 text-red-700 font-bold hover:bg-red-100 transition-colors text-sm"><Youtube size={16} /> Watch Video</button>
+                  <div key={i} className="glass-card p-6 hover:border-indigo-300 group">
+                    <h4 className="font-bold text-lg text-slate-800 mb-4 flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-red-400"></div>
+                      {item.skill}
+                    </h4>
+                    <div className="space-y-3 opacity-80 group-hover:opacity-100 transition-opacity">
+                      <button onClick={() => openNotes(item.notes_topic)} className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-green-50 text-green-700 font-bold hover:bg-green-100 transition-colors text-sm"><FileText size={16} /> Read Notes</button>
+                      <button onClick={() => openVideo(item.video_topic)} className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-red-50 text-red-700 font-bold hover:bg-red-100 transition-colors text-sm"><Youtube size={16} /> Watch Video</button>
                     </div>
                   </div>
                 ))}
               </div>
-              <div className="bg-white p-8 rounded-3xl shadow-lg border border-slate-100">
+
+              <div className="glass-card p-8">
                 <h3 className="font-bold text-slate-700 mb-6">Current Skill Impact Analysis</h3>
                 {analysisData.has_skills ? (
                   <div className="h-64">
                     <ResponsiveContainer width="100%" height="100%">
                       <LineChart data={analysisData.skill_importance_data || []}>
                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                        <XAxis dataKey="skill" tick={{fill: '#64748b'}} />
+                        <XAxis dataKey="skill" tick={{fill: '#64748b', fontSize: 12, fontWeight: 600}} axisLine={false} tickLine={false} />
                         <YAxis hide />
-                        <Tooltip />
-                        <Line type="monotone" dataKey="importance" stroke="#6366f1" strokeWidth={4} dot={{r: 6}} />
+                        <Tooltip contentStyle={{borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)'}} />
+                        <Line type="monotone" dataKey="importance" stroke="#6366f1" strokeWidth={4} dot={{r: 6, fill: '#6366f1', strokeWidth: 2, stroke: '#fff'}} activeDot={{r: 8}} />
                       </LineChart>
                     </ResponsiveContainer>
                   </div>
                 ) : (
-                  <div className="text-center py-10 bg-indigo-50 rounded-2xl">
+                  <div className="text-center py-10 bg-indigo-50/50 rounded-2xl border border-indigo-100">
                     <Trophy size={48} className="mx-auto text-indigo-400 mb-4" />
                     <h4 className="text-xl font-bold text-indigo-900">A Fresh Start!</h4>
                     <p className="text-indigo-700 mt-2 max-w-lg mx-auto">"{analysisData.motivational_msg}"</p>
                   </div>
                 )}
               </div>
+
               <div className="text-center pt-10 pb-4">
                  <button onClick={() => setViewState('input')} className="text-slate-400 hover:text-indigo-600 font-bold flex items-center justify-center gap-2 mx-auto transition-colors"><Search size={16}/> Analyze Another Role</button>
               </div>
