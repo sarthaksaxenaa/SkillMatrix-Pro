@@ -231,3 +231,37 @@ button:active {
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
   border-radius: 999px;
 }
+
+/* ============================================
+   TOAST ANIMATIONS
+   ============================================ */
+
+@keyframes toast-fly-in {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes toast-fold-out {
+  0% {
+    opacity: 1;
+    transform: translateY(0) rotateX(0deg) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(20px) rotateX(90deg) scale(0.8);
+  }
+}
+
+.animate-toast-fly-in {
+  animation: toast-fly-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-toast-fold-out {
+  animation: toast-fold-out 0.5s cubic-bezier(0.5, 0, 0, 1) forwards;
+}

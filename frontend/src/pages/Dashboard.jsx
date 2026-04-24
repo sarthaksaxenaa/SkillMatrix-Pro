@@ -45,6 +45,19 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
   const [fixedPoints, setFixedPoints] = useState([]);
   const [isFixing, setIsFixing] = useState(false);
 
+  // --- NEW: Toast State ---
+  const [toast, setToast] = useState({ message: '', visible: false, isLeaving: false });
+
+  const showToast = (message) => {
+    setToast({ message, visible: true, isLeaving: false });
+    setTimeout(() => {
+        setToast(prev => ({ ...prev, isLeaving: true }));
+        setTimeout(() => {
+            setToast({ message: '', visible: false, isLeaving: false });
+        }, 600); // Matches the fold-out CSS duration
+    }, 3000);
+  };
+
   useEffect(() => {
     const saved = localStorage.getItem('resumeHistory');
     if (saved) setResumeHistory(JSON.parse(saved));
@@ -105,7 +118,9 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
   };
 
   const handleAnalyze = async () => {
-    if (!file || !targetRole) return alert("Please enter a role and upload a resume!");
+    if (!file || !targetRole) {
+      return showToast("Please enter a role and upload a resume!");
+    }
 
     setViewState('analyzing');
     const formData = new FormData();
@@ -117,7 +132,7 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
 
       // If Backend says it's not a resume, stop
       if (data.error === "Not a Resume") {
-          alert("ERROR: " + data.message);
+          showToast("ERROR: " + data.message);
           setViewState('input');
           return;
       }
@@ -149,7 +164,7 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
 
     } catch (error) {
       console.error(error);
-      alert("Analysis failed, switching to demo mode.");
+      showToast("Analysis failed, switching to demo mode.");
       setViewState('input');
     }
   };
@@ -606,31 +621,54 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
           {showFixModal && (
             <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
               <div className="surface p-8 max-w-md w-full animate-enter-scale">
-                <div className="flex justify-between items-center mb-6">
-                  <p className="font-medium text-sm">AI Resume Upgrade</p>
-                  <button onClick={() => setShowFixModal(false)} className="text-zinc-600 hover:text-zinc-400 transition-colors" style={{ background: 'transparent' }}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                  </button>
-                </div>
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-enter">
+              <div className="bg-slate-900 border border-slate-700 w-full max-w-2xl rounded-3xl p-8 relative shadow-2xl">
+                <button onClick={() => setShowFixModal(false)} className="absolute top-6 right-6 text-slate-400 hover:text-white">
+                  <Icon d="M18 6L6 18M6 6l12 12" />
+                </button>
+                <h3 className="text-2xl font-bold mb-2 text-white flex items-center gap-3">
+                  <ZapIcon className="text-amber-400" /> Resume Fixer AI
+                </h3>
+                <p className="text-slate-400 text-sm mb-6">Auto-generating powerful bullet points for {targetRole}</p>
 
                 {isFixing ? (
-                  <div className="flex flex-col items-center py-12">
-                    <div className="w-6 h-6 border-2 border-zinc-700 border-t-blue-500 rounded-full animate-spin mb-4" />
-                    <p className="text-sm text-zinc-500">Polishing your achievements...</p>
+                  <div className="flex flex-col items-center justify-center py-12">
+                     <div className="w-10 h-10 border-4 border-slate-700 border-t-amber-500 rounded-full animate-spin mb-4" />
+                     <p className="text-slate-300 font-medium">Rewriting your experience...</p>
                   </div>
                 ) : (
-                  <div className="space-y-3">
-                    <p className="text-xs text-zinc-500 mb-4">Copy these improved bullets to your resume.</p>
-                    {fixedPoints.map((point, i) => (
-                      <div key={i} className="p-4 rounded-xl text-sm text-zinc-300 leading-relaxed" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)' }}>
-                        {point}
+                  <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
+                    {fixedPoints.map((pt, i) => (
+                      <div key={i} className="bg-slate-800 border border-slate-700 p-4 rounded-xl hover:border-amber-500/30 transition-colors group">
+                        <div className="flex items-start gap-3">
+                           <CheckIcon className="text-emerald-500 shrink-0 mt-0.5" size={16} />
+                           <p className="text-slate-200 text-sm leading-relaxed">{pt}</p>
+                        </div>
+                        <button className="mt-3 text-xs font-bold text-amber-500 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
+                          Copy Point <ChevronRightIcon size={12} />
+                        </button>
                       </div>
                     ))}
-                    <button onClick={() => setShowFixModal(false)} className="btn-primary w-full py-3 text-sm mt-4">Done</button>
                   </div>
                 )}
               </div>
             </div>
+          )}
+
+          {/* --- CUSTOM TOAST NOTIFICATION --- */}
+          {toast.visible && (
+              <div className={`fixed bottom-8 right-8 z-[100] max-w-sm w-full bg-zinc-900 border border-zinc-800 text-white px-5 py-4 rounded-xl shadow-2xl flex items-start gap-3 ${toast.isLeaving ? 'animate-toast-fold-out' : 'animate-toast-fly-in'}`} style={{ perspective: '1000px', transformOrigin: 'bottom right' }}>
+                  <div className="mt-0.5 shrink-0 text-red-400">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  </div>
+                  <div>
+                      <h4 className="text-sm font-semibold text-zinc-100 mb-0.5">Action Required</h4>
+                      <p className="text-xs text-zinc-400 leading-relaxed">{toast.message}</p>
+                  </div>
+                  <button onClick={() => setToast({ ...toast, isLeaving: true })} className="ml-auto text-zinc-500 hover:text-white transition-colors">
+                      <Icon d="M18 6L6 18M6 6l12 12" size={16} />
+                  </button>
+              </div>
           )}
 
         </div>
