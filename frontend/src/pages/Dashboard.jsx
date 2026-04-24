@@ -388,16 +388,8 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
                                     </div>
                                 </div>
                             ) : (
-                                <div className="p-5 border border-dashed border-zinc-800 rounded-xl opacity-50 select-none bg-zinc-900/50">
-                                    <div className="flex gap-4 items-center animate-pulse">
-                                        <div className="w-12 h-12 bg-zinc-800 rounded-xl"></div>
-                                        <div className="space-y-2">
-                                            <div className="h-4 w-24 bg-zinc-800 rounded"></div>
-                                            <div className="h-3 w-32 bg-zinc-800 rounded"></div>
-                                        </div>
-                                    </div>
-                                    <p className="text-xs text-zinc-500 mt-5 text-center">Analyze a resume to see it here</p>
-                                </div>
+                                <div className="p-6 border border-dashed border-zinc-800/80 rounded-xl select-none bg-zinc-900/30 flex flex-col items-center justify-center text-center">
+                                    <div className="w-10 h-10 rounded-full bg-zinc-800/50 flex items-center justify-center text-zinc-500 mb-3"><HistoryIcon size={18} /></div><p className="text-sm font-medium text-zinc-400">No activity yet</p><p className="text-xs text-zinc-600 mt-1">Upload a resume to see your analysis here</p></div>
                             )}
                         </div>
 
