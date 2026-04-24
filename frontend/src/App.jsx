@@ -27,7 +27,7 @@ function App() {
   };
 
   return (
-    <div className="font-sans text-gray-900 bg-gray-50 min-h-screen">
+    <div className="font-sans min-h-screen" style={{ background: '#050510', color: '#f1f5f9' }}>
       {currentPage === 'login' && <Login onLogin={handleLogin} />}
 
       {currentPage === 'dashboard' && (

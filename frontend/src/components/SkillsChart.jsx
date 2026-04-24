@@ -18,53 +18,52 @@ const data = [
 
 const SkillsChart = () => {
   return (
-    <div className="bg-white p-6 w-full h-[400px] mb-8">
-      <h3 className="text-xl font-bold text-slate-800 mb-6 border-l-4 border-indigo-600 pl-3 uppercase tracking-wider">
+    <div className="glass-card p-6 w-full h-[400px] mb-8">
+      <h3 className="text-xl font-bold text-slate-200 mb-6 border-l-4 border-indigo-500 pl-3 uppercase tracking-wider">
         Skill Growth Analysis
       </h3>
-      
+
       <ResponsiveContainer width="100%" height="90%">
         <LineChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="0" stroke="#e2e8f0" /> {/* Solid grid lines for sharpness */}
-          <XAxis 
-            dataKey="name" 
-            axisLine={false} 
-            tickLine={false} 
-            tick={{ fill: '#64748b', fontSize: 12, fontWeight: 'bold' }} 
+          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+          <XAxis
+            dataKey="name"
+            axisLine={false}
+            tickLine={false}
+            tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 600 }}
             dy={10}
           />
-          <YAxis 
-            axisLine={false} 
-            tickLine={false} 
-            tick={{ fill: '#64748b', fontSize: 12, fontWeight: 'bold' }} 
+          <YAxis
+            axisLine={false}
+            tickLine={false}
+            tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 600 }}
           />
-          <Tooltip 
-            contentStyle={{ 
-              borderRadius: '0px', 
-              border: '2px solid #1e293b', 
-              boxShadow: '4px 4px 0px rgba(0,0,0,0.2)',
-              fontWeight: 'bold'
+          <Tooltip
+            contentStyle={{
+              borderRadius: '12px',
+              border: '1px solid rgba(255,255,255,0.08)',
+              background: 'rgba(15,15,30,0.9)',
+              color: '#f1f5f9',
+              fontWeight: 600
             }}
           />
-          <Legend wrapperStyle={{ paddingTop: '20px', fontWeight: 'bold' }} />
-          
-          {/* Average Line (Green) */}
-          <Line 
-            type="linear" // "linear" makes it sharp, "monotone" makes it smooth
-            dataKey="Average" 
-            stroke="#65a30d" // Green
-            strokeWidth={3}
-            dot={{ r: 4, strokeWidth: 2 }}
+          <Legend wrapperStyle={{ paddingTop: '20px', fontWeight: 600 }} />
+
+          <Line
+            type="monotone"
+            dataKey="Average"
+            stroke="#10b981"
+            strokeWidth={2}
+            dot={{ r: 4, strokeWidth: 2, stroke: '#050510' }}
             activeDot={{ r: 6 }}
           />
-          
-          {/* My Skills Line (Red) */}
-          <Line 
-            type="linear" 
-            dataKey="You" 
-            stroke="#dc2626" // Red
-            strokeWidth={3} 
-            dot={{ r: 4, strokeWidth: 2 }}
+
+          <Line
+            type="monotone"
+            dataKey="You"
+            stroke="#6366f1"
+            strokeWidth={3}
+            dot={{ r: 4, strokeWidth: 2, stroke: '#050510' }}
             activeDot={{ r: 6 }}
           />
         </LineChart>
