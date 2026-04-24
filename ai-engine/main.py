@@ -16,7 +16,7 @@ from routes.interview import router as interview_router
 
 # --- App Setup ---
 print("\n" + "=" * 50)
-print("🔥 STARTING AI ENGINE - SKILLMATRIX PRO 🔥")
+print("STARTING AI ENGINE - SKILLMATRIX PRO")
 print("=" * 50 + "\n")
 
 app = FastAPI(title="SkillMatrix-Pro AI Engine")
@@ -34,14 +34,14 @@ app.add_middleware(
 async def startup_db_client():
     """Connect to MongoDB on server startup."""
     try:
-        print("⏳ Attempting to connect to MongoDB...")
+        print("[INFO] Attempting to connect to MongoDB...")
         app.mongodb_client = AsyncIOMotorClient(MONGO_URL)
         app.db = app.mongodb_client[DB_NAME]
         app.users_collection = app.db.users
         await app.db.command("ping")
-        print("✅ SUCCESS: Connected to local MongoDB!")
+        print("[OK] SUCCESS: Connected to local MongoDB!")
     except Exception as e:
-        print(f"❌ ERROR: MongoDB Connection Failed: {e}")
+        print(f"[ERROR] MongoDB Connection Failed: {e}")
 
 
 # --- Health Check ---

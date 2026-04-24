@@ -30,7 +30,7 @@ router.post('/upload-resume', upload.single('resume'), async (req, res) => {
     if (!req.file) return res.status(400).json({ error: "No file uploaded" });
 
     const jobRole = req.body.job_role || "General";
-    console.log(`📄 Processing Resume for Role: ${jobRole}`);
+    console.log(`Processing Resume for Role: ${jobRole}`);
 
     const formData = new FormData();
     formData.append('file', fs.createReadStream(req.file.path));
@@ -64,7 +64,7 @@ router.post('/submit-answer', async (req, res) => {
 router.post('/get-question', async (req, res) => {
   try {
     const { job_role } = req.body;
-    console.log("❓ Fetching question for role:", job_role);
+    console.log("Fetching question for role:", job_role);
 
     const aiResponse = await axios.post(`${AI_ENGINE_URL}/get-question`, {
       job_role: job_role || "general"
@@ -81,7 +81,7 @@ router.post('/get-question', async (req, res) => {
 router.post('/chat', async (req, res) => {
   try {
     const { message } = req.body;
-    console.log("💬 Chat Message:", message);
+    console.log("Chat Message:", message);
 
     const aiResponse = await axios.post(`${AI_ENGINE_URL}/chat`, { message });
     res.json(aiResponse.data);

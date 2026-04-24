@@ -42,7 +42,7 @@ const Interview = ({ jobRole, mode, onEnd }) => {
         const newCount = prev + 1;
         const warningMsg = `Warning ${newCount}. ${reason}. Stay focused.`;
         speakText(warningMsg, true);
-        setProctorMessage(`⚠️ ALERT: ${reason}`);
+        setProctorMessage(`ALERT: ${reason}`);
         return newCount;
     });
     setTimeout(() => {
@@ -212,7 +212,7 @@ const Interview = ({ jobRole, mode, onEnd }) => {
             <div className={`absolute top-0 left-0 w-2 h-full ${isCheating ? 'bg-red-500' : 'bg-indigo-500'}`}></div>
             <div className="flex justify-between items-center mb-4">
                 <h2 className={`font-bold text-sm uppercase tracking-wider ${isCheating ? 'text-red-400' : 'text-slate-400'}`}>
-                    {isCheating ? "⚠️ PROCTORING ALERT" : "Current Question"}
+                    {isCheating ? "PROCTORING ALERT" : "Current Question"}
                 </h2>
                 {aiSpeaking && <Volume2 className="text-indigo-400 animate-pulse" />}
             </div>

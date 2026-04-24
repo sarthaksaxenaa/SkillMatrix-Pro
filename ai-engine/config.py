@@ -24,8 +24,8 @@ groq_client = None
 try:
     if GROQ_API_KEY:
         groq_client = Groq(api_key=GROQ_API_KEY)
-        print(f"✅ SUCCESS: Using Groq AI Model -> {SELECTED_MODEL}")
+        print(f"[OK] SUCCESS: Using Groq AI Model -> {SELECTED_MODEL}")
     else:
-        print("⚠️ WARNING: Groq API Key not set. AI features will be disabled.")
+        print("[WARN] WARNING: Groq API Key not set. AI features will be disabled.")
 except Exception as e:
-    print(f"❌ CRITICAL: Groq Setup Error: {e}")
+    print(f"[ERROR] CRITICAL: Groq Setup Error: {e}")

@@ -33,6 +33,6 @@ app.use('/api', aiRoutes);
 // Start Server
 app.listen(PORT, () => {
   console.log(`=================================`);
-  console.log(`🚀 SERVER RUNNING ON PORT ${PORT}`);
+  console.log(`SERVER RUNNING ON PORT ${PORT}`);
   console.log(`=================================`);
 });

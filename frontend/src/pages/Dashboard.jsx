@@ -101,7 +101,7 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
 
       // If Backend says it's not a resume, stop
       if (data.error === "Not a Resume") {
-          alert("❌ ERROR: " + data.message);
+          alert("ERROR: " + data.message);
           setViewState('input');
           return;
       }
@@ -367,7 +367,7 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
           {viewState === 'results' && analysisData && (
             <div className="animate-fade-in space-y-8">
               <div className="bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-100 p-6 rounded-2xl flex items-start gap-4 shadow-sm">
-                <div className="text-4xl">🔥</div>
+                <div className="text-4xl">Fire</div>
                 <div>
                   <h3 className="font-bold text-orange-800 text-xs uppercase tracking-widest mb-1">Reality Check (Friendly Roast)</h3>
                   <p className="text-orange-900 font-medium text-lg italic leading-relaxed">"{analysisData.roast}"</p>
@@ -413,7 +413,7 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
 
               <SkillsChart />
 
-              {/* 🚀 NEW: JOB SEARCH & AI FIXER */}
+              {/* JOB SEARCH & AI FIXER */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                  <div className="glass-card p-8 bg-indigo-50/30 border-indigo-100">
                     <h3 className="font-bold text-indigo-900 mb-4 flex items-center gap-2"><JobIcon size={20}/> Who is hiring for "{targetRole}"?</h3>
