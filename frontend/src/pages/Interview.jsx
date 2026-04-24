@@ -186,74 +186,74 @@ const Interview = ({ jobRole, mode, onEnd }) => {
   };
 
   return (
-    <div className={`min-h-screen text-white flex flex-col transition-colors duration-500 ${isCheating ? 'bg-red-950' : 'bg-slate-900'}`}>
+    <div className={`min-h-screen flex flex-col transition-colors duration-500`} style={{ background: isCheating ? '#1a0505' : 'var(--bg)' }}>
       
       {/* HEADER */}
-      <header className={`h-16 border-b flex items-center justify-between px-6 backdrop-blur-md transition-colors ${isCheating ? 'bg-red-900/50 border-red-700' : 'bg-slate-800/50 border-slate-700'}`}>
+      <header className={`h-16 border-b flex items-center justify-between px-8 backdrop-blur-md transition-colors`} style={{ borderColor: isCheating ? 'rgba(239,68,68,0.2)' : 'var(--border)', background: isCheating ? 'transparent' : 'var(--bg)' }}>
         <div className="flex items-center gap-3">
-          <div className={`w-8 h-8 rounded-full animate-pulse flex items-center justify-center ${isCheating ? 'bg-white' : 'bg-red-500'}`}>
-            {isCheating ? <AlertTriangle className="text-red-600" size={18}/> : <Video size={16} className="text-white"/>}
+          <div className="flex items-center justify-center">
+            {isCheating ? <AlertTriangle className="text-red-500" size={18}/> : <Video size={16} className="text-zinc-400"/>}
           </div>
           <div>
-            <h1 className="font-bold text-lg tracking-wide">{isCheating ? 'VIOLATION DETECTED' : 'LIVE INTERVIEW'}</h1>
-            <p className={`text-xs font-mono uppercase ${isCheating ? 'text-red-200' : 'text-slate-400'}`}>
-                {mode === 'voice' ? 'PRO VOICE MODE' : 'TEXT MODE'} • {jobRole}
+            <h1 className="font-medium text-sm tracking-wide">{isCheating ? <span className="text-red-400">Violation Detected</span> : 'Live Interview'}</h1>
+            <p className="text-xs text-zinc-500 uppercase tracking-widest mt-0.5">
+                {mode === 'voice' ? 'Voice Mode' : 'Text Mode'} · {jobRole}
             </p>
           </div>
         </div>
         
-        <div className="flex items-center gap-4">
-            <div className={`flex items-center gap-2 px-3 py-1 rounded-lg border font-mono font-bold ${warningCount > 0 ? 'bg-red-600 border-red-400 text-white' : 'bg-slate-800 border-slate-700 text-slate-400'}`}>
-                <ShieldAlert size={16} /> FLAGS: {warningCount}
+        <div className="flex items-center gap-6">
+            <div className={`flex items-center gap-2 text-xs font-medium ${warningCount > 0 ? 'text-red-400' : 'text-zinc-500'}`}>
+                <ShieldAlert size={14} /> FLAGS: {warningCount}
             </div>
           
-            <div className="flex items-center gap-2 bg-slate-800 px-3 py-1 rounded-lg border border-slate-700 font-mono text-red-400">
-                <Clock size={16} /> {formatTime(timer)}
+            <div className="flex items-center gap-2 text-xs font-mono text-zinc-400">
+                <Clock size={14} /> {formatTime(timer)}
             </div>
             
-            <button onClick={handleEndSession} className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg text-sm font-bold transition-colors">
-                End Session
+            <button onClick={handleEndSession} className="text-zinc-500 hover:text-zinc-300 text-sm transition-colors bg-transparent border-none">
+                End session
             </button>
         </div>
       </header>
 
       {/* MAIN ARENA */}
-      <div className="flex-1 flex gap-6 p-6 overflow-hidden">
+      <div className="flex-1 flex gap-6 p-8 max-w-7xl mx-auto w-full">
         
         {/* LEFT: AI INTERVIEWER */}
         <div className="flex-1 flex flex-col gap-6">
-          <div className={`bg-slate-800 border p-8 rounded-3xl shadow-2xl relative overflow-hidden group transition-all duration-300 ${isCheating ? 'border-red-500 shadow-red-500/20' : 'border-slate-700'} ${aiSpeaking ? 'ring-2 ring-indigo-500' : ''}`}>
-            <div className={`absolute top-0 left-0 w-2 h-full ${isCheating ? 'bg-red-500' : 'bg-indigo-500'}`}></div>
-            <div className="flex justify-between items-center mb-4">
-                <h2 className={`font-bold text-sm uppercase tracking-wider ${isCheating ? 'text-red-400' : 'text-slate-400'}`}>
-                    {isCheating ? "PROCTORING ALERT" : "Current Question"}
+          <div className={`surface p-10 flex flex-col justify-center min-h-[200px] transition-all duration-300 ${isCheating ? 'border-red-500/30' : ''}`}>
+            <div className="flex justify-between items-center mb-6">
+                <h2 className={`label ${isCheating ? 'text-red-400/80' : 'text-zinc-500'}`}>
+                    {isCheating ? "Proctoring Alert" : "Current Question"}
                 </h2>
-                {aiSpeaking && <Volume2 className="text-indigo-400 animate-pulse" />}
+                {aiSpeaking && <Volume2 className="text-blue-400" size={16} />}
             </div>
             {isCheating ? (
-                <p className="text-2xl font-bold text-red-200">PLEASE RETURN TO THE INTERVIEW SCREEN IMMEDIATELY.</p>
+                <p className="heading-display text-3xl text-red-400">Please return to the interview window immediately.</p>
             ) : (
-                <p className="text-2xl font-medium leading-relaxed text-indigo-100">"{question}"</p>
+                <p className="heading-display text-3xl leading-tight">"{question}"</p>
             )}
           </div>
 
-          <div className="flex-1 bg-slate-800 border border-slate-700 rounded-3xl p-6 flex flex-col relative shadow-inner">
+          <div className="surface flex-1 p-8 flex flex-col relative">
              <textarea 
                value={answer}
                onChange={(e) => setAnswer(e.target.value)}
-               placeholder={mode === 'voice' ? "Listening..." : "Type answer..."}
-               className="flex-1 bg-transparent resize-none outline-none text-lg text-slate-200 placeholder-slate-600"
+               placeholder={mode === 'voice' ? "Listening..." : "Type your answer..."}
+               className="flex-1 bg-transparent resize-none outline-none text-base text-zinc-300 placeholder-zinc-600 border-none"
+               style={{ border: 'none', background: 'transparent' }}
                disabled={feedback !== null || isCheating}
              />
-             <div className="flex justify-between items-center mt-4">
+             <div className="flex justify-between items-center mt-6 pt-6 border-t" style={{ borderColor: 'var(--border)' }}>
                 {mode === 'voice' && (
-                  <button onClick={toggleMic} className={`flex items-center gap-2 px-4 py-2 rounded-full font-bold transition-all ${isListening ? 'bg-red-500/20 text-red-400 border border-red-500 animate-pulse' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'}`}>
-                    {isListening ? <><MicOff size={18}/> Stop</> : <><Mic size={18}/> Speak</>}
+                  <button onClick={toggleMic} className={`btn-secondary flex items-center gap-2 px-4 py-2 text-sm ${isListening ? '!text-red-400 !border-red-400/30' : ''}`}>
+                    {isListening ? <><MicOff size={16}/> Stop listening</> : <><Mic size={16}/> Start speaking</>}
                   </button>
                 )}
                 {!feedback && (
-                    <button onClick={submitAnswer} disabled={!answer.trim() || loading || isCheating} className="ml-auto bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 disabled:opacity-50 transition-all">
-                    {loading ? "Grading..." : <>Submit <Send size={18}/></>}
+                    <button onClick={submitAnswer} disabled={!answer.trim() || loading || isCheating} className="ml-auto btn-primary px-6 py-2.5 text-sm flex items-center gap-2 disabled:opacity-50">
+                    {loading ? "Grading..." : <>Submit answer <Send size={14}/></>}
                     </button>
                 )}
              </div>
@@ -262,32 +262,32 @@ const Interview = ({ jobRole, mode, onEnd }) => {
 
         {/* RIGHT: REAL WEBCAM + PROCTOR OVERLAY */}
         {feedback ? (
-            <div className="w-1/3 bg-slate-800 border border-slate-700 rounded-3xl p-6 flex flex-col animate-fade-in-right">
-               <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2"><CheckCircle className="text-green-400" /> AI Feedback</h3>
-               <div className="flex items-center justify-center mb-8">
-                  <div className={`w-32 h-32 rounded-full border-8 flex items-center justify-center text-4xl font-black ${feedback.score >= 7 ? 'border-green-500 text-green-400' : 'border-amber-500 text-amber-400'}`}>
-                    {feedback.score}/10
+            <div className="w-[340px] surface p-8 flex flex-col animate-enter">
+               <h3 className="label mb-8 flex items-center gap-2"><CheckCircle className="text-emerald-500" size={14}/> AI Evaluation</h3>
+               <div className="flex items-center justify-center mb-10">
+                  <div className={`w-32 h-32 rounded-full border flex items-center justify-center text-4xl font-bold ${feedback.score >= 7 ? 'border-emerald-500/30 text-emerald-400' : 'border-amber-500/30 text-amber-400'}`}>
+                    {feedback.score}<span className="text-lg text-zinc-600">/10</span>
                   </div>
                </div>
-               <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-700/50 mb-6 flex-1 overflow-y-auto">
-                 <p className="text-slate-300 italic text-sm leading-relaxed">"{feedback.feedback}"</p>
+               <div className="flex-1 overflow-y-auto mb-8">
+                 <p className="text-zinc-400 text-sm leading-relaxed">"{feedback.feedback}"</p>
                </div>
-               <button onClick={fetchNewQuestion} className="w-full bg-slate-700 hover:bg-slate-600 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors">Next <ChevronRight size={20}/></button>
+               <button onClick={fetchNewQuestion} className="w-full btn-secondary py-3 text-sm flex items-center justify-center gap-2">Next question <ChevronRight size={16}/></button>
             </div>
         ) : (
-            <div className={`w-1/3 rounded-3xl relative overflow-hidden flex items-center justify-center border shadow-2xl transition-all duration-300 ${isCheating ? 'border-red-500 shadow-red-500/50' : 'border-slate-700 bg-black'}`}>
-                <video ref={videoRef} autoPlay muted playsInline className={`absolute inset-0 w-full h-full object-cover transform -scale-x-100 transition-opacity ${isCheating ? 'opacity-50' : 'opacity-100'}`} />
+            <div className={`w-[340px] surface relative overflow-hidden flex items-center justify-center transition-all duration-300 ${isCheating ? 'border-red-500/50' : ''}`}>
+                <video ref={videoRef} autoPlay muted playsInline className={`absolute inset-0 w-full h-full object-cover transform -scale-x-100 transition-opacity ${isCheating ? 'opacity-30' : 'opacity-100'}`} />
                 
-                <div className="absolute top-4 left-4 z-20 bg-black/60 px-3 py-1 rounded-lg backdrop-blur-sm border border-white/10 flex items-center gap-2">
-                    <Eye size={14} className={isCheating ? "text-red-500" : "text-green-500"} />
-                    <span className={`text-xs font-mono font-bold ${isCheating ? "text-red-400" : "text-green-400"}`}>
+                <div className="absolute top-4 left-4 z-20 px-3 py-1.5 rounded-lg backdrop-blur-md flex items-center gap-2" style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                    <Eye size={12} className={isCheating ? "text-red-400" : "text-emerald-400"} />
+                    <span className={`text-[10px] uppercase tracking-widest font-medium ${isCheating ? "text-red-400" : "text-emerald-400"}`}>
                         {proctorMessage}
                     </span>
                 </div>
 
                 {isCheating && (
-                    <div className="absolute inset-0 z-30 flex items-center justify-center bg-red-900/40 backdrop-blur-sm animate-pulse">
-                        <AlertTriangle size={64} className="text-red-500" />
+                    <div className="absolute inset-0 z-30 flex items-center justify-center backdrop-blur-sm" style={{ background: 'rgba(239,68,68,0.1)' }}>
+                        <AlertTriangle size={48} className="text-red-500/50" />
                     </div>
                 )}
             </div>

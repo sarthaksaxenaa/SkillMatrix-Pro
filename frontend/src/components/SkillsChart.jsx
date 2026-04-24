@@ -18,52 +18,50 @@ const data = [
 
 const SkillsChart = () => {
   return (
-    <div className="glass-card p-6 w-full h-[400px] mb-8">
-      <h3 className="text-xl font-bold text-slate-200 mb-6 border-l-4 border-indigo-500 pl-3 uppercase tracking-wider">
-        Skill Growth Analysis
-      </h3>
+    <div className="surface p-6 w-full h-[400px]">
+      <p className="label mb-6">Skill Growth Analysis</p>
 
       <ResponsiveContainer width="100%" height="90%">
         <LineChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" vertical={false} />
           <XAxis
             dataKey="name"
             axisLine={false}
             tickLine={false}
-            tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 600 }}
+            tick={{ fill: '#71717a', fontSize: 12 }}
             dy={10}
           />
           <YAxis
             axisLine={false}
             tickLine={false}
-            tick={{ fill: '#94a3b8', fontSize: 12, fontWeight: 600 }}
+            tick={{ fill: '#71717a', fontSize: 12 }}
           />
           <Tooltip
             contentStyle={{
-              borderRadius: '12px',
-              border: '1px solid rgba(255,255,255,0.08)',
-              background: 'rgba(15,15,30,0.9)',
-              color: '#f1f5f9',
-              fontWeight: 600
+              borderRadius: '8px',
+              border: '1px solid rgba(255,255,255,0.06)',
+              background: '#111113',
+              color: '#fafafa',
+              fontSize: '12px'
             }}
           />
-          <Legend wrapperStyle={{ paddingTop: '20px', fontWeight: 600 }} />
+          <Legend wrapperStyle={{ paddingTop: '20px', fontSize: '12px', color: '#a1a1aa' }} />
 
           <Line
             type="monotone"
             dataKey="Average"
-            stroke="#10b981"
+            stroke="#52525b"
             strokeWidth={2}
-            dot={{ r: 4, strokeWidth: 2, stroke: '#050510' }}
+            dot={{ r: 4, strokeWidth: 2, stroke: '#09090b', fill: '#52525b' }}
             activeDot={{ r: 6 }}
           />
 
           <Line
             type="monotone"
             dataKey="You"
-            stroke="#6366f1"
-            strokeWidth={3}
-            dot={{ r: 4, strokeWidth: 2, stroke: '#050510' }}
+            stroke="#3b82f6"
+            strokeWidth={2}
+            dot={{ r: 4, strokeWidth: 2, stroke: '#09090b', fill: '#3b82f6' }}
             activeDot={{ r: 6 }}
           />
         </LineChart>
