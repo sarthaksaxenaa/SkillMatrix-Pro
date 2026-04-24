@@ -619,8 +619,6 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
 
           {/* --- FIXER MODAL --- */}
           {showFixModal && (
-            <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-              <div className="surface p-8 max-w-md w-full animate-enter-scale">
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-enter">
               <div className="bg-slate-900 border border-slate-700 w-full max-w-2xl rounded-3xl p-8 relative shadow-2xl">
                 <button onClick={() => setShowFixModal(false)} className="absolute top-6 right-6 text-slate-400 hover:text-white">
@@ -678,3 +676,4 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
 };
 
 export default Dashboard;
+
