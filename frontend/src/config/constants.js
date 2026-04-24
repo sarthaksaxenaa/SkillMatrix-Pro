@@ -13,9 +13,9 @@ export const CHART_COLORS = ['#6366f1', '#e2e8f0'];
 export const BAR_COLORS = ['#6366f1', '#3b82f6', '#10b981'];
 
 export const LOADING_STEPS = [
-  "Extracting text from your resume...",
-  "Analyzing technical keywords...",
-  "AI is judging your life choices (Roasting)...",
-  "Calculating Role Readiness Score...",
-  "Generating Study Roadmap..."
+  "Parsing document structure and extracting entities...",
+  "Cross-referencing skills against top industry job descriptions...",
+  "Running comparative analysis on technical gaps...",
+  "Calculating candidate percentile and readiness score...",
+  "Generating actionable feedback and impact metrics..."
 ];
