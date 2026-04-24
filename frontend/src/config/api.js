@@ -3,7 +3,12 @@
  * All components import the base URL from here instead of hardcoding it.
  */
 
-export const API_BASE_URL = 'http://localhost:8000';
+export const API_BASE_URL = 'http://localhost:5000/api';
+
+function getAuthHeaders() {
+  const token = localStorage.getItem('token');
+  return token ? { 'x-auth-token': token } : {};
+}
 
 /**
  * POST JSON data to an API endpoint.
@@ -11,7 +16,10 @@ export const API_BASE_URL = 'http://localhost:8000';
 export async function apiPost(endpoint, body) {
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 
+        'Content-Type': 'application/json',
+        ...getAuthHeaders()
+    },
     body: JSON.stringify(body),
   });
   return response.json();
@@ -23,7 +31,19 @@ export async function apiPost(endpoint, body) {
 export async function apiUpload(endpoint, formData) {
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     method: 'POST',
+    headers: { ...getAuthHeaders() },
     body: formData,
+  });
+  return response.json();
+}
+
+/**
+ * GET data from an API endpoint.
+ */
+export async function apiGet(endpoint) {
+  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    method: 'GET',
+    headers: { ...getAuthHeaders() },
   });
   return response.json();
 }

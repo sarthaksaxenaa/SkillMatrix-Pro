@@ -8,6 +8,8 @@ const axios = require('axios');
 const multer = require('multer');
 const FormData = require('form-data');
 const fs = require('fs');
+const auth = require('../middleware/auth');
+const Analysis = require('../models/Analysis');
 
 const router = express.Router();
 const upload = multer({ dest: 'uploads/' });
@@ -25,7 +27,7 @@ router.get('/ai-status', async (req, res) => {
 });
 
 // Upload a resume PDF and forward to AI for analysis
-router.post('/upload-resume', upload.single('resume'), async (req, res) => {
+router.post('/upload-resume', auth, upload.single('resume'), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: "No file uploaded" });
 
@@ -41,12 +43,54 @@ router.post('/upload-resume', upload.single('resume'), async (req, res) => {
     });
 
     fs.unlinkSync(req.file.path);
+
+    // Save result to MongoDB
+    if (!aiResponse.data.error) {
+        try {
+            const newAnalysis = new Analysis({
+                user: req.user.id,
+                role: jobRole,
+                fileName: req.file.originalname,
+                ...aiResponse.data
+            });
+            await newAnalysis.save();
+        } catch (dbErr) {
+            console.error("MongoDB Save Error:", dbErr.message);
+        }
+    }
+
     res.json(aiResponse.data);
   } catch (error) {
     console.error("Upload Error:", error.message);
+    if (req.file && fs.existsSync(req.file.path)) {
+        fs.unlinkSync(req.file.path);
+    }
     res.status(500).json({ error: "Failed to process resume" });
   }
 });
+
+// Fetch user's analysis history
+router.get('/history', auth, async (req, res) => {
+  try {
+    const history = await Analysis.find({ user: req.user.id }).sort({ date: -1 });
+    
+    // Format to match what frontend expects
+    const formattedHistory = history.map(h => ({
+        id: h._id,
+        role: h.role,
+        fileName: h.fileName,
+        date: new Date(h.date).toLocaleDateString(),
+        score: h.readiness_score,
+        fullData: h
+    }));
+    
+    res.json(formattedHistory);
+  } catch (error) {
+    console.error("History Fetch Error:", error.message);
+    res.status(500).json({ error: "Failed to fetch history" });
+  }
+});
+
 
 // Forward answer to AI for grading
 router.post('/submit-answer', async (req, res) => {
@@ -57,6 +101,17 @@ router.post('/submit-answer', async (req, res) => {
   } catch (error) {
     console.error("Grading Error:", error.message);
     res.status(500).json({ error: "Failed to grade answer" });
+  }
+});
+
+// Forward fix resume request to AI
+router.post('/fix-resume', auth, async (req, res) => {
+  try {
+    const aiResponse = await axios.post(`${AI_ENGINE_URL}/fix-resume`, req.body);
+    res.json(aiResponse.data);
+  } catch (error) {
+    console.error("Fix Resume Error:", error.message);
+    res.status(500).json({ fixed_points: ["Could not connect to AI Engine"] });
   }
 });
 

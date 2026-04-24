@@ -11,19 +11,34 @@ const Login = ({ onLogin }) => {
     e.preventDefault();
     setError('');
     setLoading(true);
-    const endpoint = isLogin ? `${API_BASE_URL}/login` : `${API_BASE_URL}/signup`;
+    const endpoint = isLogin ? `${API_BASE_URL}/login` : `${API_BASE_URL}/register`;
+    
+    // Map fullName to name for Express backend
+    const payload = {
+        email: formData.email,
+        password: formData.password,
+        ...(isLogin ? {} : { name: formData.fullName })
+    };
+
     try {
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
       const data = await response.json();
-      if (data.status === 'success') {
-        localStorage.setItem('userName', data.user || 'User');
+      
+      if (response.ok && data.token) {
+        // Login success
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('userName', data.user.name || 'User');
         onLogin();
+      } else if (response.ok && data.msg === 'User registered successfully') {
+        // Signup success, switch to login
+        setIsLogin(true);
+        setError('Account created! Please log in.');
       } else {
-        setError(data.detail || 'Authentication failed.');
+        setError(data.msg || data.error || data.detail || 'Authentication failed');
       }
     } catch {
       setError('Server connection failed. Is the backend running?');

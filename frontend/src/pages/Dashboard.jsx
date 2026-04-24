@@ -3,7 +3,7 @@ import {
   PieChart, Pie, Cell, BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid
 } from 'recharts';
 import SkillsChart from '../components/SkillsChart';
-import { apiUpload, apiPost } from '../config/api';
+import { apiUpload, apiPost, apiGet } from '../config/api';
 import { COMMON_ROLES, CHART_COLORS as COLORS, BAR_COLORS, LOADING_STEPS } from '../config/constants';
 
 // Inline SVG icon components (replacing Lucide)
@@ -59,8 +59,17 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
   };
 
   useEffect(() => {
-    const saved = localStorage.getItem('resumeHistory');
-    if (saved) setResumeHistory(JSON.parse(saved));
+    const fetchHistory = async () => {
+        try {
+            const history = await apiGet('/history');
+            if (Array.isArray(history)) {
+                setResumeHistory(history);
+            }
+        } catch (e) {
+            console.error("Failed to load history:", e);
+        }
+    };
+    fetchHistory();
   }, []);
 
   useEffect(() => {
@@ -99,16 +108,13 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
       score: data.readiness_score,
       fullData: data
     };
-    const updatedHistory = [newEntry, ...resumeHistory];
-    setResumeHistory(updatedHistory);
-    localStorage.setItem('resumeHistory', JSON.stringify(updatedHistory));
+    setResumeHistory(prev => [newEntry, ...prev]);
   };
 
   const deleteHistoryItem = (e, id) => {
     e.stopPropagation();
     const updated = resumeHistory.filter(item => item.id !== id);
     setResumeHistory(updated);
-    localStorage.setItem('resumeHistory', JSON.stringify(updated));
   };
 
   const loadHistoryItem = (item) => {
@@ -128,7 +134,7 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
     formData.append('job_role', targetRole);
 
     try {
-      const data = await apiUpload('/api/analyze-resume', formData);
+      const data = await apiUpload('/upload-resume', formData);
 
       // If Backend says it's not a resume, stop
       if (data.error === "Not a Resume") {

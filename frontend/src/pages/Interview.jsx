@@ -168,7 +168,7 @@ const Interview = ({ jobRole, mode, onEnd }) => {
     setLoading(true);
     if (isListening) toggleMic();
     try {
-      const res = await fetch(`${API_BASE_URL}/grade-answer`, {
+      const res = await fetch(`${API_BASE_URL}/submit-answer`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ question, user_answer: answer })
       });
