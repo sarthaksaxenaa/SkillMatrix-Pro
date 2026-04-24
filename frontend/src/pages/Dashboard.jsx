@@ -297,100 +297,117 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
                     </div>
                     
                     <div>
-                      <label className="label block mb-2">Resume PDF</label>
-                      <div className="border border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors relative group" style={{ borderColor: file ? 'rgba(59,130,246,0.5)' : 'var(--border)', background: file ? 'rgba(59,130,246,0.02)' : 'transparent' }}>
+                      <div className="flex justify-between items-end mb-2">
+                          <label className="label block">Resume PDF</label>
+                          <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest bg-zinc-800/50 px-2 py-0.5 rounded">Top 1% resumes score 85+</span>
+                      </div>
+                      <div className="border-2 border-dashed rounded-xl p-10 text-center cursor-pointer transition-all duration-300 relative group hover:border-blue-500/50 hover:bg-blue-500/[0.02]" style={{ borderColor: file ? 'rgba(59,130,246,0.5)' : 'var(--border)', background: file ? 'rgba(59,130,246,0.02)' : 'transparent' }}>
                         <input type="file" accept=".pdf" onChange={(e) => setFile(e.target.files[0])} className="absolute inset-0 opacity-0 cursor-pointer z-10" />
-                        <div className="flex flex-col items-center gap-2 group-hover:scale-[1.02] transition-transform">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={file ? "text-blue-400" : "text-zinc-500"}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
-                            <p className="text-sm font-medium text-zinc-300">{file ? <span className="text-blue-400">{file.name}</span> : "Upload PDF Resume"}</p>
+                        <div className="flex flex-col items-center gap-3 group-hover:-translate-y-1 transition-transform duration-300">
+                            <div className={`p-4 rounded-full transition-colors duration-300 ${file ? 'bg-blue-500/10' : 'bg-zinc-800/50 group-hover:bg-blue-500/10'}`}>
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={file ? "text-blue-400" : "text-zinc-400 group-hover:text-blue-400 transition-colors"}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+                            </div>
+                            <p className="text-base font-medium text-zinc-300">{file ? <span className="text-blue-400 font-semibold">{file.name}</span> : "Drag & drop or click to upload PDF"}</p>
                             <p className="text-xs text-zinc-500">Max file size: 5MB</p>
                         </div>
                       </div>
                     </div>
                     
-                    <button onClick={handleAnalyze} className="btn-primary w-full py-3.5 text-sm flex items-center justify-center gap-2 group shadow-lg shadow-blue-500/10">
-                      Check Job Readiness
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="group-hover:translate-x-1 transition-transform"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-                    </button>
-
-                    <div className="flex items-center justify-center gap-2 text-xs text-zinc-500 pt-2">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                        <span>Your data is secure. We never store or share your resume.</span>
+                    <div className="pt-2">
+                        <button onClick={handleAnalyze} className="btn-primary w-full py-4 text-sm font-semibold flex items-center justify-center gap-2 group shadow-lg shadow-blue-500/10 hover:shadow-blue-500/20 transition-all">
+                          Check Job Readiness
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="group-hover:translate-x-1 transition-transform"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                        </button>
+                        
+                        <div className="flex justify-between items-center mt-3 text-xs text-zinc-500 px-1">
+                            <div className="flex items-center gap-2">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                <span>We never store your resume.</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-zinc-400">
+                                <ClockIcon size={12} />
+                                <span>Takes 10–15s to generate detailed report</span>
+                            </div>
+                        </div>
                     </div>
                   </div>
                 </div>
 
                 {/* Right Column: Stats & Trust */}
                 <div className="lg:col-span-5 space-y-6">
-                    
-                    {/* Stats Ribbon */}
-                    <div className="flex items-center gap-4 py-4 border-b border-zinc-800/50">
-                        <div>
-                            <div className="text-2xl font-bold text-white">12k+</div>
-                            <div className="text-xs text-zinc-500">Resumes analyzed</div>
+                    <div className="surface p-6 rounded-2xl flex flex-col gap-8 h-full shadow-xl">
+                        
+                        {/* Stats Ribbon */}
+                        <div className="flex justify-between items-center px-2">
+                            <div>
+                                <div className="text-2xl font-bold text-white">12k+</div>
+                                <div className="text-xs text-zinc-500 mt-0.5">Resumes analyzed</div>
+                            </div>
+                            <div className="w-px h-8 bg-zinc-800"></div>
+                            <div className="text-right">
+                                <div className="text-2xl font-bold text-emerald-400">98%</div>
+                                <div className="text-xs text-zinc-500 mt-0.5">Extraction accuracy</div>
+                            </div>
                         </div>
-                        <div className="w-px h-8 bg-zinc-800"></div>
-                        <div>
-                            <div className="text-2xl font-bold text-emerald-400">98%</div>
-                            <div className="text-xs text-zinc-500">Accuracy rate</div>
-                        </div>
-                    </div>
 
-                    {/* Recent History Shortcut */}
-                    <div>
-                        <p className="label mb-4">Recent Activity</p>
-                        {resumeHistory.length > 0 ? (
-                            <div onClick={() => loadHistoryItem(resumeHistory[0])} className="surface-interactive p-5 group">
-                                <div className="flex items-center justify-between mb-4">
-                                    <div className="flex items-center gap-3">
-                                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold border ${resumeHistory[0].score >= 80 ? 'text-emerald-400 border-emerald-500/20 bg-emerald-500/8' : resumeHistory[0].score >= 50 ? 'text-amber-400 border-amber-500/20 bg-amber-500/8' : 'text-red-400 border-red-500/20 bg-red-500/8'}`}>
-                                            {resumeHistory[0].score}
+                        <hr className="border-zinc-800/60" />
+
+                        {/* Recent History Shortcut */}
+                        <div>
+                            <p className="label mb-4 px-2">Recent Activity</p>
+                            {resumeHistory.length > 0 ? (
+                                <div onClick={() => loadHistoryItem(resumeHistory[0])} className="surface-interactive p-4 group border border-transparent hover:border-zinc-700">
+                                    <div className="flex items-center justify-between mb-3">
+                                        <div className="flex items-center gap-4">
+                                            <div className={`w-12 h-12 rounded-xl flex flex-col items-center justify-center border shadow-sm ${resumeHistory[0].score >= 80 ? 'border-emerald-500/30 bg-emerald-500/10' : resumeHistory[0].score >= 50 ? 'border-amber-500/30 bg-amber-500/10' : 'border-red-500/30 bg-red-500/10'}`}>
+                                                <span className={`text-lg font-bold leading-none ${resumeHistory[0].score >= 80 ? 'text-emerald-400' : resumeHistory[0].score >= 50 ? 'text-amber-400' : 'text-red-400'}`}>{resumeHistory[0].score}</span>
+                                            </div>
+                                            <div>
+                                                <p className="font-medium text-sm text-zinc-200">{resumeHistory[0].role}</p>
+                                                <p className="text-xs text-zinc-500 mt-1">{resumeHistory[0].score >= 80 ? 'Top Tier' : resumeHistory[0].score >= 50 ? 'Above Average' : 'Needs Work'} • {resumeHistory[0].date}</p>
+                                            </div>
+                                        </div>
+                                        <span className="text-zinc-500 group-hover:text-white transition-colors bg-zinc-800/50 p-2 rounded-lg">
+                                            <ChevronRightIcon size={16} />
+                                        </span>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="p-5 border border-dashed border-zinc-800 rounded-xl opacity-50 select-none bg-zinc-900/50">
+                                    <div className="flex gap-4 items-center animate-pulse">
+                                        <div className="w-12 h-12 bg-zinc-800 rounded-xl"></div>
+                                        <div className="space-y-2">
+                                            <div className="h-4 w-24 bg-zinc-800 rounded"></div>
+                                            <div className="h-3 w-32 bg-zinc-800 rounded"></div>
+                                        </div>
+                                    </div>
+                                    <p className="text-xs text-zinc-500 mt-5 text-center">Analyze a resume to see it here</p>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Feature Highlights */}
+                        <div className="flex-1">
+                            <p className="label mb-5 px-2">Engine Capabilities</p>
+                            <ul className="space-y-5 px-2">
+                                {[
+                                    { title: 'Brutal AI Roast', desc: 'No sugar-coating. See exactly why you are getting rejected.' },
+                                    { title: 'Missing Skills Gap', desc: 'Identify the exact keywords the ATS is filtering you out for.' },
+                                    { title: 'Resume Fixer AI', desc: 'Auto-generate powerful, impact-driven bullet points.' }
+                                ].map((feat, idx) => (
+                                    <li key={idx} className="flex gap-3.5">
+                                        <div className="mt-0.5 shrink-0 bg-blue-500/10 p-1.5 rounded-md text-blue-400">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
                                         </div>
                                         <div>
-                                            <p className="font-medium text-sm text-white">{resumeHistory[0].role}</p>
-                                            <p className="text-xs text-zinc-500">{resumeHistory[0].date}</p>
+                                            <p className="text-sm font-semibold text-zinc-200">{feat.title}</p>
+                                            <p className="text-xs text-zinc-500 mt-1 leading-relaxed">{feat.desc}</p>
                                         </div>
-                                    </div>
-                                    <span className="text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-                                    </span>
-                                </div>
-                                <p className="text-xs text-zinc-400 border-t border-zinc-800 pt-3">Click to view full analysis</p>
-                            </div>
-                        ) : (
-                            <div className="surface p-6 opacity-50 select-none">
-                                <div className="flex gap-4 items-center animate-pulse">
-                                    <div className="w-12 h-12 bg-zinc-800 rounded-xl"></div>
-                                    <div className="space-y-2">
-                                        <div className="h-4 w-24 bg-zinc-800 rounded"></div>
-                                        <div className="h-3 w-32 bg-zinc-800 rounded"></div>
-                                    </div>
-                                </div>
-                                <p className="text-xs text-zinc-500 mt-6 text-center">Analyze a resume to see it here</p>
-                            </div>
-                        )}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
                     </div>
-
-                    {/* Feature Highlights */}
-                    <div className="surface p-6">
-                        <p className="label mb-4">What you get</p>
-                        <ul className="space-y-4">
-                            {[
-                                { title: 'Brutal AI Roast', desc: 'No sugar-coating. See exactly why you are getting rejected.' },
-                                { title: 'Missing Skills Gap', desc: 'Identify the exact keywords the ATS is filtering you out for.' },
-                                { title: 'Resume Fixer AI', desc: 'Auto-generate powerful, impact-driven bullet points.' }
-                            ].map((feat, idx) => (
-                                <li key={idx} className="flex gap-3">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-blue-400 mt-0.5 shrink-0"><polyline points="20 6 9 17 4 12"/></svg>
-                                    <div>
-                                        <p className="text-sm font-medium text-zinc-200">{feat.title}</p>
-                                        <p className="text-xs text-zinc-500 mt-0.5">{feat.desc}</p>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
                 </div>
               </div>
             </div>
