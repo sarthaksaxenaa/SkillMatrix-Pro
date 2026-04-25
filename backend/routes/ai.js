@@ -26,8 +26,8 @@ router.get('/ai-status', async (req, res) => {
   }
 });
 
-// Upload a resume PDF and forward to AI for analysis
-router.post('/upload-resume', auth, upload.single('resume'), async (req, res) => {
+// Upload a resume PDF and forward to AI for analysis (no auth needed — stateless analysis)
+router.post('/upload-resume', upload.single('resume'), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: "No file uploaded" });
 
@@ -38,26 +38,11 @@ router.post('/upload-resume', auth, upload.single('resume'), async (req, res) =>
     formData.append('file', fs.createReadStream(req.file.path));
     formData.append('job_role', jobRole);
 
-    const aiResponse = await axios.post(`${AI_ENGINE_URL}/analyze-resume`, formData, {
+    const aiResponse = await axios.post(`${AI_ENGINE_URL}/api/analyze-resume`, formData, {
       headers: { ...formData.getHeaders() },
     });
 
     fs.unlinkSync(req.file.path);
-
-    // Save result to MongoDB
-    if (!aiResponse.data.error) {
-        try {
-            const newAnalysis = new Analysis({
-                user: req.user.id,
-                role: jobRole,
-                fileName: req.file.originalname,
-                ...aiResponse.data
-            });
-            await newAnalysis.save();
-        } catch (dbErr) {
-            console.error("MongoDB Save Error:", dbErr.message);
-        }
-    }
 
     res.json(aiResponse.data);
   } catch (error) {
@@ -104,8 +89,8 @@ router.post('/submit-answer', async (req, res) => {
   }
 });
 
-// Forward fix resume request to AI
-router.post('/fix-resume', auth, async (req, res) => {
+// Forward fix resume request to AI (no auth needed — stateless)
+router.post('/fix-resume', async (req, res) => {
   try {
     const aiResponse = await axios.post(`${AI_ENGINE_URL}/fix-resume`, req.body);
     res.json(aiResponse.data);

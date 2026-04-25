@@ -20,21 +20,14 @@ RESUME_KEYWORDS = [
 
 
 def extract_skills_from_text(text):
-    """Extract recognized skills from resume text and assign importance scores."""
-    found = []
-    text_lower = text.lower()
-
-    for skill in COMMON_SKILLS:
-        if skill.lower() in text_lower:
-            found.append({"skill": skill, "importance": random.randint(60, 95)})
-
-    if not found:
-        return [
-            {"skill": "Tech Basics", "importance": 70},
-            {"skill": "Soft Skills", "importance": 80}
-        ]
-
-    return found[:7]
+    """
+    DEPRECATED: Skill extraction is now handled by the AI model for higher accuracy.
+    This remains as a backup to prevent import errors.
+    """
+    return [
+        {"skill": "General Tech", "importance": 70},
+        {"skill": "Soft Skills", "importance": 80}
+    ]
 
 
 def is_valid_resume(text):

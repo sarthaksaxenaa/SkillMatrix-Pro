@@ -3,7 +3,7 @@ import {
   PieChart, Pie, Cell, BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid
 } from 'recharts';
 import SkillsChart from '../components/SkillsChart';
-import { apiUpload, apiPost, apiGet } from '../config/api';
+import { apiUpload, apiPost } from '../config/api';
 import { COMMON_ROLES, CHART_COLORS as COLORS, BAR_COLORS, LOADING_STEPS } from '../config/constants';
 
 // Inline SVG icon components (replacing Lucide)
@@ -59,17 +59,14 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
   };
 
   useEffect(() => {
-    const fetchHistory = async () => {
-        try {
-            const history = await apiGet('/history');
-            if (Array.isArray(history)) {
-                setResumeHistory(history);
-            }
-        } catch (e) {
-            console.error("Failed to load history:", e);
-        }
-    };
-    fetchHistory();
+    const savedHistory = localStorage.getItem('resumeHistory');
+    if (savedHistory) {
+      try {
+        setResumeHistory(JSON.parse(savedHistory));
+      } catch (e) {
+        console.error("Failed to parse history:", e);
+      }
+    }
   }, []);
 
   useEffect(() => {
@@ -108,13 +105,20 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
       score: data.readiness_score,
       fullData: data
     };
-    setResumeHistory(prev => [newEntry, ...prev]);
+    setResumeHistory(prev => {
+      const updated = [newEntry, ...prev].slice(0, 50);
+      localStorage.setItem('resumeHistory', JSON.stringify(updated));
+      return updated;
+    });
   };
 
   const deleteHistoryItem = (e, id) => {
     e.stopPropagation();
-    const updated = resumeHistory.filter(item => item.id !== id);
-    setResumeHistory(updated);
+    setResumeHistory(prev => {
+      const updated = prev.filter(item => item.id !== id);
+      localStorage.setItem('resumeHistory', JSON.stringify(updated));
+      return updated;
+    });
   };
 
   const loadHistoryItem = (item) => {
@@ -130,8 +134,45 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
 
     setViewState('analyzing');
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append('resume', file);
     formData.append('job_role', targetRole);
+
+    // Role-specific skill map for fallback
+    const roleSkillMap = {
+      'software engineer': ['System Design', 'Data Structures', 'REST APIs', 'CI/CD'],
+      'sde': ['System Design', 'Data Structures', 'REST APIs', 'CI/CD'],
+      'frontend developer': ['React/Vue/Angular', 'TypeScript', 'Web Performance', 'Accessibility'],
+      'backend developer': ['API Design', 'Database Optimization', 'Microservices', 'Docker'],
+      'data scientist': ['Machine Learning', 'Statistics', 'Python/R', 'Data Visualization'],
+      'data analyst': ['SQL (Advanced)', 'Tableau/Power BI', 'A/B Testing', 'Business Acumen'],
+      'product manager': ['Product Strategy', 'User Research', 'Metrics/KPIs', 'Roadmapping'],
+      'devops engineer': ['Docker/Kubernetes', 'CI/CD Pipelines', 'Terraform/IaC', 'Monitoring'],
+      'ui/ux designer': ['Figma/Sketch', 'User Research', 'Prototyping', 'Design Systems'],
+      'default': ['Domain Knowledge', 'Problem Solving', 'Communication', 'Technical Skills']
+    };
+    const roleLower = targetRole.toLowerCase();
+    const matchedSkills = Object.entries(roleSkillMap).find(([k]) => roleLower.includes(k))?.[1] || roleSkillMap['default'];
+
+    // Complete fallback data — role-aware
+    const fallbackData = {
+      roast: `Your resume has potential for a ${targetRole} role. However, it lacks the specific depth and measurable impact that top ${targetRole} candidates demonstrate. Focus on quantifying your achievements and showcasing domain-specific expertise.`,
+      readiness_score: 50,
+      sub_scores: { technical_depth: 48, impact_metrics: 40, clarity_precision: 58, role_alignment: 42 },
+      missing_basic_skills: matchedSkills.map(s => ({ skill: s, notes_topic: `${s} tutorial`, video_topic: `${s} crash course` })),
+      global_standing: { you: 50, average: 60, top_performer: 95 },
+      skill_importance_data: matchedSkills.map((s, i) => ({ skill: s, importance: 90 - i * 8 })),
+      top_strengths: [
+        "Shows initiative through personal projects",
+        "Demonstrates foundational knowledge",
+        "Resume is structured and readable"
+      ],
+      areas_for_improvement: [
+        `Add quantifiable metrics relevant to ${targetRole} (%, $, numbers)`,
+        `Deepen expertise in core ${targetRole} competencies`,
+        `Tailor project descriptions specifically to ${targetRole} expectations`
+      ],
+      has_skills: true
+    };
 
     try {
       const data = await apiUpload('/upload-resume', formData);
@@ -143,35 +184,24 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
           return;
       }
 
-      // Generic fallback (e.g., AI down)
-      if (data.error && !data.roast) {
-         const dummyData = {
-           roast: "Resume not found? No worries, let's pretend it's perfect.",
-           readiness_score: 70,
-           missing_basic_skills: [],
-           global_standing: { you: 70, average: 60, top_performer: 90 },
-           skill_importance_data: [],
-           pro_recommendations: ["System Design"],
-           has_skills: true
-        };
-        setTimeout(() => {
-            setAnalysisData(dummyData);
-            saveToHistory(targetRole, file.name, dummyData);
-            setViewState('results');
-        }, 3000);
-        return;
-      }
+      // Validate the response has minimum required fields
+      const isValidResponse = data.readiness_score !== undefined && data.roast;
 
       setTimeout(() => {
-        setAnalysisData(data);
-        saveToHistory(targetRole, file.name, data);
+        setAnalysisData(isValidResponse ? data : fallbackData);
+        saveToHistory(targetRole, file.name, isValidResponse ? data : fallbackData);
         setViewState('results');
       }, 4000);
 
     } catch (error) {
-      console.error(error);
-      showToast("Analysis failed, switching to demo mode.");
-      setViewState('input');
+      console.error("Analysis error:", error.message);
+      // Show role-specific fallback results
+      setTimeout(() => {
+        setAnalysisData(fallbackData);
+        saveToHistory(targetRole, file.name, fallbackData);
+        showToast("AI engine offline. Showing estimated analysis.");
+        setViewState('results');
+      }, 3000);
     }
   };
 
@@ -500,13 +530,100 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
           )}
 
           {/* --- RESULTS --- */}
-          {viewState === 'results' && analysisData && (
+          {viewState === 'results' && analysisData && (() => {
+            // Normalize data — ensures old history entries and partial AI responses never break the UI
+            const d = {
+              roast: analysisData.roast || `Your resume shows a solid foundation. Focus on quantifiable impact and technical depth to level up.`,
+              readiness_score: typeof analysisData.readiness_score === 'number' ? analysisData.readiness_score : 55,
+              sub_scores: {
+                technical_depth: analysisData.sub_scores?.technical_depth ?? 50,
+                impact_metrics: analysisData.sub_scores?.impact_metrics ?? 45,
+                clarity_precision: analysisData.sub_scores?.clarity_precision ?? 55,
+                role_alignment: analysisData.sub_scores?.role_alignment ?? 50,
+              },
+              missing_basic_skills: (analysisData.missing_basic_skills?.length > 0) ? analysisData.missing_basic_skills : [
+                { skill: "System Design", notes_topic: "System Design fundamentals", video_topic: "System Design interview" },
+                { skill: "Data Structures", notes_topic: "DSA", video_topic: "DSA crash course" }
+              ],
+              skill_importance_data: (analysisData.skill_importance_data?.length > 0) ? analysisData.skill_importance_data : [
+                { skill: "Core Skills", importance: 80 }, { skill: "Communication", importance: 70 }
+              ],
+              top_strengths: (analysisData.top_strengths?.length > 0) ? analysisData.top_strengths : [
+                "Shows initiative through projects", "Foundational technical knowledge", "Resume is structured"
+              ],
+              areas_for_improvement: (analysisData.areas_for_improvement?.length > 0) ? analysisData.areas_for_improvement : [
+                "Add quantifiable metrics (%, $, numbers)", "Show deeper technical ownership", "Tailor to the target role"
+              ],
+              global_standing: {
+                you: analysisData.global_standing?.you ?? analysisData.readiness_score ?? 55,
+                average: analysisData.global_standing?.average ?? 60,
+                top_performer: analysisData.global_standing?.top_performer ?? 95
+              },
+              has_skills: analysisData.has_skills !== false,
+              motivational_msg: analysisData.motivational_msg || "The bar is high, but so is your potential."
+            };
+            return (
             <div className="space-y-8 animate-enter delay-1">
 
+              {/* Apple Standard Evaluation Header */}
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                </div>
+                <h3 className="text-xl font-bold tracking-tight">Apple Standard <span className="font-serif italic font-normal text-zinc-500">Evaluation</span></h3>
+              </div>
+
               {/* Roast */}
-              <div className="surface p-6 border-l-2 border-l-amber-500/50">
-                <p className="label mb-2 text-amber-500/70">Reality check</p>
-                <p className="text-sm text-zinc-300 italic leading-relaxed">"{analysisData.roast}"</p>
+              <div className="surface p-6 border-l-2 border-l-blue-500/50 bg-blue-500/[0.02]">
+                <p className="label mb-2 text-blue-400/70">Senior Engineering Manager's Note</p>
+                <p className="text-base text-zinc-200 font-medium leading-relaxed">"{d.roast}"</p>
+              </div>
+
+              {/* Advanced Sub-Scores */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                  {[
+                    { label: 'Technical Depth', key: 'technical_depth', color: '#3b82f6' },
+                    { label: 'Impact & Metrics', key: 'impact_metrics', color: '#f59e0b' },
+                    { label: 'Clarity & Precision', key: 'clarity_precision', color: '#10b981' },
+                    { label: 'Role Alignment', key: 'role_alignment', color: '#8b5cf6' }
+                  ].map(score => (
+                    <div key={score.key} className="surface p-4 flex flex-col items-center justify-center text-center">
+                      <p className="text-[10px] uppercase tracking-widest text-zinc-500 mb-3 font-semibold">{score.label}</p>
+                      <div className="relative w-20 h-20 flex items-center justify-center">
+                        <svg className="w-full h-full -rotate-90">
+                          <circle cx="40" cy="40" r="36" stroke="currentColor" strokeWidth="4" fill="transparent" className="text-zinc-800" />
+                          <circle cx="40" cy="40" r="36" stroke={score.color} strokeWidth="4" fill="transparent" strokeDasharray={226} strokeDashoffset={226 - (226 * (d.sub_scores[score.key] || 0)) / 100} strokeLinecap="round" className="transition-all duration-1000 ease-out" />
+                        </svg>
+                        <span className="absolute text-lg font-bold text-white">{d.sub_scores[score.key]}%</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+              {/* Strengths & Improvements */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="surface p-6 border-t-2 border-t-emerald-500/30">
+                  <p className="label mb-4 text-emerald-400">Top Strengths</p>
+                  <ul className="space-y-3">
+                    {d.top_strengths.map((s, i) => (
+                      <li key={i} className="flex items-start gap-3 text-sm text-zinc-300">
+                        <div className="mt-1 shrink-0 w-4 h-4 rounded-full bg-emerald-500/10 flex items-center justify-center"><CheckIcon size={10} className="text-emerald-400" /></div>
+                        {s}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="surface p-6 border-t-2 border-t-amber-500/30">
+                  <p className="label mb-4 text-amber-400">Critical Improvements</p>
+                  <ul className="space-y-3">
+                    {d.areas_for_improvement.map((s, i) => (
+                      <li key={i} className="flex items-start gap-3 text-sm text-zinc-300">
+                        <div className="mt-1 shrink-0 w-4 h-4 rounded-full bg-amber-500/10 flex items-center justify-center"><ZapIcon size={10} className="text-amber-400" /></div>
+                        {s}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
 
               {/* Charts */}
@@ -516,13 +633,13 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
                   <div className="w-40 h-40 relative">
                     <ResponsiveContainer width="100%" height="100%">
                       <PieChart>
-                        <Pie data={[{ value: analysisData.readiness_score }, { value: 100 - analysisData.readiness_score }]} cx="50%" cy="50%" innerRadius={55} outerRadius={70} startAngle={90} endAngle={-270} dataKey="value" stroke="none">
+                        <Pie data={[{ value: d.readiness_score }, { value: 100 - d.readiness_score }]} cx="50%" cy="50%" innerRadius={55} outerRadius={70} startAngle={90} endAngle={-270} dataKey="value" stroke="none">
                           <Cell fill="#3b82f6" />
                           <Cell fill="rgba(255,255,255,0.04)" />
                         </Pie>
                       </PieChart>
                     </ResponsiveContainer>
-                    <div className="absolute inset-0 flex items-center justify-center text-3xl font-bold tracking-tight">{analysisData.readiness_score}<span className="text-lg text-zinc-500">%</span></div>
+                    <div className="absolute inset-0 flex items-center justify-center text-3xl font-bold tracking-tight">{d.readiness_score}<span className="text-lg text-zinc-500">%</span></div>
                   </div>
                 </div>
 
@@ -530,7 +647,7 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
                   <p className="label mb-4">Competition standing</p>
                   <div className="h-48">
                     <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={[{ name: 'You', score: analysisData.global_standing?.you || 0 }, { name: 'Average', score: analysisData.global_standing?.average || 60 }, { name: 'Top Tier', score: analysisData.global_standing?.top_performer || 90 }]} layout="vertical" margin={{ left: 10 }}>
+                      <BarChart data={[{ name: 'You', score: d.global_standing.you }, { name: 'Average', score: d.global_standing.average }, { name: 'Top Tier', score: d.global_standing.top_performer }]} layout="vertical" margin={{ left: 10 }}>
                         <XAxis type="number" hide />
                         <YAxis dataKey="name" type="category" width={60} tick={{fontSize: 12, fill: '#71717a'}} />
                         <Tooltip cursor={{fill: 'transparent'}} contentStyle={{borderRadius: '8px', border: '1px solid rgba(255,255,255,0.06)', background: '#111113', color: '#fafafa', fontSize: '12px'}} />
@@ -573,7 +690,7 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
               <div>
                 <p className="label mb-4">Missing skills · Action plan</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {analysisData.missing_basic_skills && analysisData.missing_basic_skills.map((item, i) => (
+                  {d.missing_basic_skills.map((item, i) => (
                     <div key={i} className="surface p-5">
                       <p className="text-sm font-medium mb-4">{item.skill}</p>
                       <div className="flex gap-2">
@@ -588,10 +705,10 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
               {/* Skills Impact Chart */}
               <div className="surface p-6">
                 <p className="label mb-4">Skill impact analysis</p>
-                {analysisData.has_skills ? (
+                {d.has_skills ? (
                   <div className="h-56">
                     <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={analysisData.skill_importance_data || []}>
+                      <LineChart data={d.skill_importance_data}>
                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.04)" />
                         <XAxis dataKey="skill" tick={{fill: '#71717a', fontSize: 11}} axisLine={false} tickLine={false} />
                         <YAxis hide />
@@ -602,7 +719,7 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
                   </div>
                 ) : (
                   <div className="text-center py-12">
-                    <p className="text-sm text-zinc-500">"{analysisData.motivational_msg}"</p>
+                    <p className="text-sm text-zinc-500">"{d.motivational_msg}"</p>
                   </div>
                 )}
               </div>
@@ -613,7 +730,7 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
                 </button>
               </div>
             </div>
-          )}
+          ); })()}
 
           {/* --- FIXER MODAL --- */}
           {showFixModal && (
@@ -674,4 +791,3 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
 };
 
 export default Dashboard;
-

@@ -7,7 +7,7 @@ export const API_BASE_URL = 'http://localhost:5000/api';
 
 function getAuthHeaders() {
   const token = localStorage.getItem('token');
-  return token ? { 'x-auth-token': token } : {};
+  return token ? { 'Authorization': `Bearer ${token}` } : {};
 }
 
 /**
@@ -34,7 +34,11 @@ export async function apiUpload(endpoint, formData) {
     headers: { ...getAuthHeaders() },
     body: formData,
   });
-  return response.json();
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.msg || data.error || `Request failed with status ${response.status}`);
+  }
+  return data;
 }
 
 /**
