@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  PieChart, Pie, Cell, BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid
-} from 'recharts';
+// Recharts removed from Dashboard — all charts now use custom SVG + SkillsChart component
 import SkillsChart from '../components/SkillsChart';
 import { apiUpload, apiPost } from '../config/api';
 import { COMMON_ROLES, CHART_COLORS as COLORS, BAR_COLORS, LOADING_STEPS } from '../config/constants';
@@ -562,116 +560,296 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
               has_skills: analysisData.has_skills !== false,
               motivational_msg: analysisData.motivational_msg || "The bar is high, but so is your potential."
             };
+
+            // Gauge calculations
+            const score = d.readiness_score;
+            const circumference = 2 * Math.PI * 54;
+            const offset = circumference - (circumference * score) / 100;
+            const verdict = score >= 80 ? 'Top Tier' : score >= 65 ? 'Competitive' : score >= 45 ? 'Developing' : 'Needs Work';
+            const verdictColor = score >= 80 ? '#22c55e' : score >= 65 ? '#3b82f6' : score >= 45 ? '#f59e0b' : '#ef4444';
+            const gradStart = score >= 65 ? '#059669' : score >= 45 ? '#d97706' : '#dc2626';
+            const gradEnd = score >= 65 ? '#3b82f6' : score >= 45 ? '#f59e0b' : '#f97316';
+
+            // Sub-score config
+            const subScoreConfig = [
+              { label: 'Technical Depth', key: 'technical_depth', color: '#3b82f6', icon: '◆' },
+              { label: 'Impact & Metrics', key: 'impact_metrics', color: '#f59e0b', icon: '▲' },
+              { label: 'Clarity & Precision', key: 'clarity_precision', color: '#10b981', icon: '●' },
+              { label: 'Role Alignment', key: 'role_alignment', color: '#8b5cf6', icon: '■' },
+            ];
+
+            // Average sub-score
+            const avgSub = Math.round(Object.values(d.sub_scores).reduce((a, b) => a + b, 0) / 4);
+
             return (
-            <div className="space-y-8 animate-enter delay-1">
+            <div className="space-y-6 animate-enter delay-1">
 
-              {/* Apple Standard Evaluation Header */}
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+              {/* ── EVALUATION HEADER ── */}
+              <div className="flex items-center justify-between analytics-card stagger-1">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-white flex items-center justify-center shadow-lg shadow-white/5">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#09090b" strokeWidth="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold tracking-tight leading-none">Performance <span style={{ fontFamily: 'var(--serif)', fontStyle: 'italic', fontWeight: 400, color: 'var(--text-secondary)' }}>Analysis</span></h3>
+                    <p className="text-[11px] text-zinc-600 mt-0.5">AI-powered evaluation for {targetRole}</p>
+                  </div>
                 </div>
-                <h3 className="text-xl font-bold tracking-tight">Apple Standard <span className="font-serif italic font-normal text-zinc-500">Evaluation</span></h3>
+                <div className="flex items-center gap-2">
+                  <div className="px-3 py-1.5 rounded-full border text-[10px] font-mono text-zinc-500 tracking-wider" style={{ borderColor: 'var(--border)' }}>
+                    {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                  </div>
+                </div>
               </div>
 
-              {/* Roast */}
-              <div className="surface p-6 border-l-2 border-l-blue-500/50 bg-blue-500/[0.02]">
-                <p className="label mb-2 text-blue-400/70">Senior Engineering Manager's Note</p>
-                <p className="text-base text-zinc-200 font-medium leading-relaxed">"{d.roast}"</p>
+              {/* ── HERO ROW: Score Gauge + Performance Breakdown ── */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+
+                {/* LEFT: Score Gauge */}
+                <div className="lg:col-span-4 surface p-8 flex flex-col items-center justify-center analytics-card stagger-2">
+                  <p className="label mb-6">Overall Readiness</p>
+
+                  {/* SVG Gauge */}
+                  <div className="relative w-44 h-44">
+                    <svg width="176" height="176" viewBox="0 0 120 120" className="w-full h-full">
+                      <defs>
+                        <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stopColor={gradStart} />
+                          <stop offset="100%" stopColor={gradEnd} />
+                        </linearGradient>
+                        <filter id="gaugeShadow">
+                          <feDropShadow dx="0" dy="0" stdDeviation="3" floodColor={gradEnd} floodOpacity="0.3"/>
+                        </filter>
+                      </defs>
+                      {/* Track */}
+                      <circle cx="60" cy="60" r="54" stroke="rgba(255,255,255,0.04)" strokeWidth="5" fill="none" />
+                      {/* Subtle tick marks */}
+                      {[0, 25, 50, 75, 100].map(tick => {
+                        const angle = ((tick / 100) * 360 - 90) * (Math.PI / 180);
+                        const x1 = 60 + 48 * Math.cos(angle);
+                        const y1 = 60 + 48 * Math.sin(angle);
+                        const x2 = 60 + 51 * Math.cos(angle);
+                        const y2 = 60 + 51 * Math.sin(angle);
+                        return <line key={tick} x1={x1} y1={y1} x2={x2} y2={y2} stroke="rgba(255,255,255,0.1)" strokeWidth="1" />;
+                      })}
+                      {/* Progress arc */}
+                      <circle
+                        cx="60" cy="60" r="54"
+                        stroke="url(#gaugeGrad)"
+                        strokeWidth="5"
+                        fill="none"
+                        strokeDasharray={circumference}
+                        strokeDashoffset={offset}
+                        strokeLinecap="round"
+                        transform="rotate(-90 60 60)"
+                        className="gauge-ring"
+                        filter="url(#gaugeShadow)"
+                      />
+                    </svg>
+                    {/* Center text */}
+                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                      <span className="text-5xl font-bold tracking-tighter">{score}</span>
+                      <span className="text-[10px] uppercase tracking-[0.15em] font-semibold mt-1" style={{ color: verdictColor }}>{verdict}</span>
+                    </div>
+                  </div>
+
+                  {/* Micro stats */}
+                  <div className="flex items-center gap-2.5 mt-7 text-[11px] text-zinc-600">
+                    <span className="flex items-center gap-1"><span className="text-emerald-500/70">✓</span> {d.top_strengths.length} strengths</span>
+                    <span className="w-0.5 h-0.5 rounded-full bg-zinc-700" />
+                    <span className="flex items-center gap-1"><span className="text-amber-500/70">!</span> {d.missing_basic_skills.length} gaps</span>
+                    <span className="w-0.5 h-0.5 rounded-full bg-zinc-700" />
+                    <span className="text-zinc-500 font-medium">{targetRole}</span>
+                  </div>
+
+                  {/* Avg sub-score footer */}
+                  <div className="mt-5 pt-4 border-t border-white/[0.04] w-full text-center">
+                    <span className="text-[10px] text-zinc-600 uppercase tracking-widest">Avg sub-score </span>
+                    <span className="text-sm font-bold font-mono ml-1" style={{ color: avgSub >= 65 ? '#22c55e' : avgSub >= 45 ? '#f59e0b' : '#ef4444' }}>{avgSub}</span>
+                  </div>
+                </div>
+
+                {/* RIGHT: Sub-Scores + Percentile */}
+                <div className="lg:col-span-8 space-y-4">
+
+                  {/* Sub-Score Bar Gauges */}
+                  <div className="surface p-6 analytics-card stagger-3">
+                    <div className="flex justify-between items-center mb-6">
+                      <p className="label">Performance Breakdown</p>
+                      <p className="text-[10px] text-zinc-600 font-mono">MAX: 100</p>
+                    </div>
+                    <div className="space-y-5">
+                      {subScoreConfig.map((item, i) => {
+                        const val = d.sub_scores[item.key];
+                        const status = val >= 70 ? 'Excellent' : val >= 50 ? 'Average' : 'Below avg';
+                        return (
+                          <div key={i}>
+                            <div className="flex justify-between items-center mb-2">
+                              <div className="flex items-center gap-2">
+                                <span className="text-[10px] opacity-50" style={{ color: item.color }}>{item.icon}</span>
+                                <span className="text-[13px] text-zinc-400 font-medium">{item.label}</span>
+                              </div>
+                              <div className="flex items-center gap-3">
+                                <span className="text-[10px] text-zinc-600 hidden sm:inline">{status}</span>
+                                <span className="text-sm font-mono font-bold tabular-nums" style={{ color: item.color }}>{val}</span>
+                              </div>
+                            </div>
+                            <div className="h-[6px] rounded-full bg-white/[0.03] overflow-hidden">
+                              <div
+                                className="h-full rounded-full gauge-bar-fill"
+                                style={{
+                                  width: `${val}%`,
+                                  background: `linear-gradient(90deg, ${item.color}66, ${item.color})`,
+                                  animationDelay: `${i * 120 + 200}ms`
+                                }}
+                              />
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Percentile Strip */}
+                  <div className="surface p-6 analytics-card stagger-4">
+                    <div className="flex justify-between items-center mb-6">
+                      <p className="label">Where You Stand</p>
+                      <p className="text-[10px] text-zinc-600">Global percentile scale</p>
+                    </div>
+                    <div className="relative pt-8 pb-6">
+                      {/* Background strip */}
+                      <div className="h-[6px] rounded-full percentile-strip relative">
+                        {/* Scale labels */}
+                        <div className="absolute -top-5 left-0 text-[9px] text-zinc-700 font-mono">0</div>
+                        <div className="absolute -top-5 left-1/4 text-[9px] text-zinc-700 font-mono">25</div>
+                        <div className="absolute -top-5 left-1/2 -translate-x-1/2 text-[9px] text-zinc-700 font-mono">50</div>
+                        <div className="absolute -top-5 left-3/4 text-[9px] text-zinc-700 font-mono">75</div>
+                        <div className="absolute -top-5 right-0 text-[9px] text-zinc-700 font-mono">100</div>
+
+                        {/* Markers */}
+                        {[
+                          { label: 'Average', value: d.global_standing.average, color: '#71717a', delay: '0.6s' },
+                          { label: 'You', value: d.global_standing.you, color: '#3b82f6', delay: '0.9s', highlight: true },
+                          { label: 'Top 1%', value: d.global_standing.top_performer, color: '#22c55e', delay: '1.2s' },
+                        ].map((m, i) => (
+                          <div
+                            key={i}
+                            className="absolute top-1/2 percentile-marker"
+                            style={{ left: `${Math.min(Math.max(m.value, 3), 97)}%`, animationDelay: m.delay }}
+                          >
+                            {/* Marker dot */}
+                            <div
+                              className={`w-4 h-4 rounded-full border-[2.5px] ${m.highlight ? 'shadow-lg' : ''}`}
+                              style={{
+                                borderColor: m.color,
+                                background: m.highlight ? m.color : '#09090b',
+                                boxShadow: m.highlight ? `0 0 12px ${m.color}40` : 'none',
+                              }}
+                            />
+                            {/* Label */}
+                            <div className="absolute top-5 left-1/2 -translate-x-1/2 whitespace-nowrap flex flex-col items-center">
+                              <span className="text-[10px] font-semibold" style={{ color: m.color }}>{m.value}</span>
+                              <span className="text-[9px] text-zinc-600 mt-0.5">{m.label}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
               </div>
 
-              {/* Advanced Sub-Scores */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                  {[
-                    { label: 'Technical Depth', key: 'technical_depth', color: '#3b82f6' },
-                    { label: 'Impact & Metrics', key: 'impact_metrics', color: '#f59e0b' },
-                    { label: 'Clarity & Precision', key: 'clarity_precision', color: '#10b981' },
-                    { label: 'Role Alignment', key: 'role_alignment', color: '#8b5cf6' }
-                  ].map(score => (
-                    <div key={score.key} className="surface p-4 flex flex-col items-center justify-center text-center">
-                      <p className="text-[10px] uppercase tracking-widest text-zinc-500 mb-3 font-semibold">{score.label}</p>
-                      <div className="relative w-20 h-20 flex items-center justify-center">
-                        <svg className="w-full h-full -rotate-90">
-                          <circle cx="40" cy="40" r="36" stroke="currentColor" strokeWidth="4" fill="transparent" className="text-zinc-800" />
-                          <circle cx="40" cy="40" r="36" stroke={score.color} strokeWidth="4" fill="transparent" strokeDasharray={226} strokeDashoffset={226 - (226 * (d.sub_scores[score.key] || 0)) / 100} strokeLinecap="round" className="transition-all duration-1000 ease-out" />
-                        </svg>
-                        <span className="absolute text-lg font-bold text-white">{d.sub_scores[score.key]}%</span>
+              {/* ── MANAGER'S NOTE (Roast) ── */}
+              <div className="surface p-6 analytics-card stagger-3" style={{ borderLeftWidth: 2, borderLeftColor: `${verdictColor}50`, background: `${verdictColor}04` }}>
+                <div className="flex items-start gap-4">
+                  <div className="shrink-0 mt-0.5 w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `${verdictColor}12` }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={verdictColor} strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase tracking-widest font-semibold mb-2" style={{ color: `${verdictColor}90` }}>Senior Engineering Manager's Assessment</p>
+                    <p className="text-[15px] text-zinc-200 font-medium leading-[1.7]">"{d.roast}"</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* ── STRENGTHS + IMPROVEMENTS ── */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="surface p-6 analytics-card stagger-4" style={{ borderTopWidth: 2, borderTopColor: 'rgba(34,197,94,0.25)' }}>
+                  <div className="flex items-center gap-2 mb-5">
+                    <div className="w-5 h-5 rounded-md bg-emerald-500/10 flex items-center justify-center">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <p className="text-[11px] uppercase tracking-widest font-semibold text-emerald-500/80">Strengths Identified</p>
+                  </div>
+                  <ul className="space-y-3.5">
+                    {d.top_strengths.map((s, i) => (
+                      <li key={i} className="flex items-start gap-3">
+                        <div className="mt-[5px] shrink-0 w-1.5 h-1.5 rounded-full bg-emerald-500/40" />
+                        <span className="text-[13px] text-zinc-300 leading-relaxed">{s}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="surface p-6 analytics-card stagger-5" style={{ borderTopWidth: 2, borderTopColor: 'rgba(245,158,11,0.25)' }}>
+                  <div className="flex items-center gap-2 mb-5">
+                    <div className="w-5 h-5 rounded-md bg-amber-500/10 flex items-center justify-center">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="3"><path d="M12 9v4M12 17h.01"/></svg>
+                    </div>
+                    <p className="text-[11px] uppercase tracking-widest font-semibold text-amber-500/80">Areas to Improve</p>
+                  </div>
+                  <ul className="space-y-3.5">
+                    {d.areas_for_improvement.map((s, i) => (
+                      <li key={i} className="flex items-start gap-3">
+                        <div className="mt-[5px] shrink-0 w-1.5 h-1.5 rounded-full bg-amber-500/40" />
+                        <span className="text-[13px] text-zinc-300 leading-relaxed">{s}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              {/* ── RADAR + SKILL MAP ── */}
+              {d.has_skills && <SkillsChart data={d} />}
+
+              {/* ── MISSING SKILLS ACTION PLAN ── */}
+              <div className="analytics-card stagger-7">
+                <div className="flex items-center justify-between mb-4">
+                  <p className="label">Skill Gaps · Action Plan</p>
+                  <p className="text-[10px] text-zinc-600">{d.missing_basic_skills.length} skills to acquire</p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {d.missing_basic_skills.map((item, i) => (
+                    <div key={i} className="surface p-5 group hover:border-blue-500/20 transition-colors">
+                      <div className="flex items-center gap-2 mb-4">
+                        <div className="w-6 h-6 rounded-md bg-red-500/8 flex items-center justify-center">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2" opacity="0.7"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                        </div>
+                        <p className="text-[13px] font-semibold text-zinc-200">{item.skill}</p>
+                      </div>
+                      <div className="flex gap-2">
+                        <button onClick={() => openNotes(item.notes_topic)} className="btn-secondary flex-1 py-2 text-xs flex items-center justify-center gap-1.5">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                          Learn
+                        </button>
+                        <button onClick={() => openVideo(item.video_topic)} className="btn-secondary flex-1 py-2 text-xs flex items-center justify-center gap-1.5">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                          Watch
+                        </button>
                       </div>
                     </div>
                   ))}
                 </div>
-
-              {/* Strengths & Improvements */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="surface p-6 border-t-2 border-t-emerald-500/30">
-                  <p className="label mb-4 text-emerald-400">Top Strengths</p>
-                  <ul className="space-y-3">
-                    {d.top_strengths.map((s, i) => (
-                      <li key={i} className="flex items-start gap-3 text-sm text-zinc-300">
-                        <div className="mt-1 shrink-0 w-4 h-4 rounded-full bg-emerald-500/10 flex items-center justify-center"><CheckIcon size={10} className="text-emerald-400" /></div>
-                        {s}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="surface p-6 border-t-2 border-t-amber-500/30">
-                  <p className="label mb-4 text-amber-400">Critical Improvements</p>
-                  <ul className="space-y-3">
-                    {d.areas_for_improvement.map((s, i) => (
-                      <li key={i} className="flex items-start gap-3 text-sm text-zinc-300">
-                        <div className="mt-1 shrink-0 w-4 h-4 rounded-full bg-amber-500/10 flex items-center justify-center"><ZapIcon size={10} className="text-amber-400" /></div>
-                        {s}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
               </div>
 
-              {/* Charts */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                <div className="surface p-6 flex flex-col items-center justify-center">
-                  <p className="label mb-6">Readiness</p>
-                  <div className="w-40 h-40 relative">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie data={[{ value: d.readiness_score }, { value: 100 - d.readiness_score }]} cx="50%" cy="50%" innerRadius={55} outerRadius={70} startAngle={90} endAngle={-270} dataKey="value" stroke="none">
-                          <Cell fill="#3b82f6" />
-                          <Cell fill="rgba(255,255,255,0.04)" />
-                        </Pie>
-                      </PieChart>
-                    </ResponsiveContainer>
-                    <div className="absolute inset-0 flex items-center justify-center text-3xl font-bold tracking-tight">{d.readiness_score}<span className="text-lg text-zinc-500">%</span></div>
-                  </div>
-                </div>
-
-                <div className="surface p-6 lg:col-span-2">
-                  <p className="label mb-4">Competition standing</p>
-                  <div className="h-48">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={[{ name: 'You', score: d.global_standing.you }, { name: 'Average', score: d.global_standing.average }, { name: 'Top Tier', score: d.global_standing.top_performer }]} layout="vertical" margin={{ left: 10 }}>
-                        <XAxis type="number" hide />
-                        <YAxis dataKey="name" type="category" width={60} tick={{fontSize: 12, fill: '#71717a'}} />
-                        <Tooltip cursor={{fill: 'transparent'}} contentStyle={{borderRadius: '8px', border: '1px solid rgba(255,255,255,0.06)', background: '#111113', color: '#fafafa', fontSize: '12px'}} />
-                        <Bar dataKey="score" radius={[0, 6, 6, 0]} barSize={24}>
-                          <Cell fill="#3b82f6" />
-                          <Cell fill="#52525b" />
-                          <Cell fill="#22c55e" />
-                        </Bar>
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-              </div>
-
-              <SkillsChart />
-
-              {/* Actions */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* ── ACTIONS: Job Search + Resume Fixer ── */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 analytics-card stagger-8">
                 <div className="surface p-6">
-                  <p className="label mb-3">Job search</p>
-                  <p className="text-sm text-zinc-400 mb-4">Who is hiring for "{targetRole}"?</p>
+                  <p className="label mb-2">Job Search</p>
+                  <p className="text-[13px] text-zinc-500 mb-4">Who is hiring for <span className="text-zinc-300 font-medium">"{targetRole}"</span>?</p>
                   <div className="flex gap-2">
                     {['LinkedIn', 'Indeed', 'Glassdoor'].map(platform => (
-                      <button key={platform} onClick={() => openJobSearch(platform.toLowerCase())} className="btn-secondary flex-1 py-2 text-xs">
+                      <button key={platform} onClick={() => openJobSearch(platform.toLowerCase())} className="btn-secondary flex-1 py-2.5 text-xs">
                         {platform}
                       </button>
                     ))}
@@ -679,54 +857,17 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
                 </div>
                 <div className="surface p-6 flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium mb-1">Resume Fixer AI</p>
-                    <p className="text-xs text-zinc-500">Generate stronger bullet points.</p>
+                    <p className="text-sm font-semibold mb-1">Resume Fixer AI</p>
+                    <p className="text-xs text-zinc-500">Auto-generate stronger bullet points.</p>
                   </div>
-                  <button onClick={handleFixResume} className="btn-primary px-5 py-2.5 text-xs">Fix resume</button>
+                  <button onClick={handleFixResume} className="btn-primary px-5 py-2.5 text-xs font-semibold">Fix resume</button>
                 </div>
               </div>
 
-              {/* Missing Skills */}
-              <div>
-                <p className="label mb-4">Missing skills · Action plan</p>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {d.missing_basic_skills.map((item, i) => (
-                    <div key={i} className="surface p-5">
-                      <p className="text-sm font-medium mb-4">{item.skill}</p>
-                      <div className="flex gap-2">
-                        <button onClick={() => openNotes(item.notes_topic)} className="btn-secondary flex-1 py-2 text-xs">Notes</button>
-                        <button onClick={() => openVideo(item.video_topic)} className="btn-secondary flex-1 py-2 text-xs">Video</button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Skills Impact Chart */}
-              <div className="surface p-6">
-                <p className="label mb-4">Skill impact analysis</p>
-                {d.has_skills ? (
-                  <div className="h-56">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={d.skill_importance_data}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.04)" />
-                        <XAxis dataKey="skill" tick={{fill: '#71717a', fontSize: 11}} axisLine={false} tickLine={false} />
-                        <YAxis hide />
-                        <Tooltip contentStyle={{borderRadius: '8px', border: '1px solid rgba(255,255,255,0.06)', background: '#111113', color: '#fafafa', fontSize: '12px'}} />
-                        <Line type="monotone" dataKey="importance" stroke="#3b82f6" strokeWidth={2} dot={{r: 4, fill: '#3b82f6', strokeWidth: 2, stroke: '#09090b'}} />
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </div>
-                ) : (
-                  <div className="text-center py-12">
-                    <p className="text-sm text-zinc-500">"{d.motivational_msg}"</p>
-                  </div>
-                )}
-              </div>
-
+              {/* ── FOOTER ── */}
               <div className="text-center pt-4">
-                <button onClick={() => setViewState('input')} className="text-zinc-600 hover:text-zinc-400 text-sm transition-colors" style={{ background: 'transparent' }}>
-                  Analyze another role →
+                <button onClick={() => setViewState('input')} className="text-zinc-600 hover:text-zinc-400 text-sm transition-colors group" style={{ background: 'transparent' }}>
+                  Analyze another role <span className="inline-block group-hover:translate-x-1 transition-transform">→</span>
                 </button>
               </div>
             </div>
