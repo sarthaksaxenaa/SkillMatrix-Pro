@@ -35,6 +35,12 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
   const [resumeHistory, setResumeHistory] = useState([]);
   const [loadingStepIndex, setLoadingStepIndex] = useState(0);
 
+  // --- History Page State ---
+  const [historySearch, setHistorySearch] = useState('');
+  const [historySortBy, setHistorySortBy] = useState('newest');
+  const [historyRoleFilter, setHistoryRoleFilter] = useState('all');
+  const [sparklineHover, setSparklineHover] = useState(null);
+
   // --- Gamification State ---
   const [streak, setStreak] = useState(3);
 
@@ -455,36 +461,339 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
           )}
 
           {/* --- HISTORY VIEW --- */}
-          {viewState === 'history' && (
+          {viewState === 'history' && (() => {
+            // --- Computed Stats ---
+            const totalAnalyses = resumeHistory.length;
+            const bestEntry = resumeHistory.reduce((a, b) => (b.score > (a?.score || 0) ? b : a), null);
+            const avgScore = totalAnalyses > 0 ? (resumeHistory.reduce((s, i) => s + i.score, 0) / totalAnalyses) : 0;
+            const roleCounts = {};
+            resumeHistory.forEach(i => { roleCounts[i.role] = (roleCounts[i.role] || 0) + 1; });
+            const topRole = Object.entries(roleCounts).sort((a, b) => b[1] - a[1])[0];
+            const uniqueRoles = Object.keys(roleCounts);
+
+            // Score distribution
+            const bands = [
+              { label: '80+', color: '#22c55e', count: resumeHistory.filter(i => i.score >= 80).length },
+              { label: '65–79', color: '#3b82f6', count: resumeHistory.filter(i => i.score >= 65 && i.score < 80).length },
+              { label: '45–64', color: '#f59e0b', count: resumeHistory.filter(i => i.score >= 45 && i.score < 65).length },
+              { label: '<45', color: '#ef4444', count: resumeHistory.filter(i => i.score < 45).length },
+            ];
+
+            // Filtered + sorted list
+            let filtered = [...resumeHistory];
+            if (historySearch) {
+              const q = historySearch.toLowerCase();
+              filtered = filtered.filter(i => i.role.toLowerCase().includes(q) || i.fileName.toLowerCase().includes(q));
+            }
+            if (historyRoleFilter !== 'all') {
+              filtered = filtered.filter(i => i.role === historyRoleFilter);
+            }
+            if (historySortBy === 'highest') filtered.sort((a, b) => b.score - a.score);
+            else if (historySortBy === 'lowest') filtered.sort((a, b) => a.score - b.score);
+
+            // Sparkline data (chronological, reversed to oldest-first)
+            const sparkData = [...resumeHistory].reverse().slice(-12);
+            const spW = 600, spH = 100, spPad = 20;
+
+            // Trend: compare last 2
+            const lastTwo = resumeHistory.slice(0, 2);
+            const scoreDiff = lastTwo.length === 2 ? lastTwo[0].score - lastTwo[1].score : 0;
+
+            // Mini gauge helper
+            const MiniGauge = ({ score, size = 48 }) => {
+              const r = (size - 8) / 2;
+              const c = 2 * Math.PI * r;
+              const off = c - (c * score) / 100;
+              const col = score >= 80 ? '#22c55e' : score >= 65 ? '#3b82f6' : score >= 45 ? '#f59e0b' : '#ef4444';
+              return (
+                <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+                  <circle cx={size/2} cy={size/2} r={r} stroke="rgba(255,255,255,0.04)" strokeWidth="3.5" fill="none"/>
+                  <circle cx={size/2} cy={size/2} r={r} stroke={col} strokeWidth="3.5" fill="none"
+                    strokeDasharray={c} strokeDashoffset={off} strokeLinecap="round"
+                    transform={`rotate(-90 ${size/2} ${size/2})`} className="mini-gauge-ring"/>
+                  <text x={size/2} y={size/2} textAnchor="middle" dominantBaseline="central"
+                    fill="white" fontSize="13" fontWeight="700" fontFamily="var(--sans)">{score}</text>
+                </svg>
+              );
+            };
+
+            return (
             <div className="animate-enter delay-1">
               {resumeHistory.length === 0 ? (
-                <div className="text-center py-24 surface">
-                  <p className="text-zinc-500 text-sm mb-4">No analyses yet.</p>
-                  <button onClick={() => setViewState('input')} className="text-blue-400 text-sm hover:underline" style={{ background: 'transparent' }}>Go to analyzer</button>
+                /* ═══ PREMIUM EMPTY STATE ═══ */
+                <div className="surface p-12 text-center max-w-lg mx-auto animate-enter" style={{ background: 'linear-gradient(180deg, var(--bg-raised) 0%, var(--bg) 100%)' }}>
+                  <div className="empty-state-illustration">
+                    {/* Pulse rings */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="empty-pulse-ring w-28 h-28 rounded-full border border-blue-500/20" />
+                    </div>
+                    <div className="absolute inset-0 flex items-center justify-center" style={{ animationDelay: '1s' }}>
+                      <div className="empty-pulse-ring w-20 h-20 rounded-full border border-blue-500/10" style={{ animationDelay: '1.5s' }} />
+                    </div>
+                    {/* Floating doc */}
+                    <div className="absolute left-3 top-4 empty-float-doc">
+                      <svg width="40" height="48" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="1.5" opacity="0.6">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+                        <line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/>
+                      </svg>
+                    </div>
+                    {/* Floating chart */}
+                    <div className="absolute right-3 top-6 empty-float-chart">
+                      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="1.5" opacity="0.5">
+                        <path d="M18 20V10M12 20V4M6 20v-6"/>
+                      </svg>
+                    </div>
+                    {/* Center arrow */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#a1a1aa" strokeWidth="2" opacity="0.3">
+                        <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                      </svg>
+                    </div>
+                  </div>
+                  <h3 className="heading-display text-2xl mb-2">Your Journey <span className="heading-serif text-2xl">Starts Here</span></h3>
+                  <p className="text-zinc-500 text-sm mb-8 leading-relaxed max-w-xs mx-auto">Upload your first resume and get an AI-powered career analysis in under 15 seconds.</p>
+                  <button onClick={() => setViewState('input')} className="btn-primary px-8 py-3 text-sm font-semibold mx-auto flex items-center gap-2 group shadow-lg shadow-blue-500/15">
+                    Analyze Your Resume
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="group-hover:translate-x-1 transition-transform"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                  </button>
+                  <div className="flex items-center justify-center gap-5 mt-6 text-[11px] text-zinc-600">
+                    <span className="flex items-center gap-1.5"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg> Free</span>
+                    <span className="flex items-center gap-1.5"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg> Instant</span>
+                    <span className="flex items-center gap-1.5"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg> Role-specific</span>
+                  </div>
                 </div>
               ) : (
-                <div className="space-y-2">
-                  {resumeHistory.map((item) => (
-                    <div key={item.id} onClick={() => loadHistoryItem(item)} className="surface-interactive p-5 flex items-center justify-between group">
-                      <div className="flex items-center gap-5">
-                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-lg font-bold border ${item.score >= 80 ? 'text-emerald-400 border-emerald-500/20 bg-emerald-500/8' : item.score >= 50 ? 'text-amber-400 border-amber-500/20 bg-amber-500/8' : 'text-red-400 border-red-500/20 bg-red-500/8'}`}>
-                          {item.score}
-                        </div>
-                        <div>
-                          <p className="font-medium text-sm">{item.role}</p>
-                          <p className="text-xs text-zinc-600 mt-0.5">{item.fileName} · {item.date}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <span className="text-xs text-zinc-600 group-hover:text-zinc-400 transition-colors">View</span>
-                        <button onClick={(e) => deleteHistoryItem(e, item.id)} className="text-zinc-700 hover:text-red-400 p-1.5 rounded-lg hover:bg-red-500/8 transition-colors"><TrashIcon size={15} /></button>
+                <div className="space-y-5">
+
+                  {/* ═══ STATS SUMMARY ROW ═══ */}
+                  <div className="stats-grid analytics-card stagger-1">
+                    <div className="stat-card" style={{ '--stat-accent': '#3b82f6' }}>
+                      <p className="label mb-3">Total Analyses</p>
+                      <p className="stat-number text-white">{totalAnalyses}</p>
+                      <div className="stat-trend neutral">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 2v20M2 12h20"/></svg>
+                        {resumeHistory.filter(i => { const d = new Date(i.date); const now = new Date(); return d.getMonth() === now.getMonth(); }).length} this month
                       </div>
                     </div>
-                  ))}
+                    <div className="stat-card" style={{ '--stat-accent': '#22c55e' }}>
+                      <p className="label mb-3">Best Score</p>
+                      <p className="stat-number" style={{ color: '#22c55e' }}>{bestEntry?.score || '—'}</p>
+                      <p className="text-[11px] text-zinc-600 mt-2 truncate">{bestEntry?.role || 'No data'}</p>
+                    </div>
+                    <div className="stat-card" style={{ '--stat-accent': '#f59e0b' }}>
+                      <p className="label mb-3">Avg Score</p>
+                      <p className="stat-number" style={{ color: '#f59e0b' }}>{avgScore.toFixed(1)}</p>
+                      {scoreDiff !== 0 && (
+                        <div className={`stat-trend ${scoreDiff > 0 ? 'positive' : 'neutral'}`}>
+                          {scoreDiff > 0 ? '↑' : '↓'} {Math.abs(scoreDiff)} pts last
+                        </div>
+                      )}
+                    </div>
+                    <div className="stat-card" style={{ '--stat-accent': '#8b5cf6' }}>
+                      <p className="label mb-3">Top Role</p>
+                      <p className="stat-number text-[22px]" style={{ color: '#c4b5fd' }}>{topRole ? topRole[0].split(' ').slice(0, 2).join(' ') : '—'}</p>
+                      <p className="text-[11px] text-zinc-600 mt-2">{topRole ? `${topRole[1]} ${topRole[1] === 1 ? 'analysis' : 'analyses'}` : ''}</p>
+                    </div>
+                  </div>
+
+                  {/* ═══ SPARKLINE + DISTRIBUTION ROW ═══ */}
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+                    {/* Sparkline Chart */}
+                    <div className="lg:col-span-8 surface p-6 analytics-card stagger-2">
+                      <div className="flex justify-between items-center mb-4">
+                        <p className="label">Score Trend</p>
+                        <p className="text-[10px] text-zinc-600 font-mono">LAST {sparkData.length} ANALYSES</p>
+                      </div>
+                      {sparkData.length >= 2 ? (() => {
+                        const minS = Math.max(0, Math.min(...sparkData.map(d => d.score)) - 10);
+                        const maxS = Math.min(100, Math.max(...sparkData.map(d => d.score)) + 10);
+                        const range = maxS - minS || 1;
+                        const pts = sparkData.map((d, i) => ({
+                          x: spPad + (i / (sparkData.length - 1)) * (spW - 2 * spPad),
+                          y: spPad + ((maxS - d.score) / range) * (spH - 2 * spPad),
+                          ...d
+                        }));
+                        const pathD = pts.map((p, i) => {
+                          if (i === 0) return `M${p.x},${p.y}`;
+                          const prev = pts[i - 1];
+                          const cpx = (prev.x + p.x) / 2;
+                          return `C${cpx},${prev.y} ${cpx},${p.y} ${p.x},${p.y}`;
+                        }).join(' ');
+                        const fillD = `${pathD} L${pts[pts.length-1].x},${spH} L${pts[0].x},${spH} Z`;
+                        return (
+                          <div className="relative" style={{ height: spH + 20 }}
+                            onMouseLeave={() => setSparklineHover(null)}>
+                            <svg width="100%" height={spH + 20} viewBox={`0 0 ${spW} ${spH + 20}`} preserveAspectRatio="none" className="overflow-visible">
+                              <defs>
+                                <linearGradient id="sparkFill" x1="0" y1="0" x2="0" y2="1">
+                                  <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.15"/>
+                                  <stop offset="100%" stopColor="#3b82f6" stopOpacity="0"/>
+                                </linearGradient>
+                                <linearGradient id="sparkStroke" x1="0" y1="0" x2="1" y2="0">
+                                  <stop offset="0%" stopColor="#60a5fa"/>
+                                  <stop offset="100%" stopColor="#3b82f6"/>
+                                </linearGradient>
+                              </defs>
+                              {/* Grid lines */}
+                              {[0, 0.25, 0.5, 0.75, 1].map((f, i) => (
+                                <line key={i} x1={spPad} y1={spPad + f * (spH - 2*spPad)} x2={spW-spPad} y2={spPad + f * (spH - 2*spPad)} stroke="rgba(255,255,255,0.03)" strokeWidth="1"/>
+                              ))}
+                              {/* Fill */}
+                              <path d={fillD} fill="url(#sparkFill)" className="sparkline-fill"/>
+                              {/* Line */}
+                              <path d={pathD} fill="none" stroke="url(#sparkStroke)" strokeWidth="2.5" strokeLinecap="round" className="sparkline-path"/>
+                              {/* Dots */}
+                              {pts.map((p, i) => (
+                                <g key={i} onMouseEnter={() => setSparklineHover(i)}>
+                                  <circle cx={p.x} cy={p.y} r="12" fill="transparent"/>
+                                  <circle cx={p.x} cy={p.y} r={sparklineHover === i ? 5 : 3} fill={p.score >= 65 ? '#22c55e' : p.score >= 45 ? '#f59e0b' : '#ef4444'}
+                                    stroke="var(--bg-raised)" strokeWidth="2"
+                                    className="sparkline-dot" style={{ animationDelay: `${0.8 + i * 0.1}s`, transition: 'r 0.2s ease' }}/>
+                                </g>
+                              ))}
+                            </svg>
+                            {/* Tooltip */}
+                            {sparklineHover !== null && pts[sparklineHover] && (
+                              <div className="sparkline-tooltip" style={{ left: pts[sparklineHover].x / spW * 100 + '%', top: pts[sparklineHover].y }}>
+                                <p className="text-xs font-bold text-white">{pts[sparklineHover].score}</p>
+                                <p className="text-[10px] text-zinc-400">{pts[sparklineHover].role} · {pts[sparklineHover].date}</p>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })() : (
+                        <div className="flex items-center justify-center h-24 text-zinc-600 text-sm">Need 2+ analyses for trend</div>
+                      )}
+                    </div>
+
+                    {/* Score Distribution */}
+                    <div className="lg:col-span-4 surface p-6 analytics-card stagger-3">
+                      <p className="label mb-5">Score Distribution</p>
+                      <div className="space-y-4">
+                        {bands.map((b, i) => (
+                          <div key={i}>
+                            <div className="flex justify-between items-center mb-1.5">
+                              <div className="flex items-center gap-2">
+                                <span className="score-band-dot" style={{ background: b.color }}/>
+                                <span className="text-xs text-zinc-400 font-medium">{b.label}</span>
+                              </div>
+                              <span className="text-xs font-bold font-mono" style={{ color: b.color }}>{b.count}</span>
+                            </div>
+                            <div className="h-[5px] rounded-full bg-white/[0.03]">
+                              <div className="score-dist-bar" style={{
+                                width: totalAnalyses > 0 ? `${(b.count / totalAnalyses) * 100}%` : '0%',
+                                background: b.color, opacity: 0.7
+                              }}/>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* ═══ FILTER BAR ═══ */}
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 analytics-card stagger-4">
+                    <div className="filter-bar flex-1">
+                      <div className="relative">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#52525b" strokeWidth="2" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', zIndex: 1 }}>
+                          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                        <input type="text" value={historySearch} onChange={e => setHistorySearch(e.target.value)}
+                          placeholder="Search roles, files..." className="history-search w-48"/>
+                      </div>
+                      <button className={`filter-chip ${historyRoleFilter === 'all' ? 'active' : ''}`} onClick={() => setHistoryRoleFilter('all')}>All</button>
+                      {uniqueRoles.slice(0, 5).map(role => (
+                        <button key={role} className={`filter-chip ${historyRoleFilter === role ? 'active' : ''}`} onClick={() => setHistoryRoleFilter(historyRoleFilter === role ? 'all' : role)}>
+                          {role}
+                        </button>
+                      ))}
+                    </div>
+                    <select className="sort-select" value={historySortBy} onChange={e => setHistorySortBy(e.target.value)}>
+                      <option value="newest">Newest first</option>
+                      <option value="highest">Highest score</option>
+                      <option value="lowest">Lowest score</option>
+                    </select>
+                  </div>
+
+                  {/* ═══ HISTORY CARDS ═══ */}
+                  {filtered.length === 0 ? (
+                    <div className="surface p-10 text-center">
+                      <p className="text-zinc-500 text-sm">No results match your filters.</p>
+                      <button onClick={() => { setHistorySearch(''); setHistoryRoleFilter('all'); }} className="text-blue-400 text-xs mt-2 hover:underline" style={{ background: 'transparent' }}>Clear filters</button>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {filtered.map((item, idx) => {
+                        const accentColor = item.score >= 80 ? '#22c55e' : item.score >= 65 ? '#3b82f6' : item.score >= 45 ? '#f59e0b' : '#ef4444';
+                        const prevItem = resumeHistory.find((h, hi) => hi > resumeHistory.indexOf(item));
+                        const diff = prevItem ? item.score - prevItem.score : 0;
+                        const sub = item.fullData?.sub_scores;
+
+                        return (
+                          <div key={item.id} onClick={() => loadHistoryItem(item)}
+                            className={`history-card history-card-enter card-stagger-${Math.min(idx, 9)} group`}
+                            style={{ '--card-accent': accentColor }}>
+                            <div className="card-glow" style={{ '--card-accent': accentColor }}/>
+
+                            <div className="flex items-center justify-between">
+                              {/* Left: Gauge + Info */}
+                              <div className="flex items-center gap-5">
+                                <MiniGauge score={item.score} size={52}/>
+                                <div>
+                                  <div className="flex items-center gap-3 mb-1">
+                                    <p className="font-semibold text-[15px] text-zinc-100">{item.role}</p>
+                                    {diff !== 0 && (
+                                      <span className={`trend-badge ${diff > 0 ? 'up' : 'down'}`}>
+                                        {diff > 0 ? '▲' : '▼'} {Math.abs(diff)}
+                                      </span>
+                                    )}
+                                  </div>
+                                  <p className="text-[11px] text-zinc-600">{item.fileName} · {item.date}</p>
+                                  {/* Sub-score pills */}
+                                  {sub && (
+                                    <div className="flex flex-wrap gap-1.5 mt-2.5">
+                                      {[
+                                        { l: 'Tech', v: sub.technical_depth, c: '#3b82f6' },
+                                        { l: 'Impact', v: sub.impact_metrics, c: '#f59e0b' },
+                                        { l: 'Clarity', v: sub.clarity_precision, c: '#10b981' },
+                                        { l: 'Align', v: sub.role_alignment, c: '#8b5cf6' },
+                                      ].map((s, i) => s.v !== undefined && (
+                                        <div key={i} className="sub-score-pill">
+                                          <span className="pill-label">{s.l}</span>
+                                          <span className="pill-value" style={{ color: s.c }}>{s.v}</span>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+
+                              {/* Right: Actions */}
+                              <div className="flex items-center gap-3 shrink-0">
+                                <span className="text-xs text-zinc-600 group-hover:text-blue-400 transition-colors font-medium hidden sm:inline">View details</span>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-zinc-700 group-hover:text-blue-400 group-hover:translate-x-0.5 transition-all">
+                                  <polyline points="9 18 15 12 9 6"/>
+                                </svg>
+                                <button onClick={(e) => deleteHistoryItem(e, item.id)} className="text-zinc-700 hover:text-red-400 p-1.5 rounded-lg hover:bg-red-500/[0.08] transition-colors ml-1">
+                                  <TrashIcon size={15}/>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {/* Results count */}
+                  <div className="text-center pt-2">
+                    <p className="text-[11px] text-zinc-700 font-mono">Showing {filtered.length} of {totalAnalyses} analyses</p>
+                  </div>
                 </div>
               )}
             </div>
-          )}
+            );
+          })()}
 
           {/* --- INTERVIEWS VIEW --- */}
           {viewState === 'interviews' && (
