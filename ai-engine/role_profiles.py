@@ -1039,3 +1039,218 @@ ROLE_PROFILES = {
     },
 }
 
+
+# ---------------------------------------------------------------------------
+# KEYWORD MAP — 100+ keyword → role mappings for fuzzy matching
+# ---------------------------------------------------------------------------
+KEYWORD_MAP = {
+    # Software Engineer aliases
+    "sde": "software engineer", "swe": "software engineer", "developer": "software engineer",
+    "programmer": "software engineer", "coder": "software engineer", "software dev": "software engineer",
+    "application developer": "software engineer", "software development": "software engineer",
+
+    # Full Stack aliases
+    "full stack": "full stack developer", "fullstack": "full stack developer",
+    "mern": "full stack developer", "mean": "full stack developer",
+    "full-stack": "full stack developer", "web developer": "full stack developer",
+
+    # Frontend aliases
+    "frontend": "frontend developer", "front end": "frontend developer",
+    "front-end": "frontend developer", "react developer": "frontend developer",
+    "vue developer": "frontend developer", "angular developer": "frontend developer",
+    "ui developer": "frontend developer", "web ui": "frontend developer",
+
+    # Backend aliases
+    "backend": "backend developer", "back end": "backend developer",
+    "back-end": "backend developer", "server side": "backend developer",
+    "api developer": "backend developer", "node developer": "backend developer",
+    "java developer": "backend developer", "python developer": "backend developer",
+    "golang": "backend developer", "go developer": "backend developer",
+
+    # Mobile aliases
+    "mobile": "mobile developer", "ios developer": "mobile developer",
+    "android developer": "mobile developer", "flutter developer": "mobile developer",
+    "react native": "mobile developer", "swift developer": "mobile developer",
+    "kotlin developer": "mobile developer", "mobile app": "mobile developer",
+
+    # Data Science aliases
+    "data sci": "data scientist", "data science": "data scientist",
+    "research scientist": "data scientist",
+
+    # Data Analyst aliases
+    "analyst": "data analyst", "data analytics": "data analyst",
+    "reporting analyst": "data analyst", "analytics": "data analyst",
+
+    # Data Engineer aliases
+    "data eng": "data engineer", "etl developer": "data engineer",
+    "data pipeline": "data engineer", "big data": "data engineer",
+    "spark developer": "data engineer",
+
+    # ML Engineer aliases
+    "ml": "machine learning engineer", "ml engineer": "machine learning engineer",
+    "mle": "machine learning engineer", "machine learning": "machine learning engineer",
+    "deep learning engineer": "machine learning engineer",
+
+    # AI Research aliases
+    "ai research": "ai research scientist", "research": "ai research scientist",
+    "ai scientist": "ai research scientist",
+
+    # AI/NLP/CV Engineer aliases
+    "ai engineer": "machine learning engineer", "ai developer": "machine learning engineer",
+    "nlp": "nlp engineer", "natural language": "nlp engineer",
+    "llm engineer": "nlp engineer", "chatbot developer": "nlp engineer",
+    "computer vision": "computer vision engineer", "cv engineer": "computer vision engineer",
+    "image processing": "computer vision engineer", "perception engineer": "computer vision engineer",
+
+    # BI Analyst aliases
+    "bi analyst": "business intelligence analyst", "bi developer": "business intelligence analyst",
+    "tableau developer": "business intelligence analyst", "power bi": "business intelligence analyst",
+    "reporting": "business intelligence analyst",
+
+    # DevOps aliases
+    "devops": "devops engineer", "dev ops": "devops engineer",
+    "infrastructure engineer": "devops engineer", "ci/cd": "devops engineer",
+    "release engineer": "devops engineer", "build engineer": "devops engineer",
+
+    # Cloud Architect aliases
+    "cloud": "cloud architect", "cloud engineer": "cloud architect",
+    "aws architect": "cloud architect", "azure architect": "cloud architect",
+    "gcp architect": "cloud architect", "cloud consultant": "cloud architect",
+
+    # SRE aliases
+    "sre": "site reliability engineer", "reliability": "site reliability engineer",
+    "site reliability": "site reliability engineer",
+
+    # Platform Engineer aliases
+    "platform": "platform engineer", "platform eng": "platform engineer",
+    "developer platform": "platform engineer",
+
+    # Network Engineer aliases
+    "network": "network engineer", "network admin": "network engineer",
+    "ccna": "network engineer", "ccnp": "network engineer",
+
+    # Security aliases
+    "security": "cybersecurity analyst", "cyber": "cybersecurity analyst",
+    "soc analyst": "cybersecurity analyst", "infosec": "cybersecurity analyst",
+    "information security": "cybersecurity analyst",
+    "security engineer": "security engineer", "appsec": "security engineer",
+    "application security": "security engineer", "devsecops": "security engineer",
+    "pentester": "penetration tester", "pen tester": "penetration tester",
+    "ethical hacker": "penetration tester", "offensive security": "penetration tester",
+    "red team": "penetration tester",
+
+    # Product Manager aliases
+    "product": "product manager", "pm": "product manager",
+    "product owner": "product manager", "apm": "product manager",
+    "associate product manager": "product manager", "tpm": "product manager",
+    "technical program manager": "product manager",
+
+    # UI/UX Designer aliases
+    "designer": "ui/ux designer", "ux": "ui/ux designer", "ui": "ui/ux designer",
+    "ux designer": "ui/ux designer", "ui designer": "ui/ux designer",
+    "product designer": "ui/ux designer", "visual designer": "ui/ux designer",
+    "interaction designer": "ui/ux designer", "ux researcher": "ui/ux designer",
+
+    # Technical Writer aliases
+    "tech writer": "technical writer", "documentation": "technical writer",
+    "content developer": "technical writer", "api writer": "technical writer",
+
+    # Scrum Master aliases
+    "scrum": "scrum master", "agile coach": "scrum master",
+    "agile": "scrum master", "scrum master": "scrum master",
+
+    # Business Analyst aliases
+    "business analyst": "business analyst", "ba": "business analyst",
+    "systems analyst": "business analyst", "requirements analyst": "business analyst",
+    "functional analyst": "business analyst",
+
+    # Digital Marketing aliases
+    "marketing": "digital marketing specialist", "digital marketing": "digital marketing specialist",
+    "seo specialist": "digital marketing specialist", "sem": "digital marketing specialist",
+    "social media": "digital marketing specialist", "content marketing": "digital marketing specialist",
+    "performance marketing": "digital marketing specialist",
+
+    # Growth aliases
+    "growth": "growth hacker", "growth marketer": "growth hacker",
+    "growth pm": "growth hacker", "growth analyst": "growth hacker",
+
+    # Sales Engineer aliases
+    "sales engineer": "sales engineer", "pre-sales": "sales engineer",
+    "presales": "sales engineer", "solutions consultant": "sales engineer",
+    "technical account manager": "sales engineer",
+
+    # Management Consultant aliases
+    "consultant": "management consultant", "management consulting": "management consultant",
+    "strategy consultant": "management consultant",
+
+    # Embedded aliases
+    "embedded": "embedded systems engineer", "firmware": "embedded systems engineer",
+    "embedded software": "embedded systems engineer", "rtos": "embedded systems engineer",
+
+    # Game Dev aliases
+    "game": "game developer", "game dev": "game developer",
+    "unity developer": "game developer", "unreal developer": "game developer",
+    "game programmer": "game developer",
+
+    # QA aliases
+    "qa": "qa engineer", "tester": "qa engineer", "sdet": "qa engineer",
+    "test engineer": "qa engineer", "quality assurance": "qa engineer",
+    "test automation": "qa engineer", "qa analyst": "qa engineer",
+
+    # Blockchain aliases
+    "blockchain": "blockchain developer", "web3": "blockchain developer",
+    "smart contract": "blockchain developer", "solidity": "blockchain developer",
+    "defi": "blockchain developer", "crypto": "blockchain developer",
+
+    # IoT aliases
+    "iot": "iot engineer", "internet of things": "iot engineer",
+    "smart devices": "iot engineer",
+
+    # DBA aliases
+    "dba": "database administrator", "database admin": "database administrator",
+    "db admin": "database administrator", "database": "database administrator",
+
+    # Solutions Architect aliases
+    "solutions architect": "solutions architect", "architect": "solutions architect",
+    "technical architect": "solutions architect", "enterprise architect": "solutions architect",
+
+    # ERP/SAP aliases
+    "erp": "erp consultant", "erp consultant": "erp consultant",
+    "oracle erp": "erp consultant", "dynamics": "erp consultant",
+    "sap": "sap consultant", "sap consultant": "sap consultant",
+    "abap": "sap consultant", "sap fico": "sap consultant",
+    "sap mm": "sap consultant", "sap sd": "sap consultant",
+    "s4hana": "sap consultant", "sap hana": "sap consultant",
+}
+
+
+def get_role_profile(job_role: str) -> dict:
+    """Match the user's job role input to the closest profile.
+
+    Resolution order:
+    1. Exact match against ROLE_PROFILES keys
+    2. Partial/substring match against ROLE_PROFILES keys
+    3. Keyword match against KEYWORD_MAP
+    4. Fallback to 'default' profile
+    """
+    role_lower = job_role.lower().strip()
+
+    # 1. Direct match
+    if role_lower in ROLE_PROFILES:
+        return ROLE_PROFILES[role_lower]
+
+    # 2. Partial match (bidirectional substring)
+    for key, profile in ROLE_PROFILES.items():
+        if key in role_lower or role_lower in key:
+            return profile
+
+    # 3. Keyword match (longest keyword first for accuracy)
+    sorted_keywords = sorted(KEYWORD_MAP.keys(), key=len, reverse=True)
+    for keyword in sorted_keywords:
+        if keyword in role_lower:
+            mapped_role = KEYWORD_MAP[keyword]
+            if mapped_role in ROLE_PROFILES:
+                return ROLE_PROFILES[mapped_role]
+
+    # 4. Fallback
+    return ROLE_PROFILES["default"]
