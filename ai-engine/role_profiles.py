@@ -645,4 +645,397 @@ ROLE_PROFILES = {
         "evaluation_focus": "offensive security expertise, finding and exploiting real vulnerabilities, methodology and documentation quality, and client communication skills",
         "industry_context": "penetration testing at security firms and red teams (Mandiant, CrowdStrike, NCC Group)"
     },
+
+    # =====================================================================
+    #  CATEGORY 5: PRODUCT & DESIGN
+    # =====================================================================
+
+    "product manager": {
+        "core_skills": [
+            "Product Strategy & Vision", "User Research & Customer Discovery",
+            "A/B Testing & Experimentation", "Product Roadmapping (Now/Next/Later)",
+            "Stakeholder Management & Communication", "Metrics & KPIs (North Star/OKRs)",
+            "Wireframing & Prototyping", "Competitive Analysis & Market Research",
+            "Go-to-Market Strategy", "User Story & PRD Writing",
+            "Prioritization Frameworks (RICE/ICE/MoSCoW)", "Cross-Functional Leadership",
+            "Data-Driven Decision Making", "Agile/Scrum Product Ownership",
+            "Customer Journey Mapping"
+        ],
+        "advanced_skills": [
+            "Product-Led Growth (PLG)", "Platform & API Product Management",
+            "Pricing & Monetization Strategy", "International Product Expansion",
+            "AI/ML Product Management", "Enterprise Product Strategy"
+        ],
+        "tools_and_platforms": [
+            "Jira/Linear/Asana", "Figma/Miro", "Amplitude/Mixpanel/Heap",
+            "Notion/Confluence", "Productboard/Aha!", "Google Analytics",
+            "Hotjar/FullStory", "LaunchDarkly"
+        ],
+        "evaluation_focus": "product thinking, user empathy, metrics-driven decisions, cross-functional leadership, business outcomes, and strategic prioritization",
+        "industry_context": "product management at consumer and enterprise tech companies (Google, Airbnb, Stripe, Salesforce)"
+    },
+
+    "ui/ux designer": {
+        "core_skills": [
+            "Figma/Sketch (Advanced)", "User Research & Interviews",
+            "Wireframing & Low/High-Fidelity Prototyping", "Design Systems & Component Libraries",
+            "Usability Testing & Heuristic Evaluation", "Information Architecture",
+            "Interaction Design & Micro-Interactions", "Visual Design (Typography/Color/Layout)",
+            "Accessibility (WCAG 2.1/a11y)", "Responsive & Adaptive Design",
+            "User Flows & Journey Mapping", "Design Thinking Methodology",
+            "Handoff to Development (Specs/Tokens)", "A/B Testing & Design Validation",
+            "Motion Design Principles"
+        ],
+        "advanced_skills": [
+            "Design Strategy & Leadership", "Design Ops & Process Scaling",
+            "Voice & Conversational UI", "AR/VR Interface Design",
+            "Data Visualization Design", "Cross-Platform Design (Web/iOS/Android)"
+        ],
+        "tools_and_platforms": [
+            "Figma/Sketch/Adobe XD", "Framer/Principle", "Miro/FigJam",
+            "Maze/UserTesting", "Zeplin/Abstract", "After Effects/Lottie",
+            "Storybook", "Hotjar/FullStory"
+        ],
+        "evaluation_focus": "design thinking process, user empathy, visual hierarchy, interaction quality, measurable UX improvements, and portfolio case studies",
+        "industry_context": "product design at design-led companies (Apple, Airbnb, Stripe, Figma)"
+    },
+
+    "technical writer": {
+        "core_skills": [
+            "Technical Documentation Writing", "API Documentation (OpenAPI/Swagger)",
+            "Developer Experience (DX) Writing", "Information Architecture for Docs",
+            "Markdown/AsciiDoc/reStructuredText", "Code Samples & Tutorials",
+            "Style Guide Adherence (Google/Microsoft)", "Docs-as-Code Workflows",
+            "Content Strategy for Documentation", "User-Centric Writing",
+            "Version Control (Git) for Docs", "Editing & Proofreading",
+            "Diagram & Visual Creation (Mermaid/Draw.io)", "Localization & i18n Writing",
+            "Release Notes & Changelogs"
+        ],
+        "advanced_skills": [
+            "Developer Portal Design", "Video Tutorial Production",
+            "Documentation Metrics & Analytics", "Content Management Systems",
+            "AI-Assisted Documentation", "Open-Source Documentation Leadership"
+        ],
+        "tools_and_platforms": [
+            "Docusaurus/GitBook/ReadTheDocs", "Markdown/MDX", "Swagger/Redoc",
+            "Confluence/Notion", "Git/GitHub", "Snagit/Camtasia",
+            "Draw.io/Mermaid", "Vale/LanguageTool"
+        ],
+        "evaluation_focus": "writing clarity, technical accuracy, audience awareness, documentation structure, and developer experience impact",
+        "industry_context": "technical writing at developer-focused companies (Stripe, Twilio, Google, AWS)"
+    },
+
+    "scrum master": {
+        "core_skills": [
+            "Scrum Framework (Advanced)", "Sprint Planning & Facilitation",
+            "Retrospective Facilitation Techniques", "Backlog Refinement & Grooming",
+            "Agile Metrics (Velocity/Burndown/Cycle Time)", "Team Coaching & Mentoring",
+            "Impediment Removal & Escalation", "Stakeholder Communication",
+            "Kanban & Lean Principles", "Servant Leadership",
+            "Conflict Resolution & Mediation", "Continuous Improvement Culture",
+            "Release Planning & Coordination", "Cross-Team Dependency Management",
+            "Agile Transformation & Change Management"
+        ],
+        "advanced_skills": [
+            "SAFe/LeSS/Nexus (Scaled Agile)", "Organizational Design for Agility",
+            "Value Stream Mapping", "OKR Alignment with Agile",
+            "Agile Coaching at Scale", "DevOps & Agile Integration"
+        ],
+        "tools_and_platforms": [
+            "Jira/Azure DevOps/Linear", "Confluence/Notion", "Miro/MURAL",
+            "Trello", "Monday.com", "Slack/Teams", "Retrium/EasyRetro",
+            "Jira Align/Rally"
+        ],
+        "evaluation_focus": "facilitation quality, team velocity improvement, impediment resolution speed, retrospective action follow-through, and agile maturity progression",
+        "industry_context": "Scrum Master/Agile Coach at agile organizations"
+    },
+
+    # =====================================================================
+    #  CATEGORY 6: BUSINESS & MARKETING
+    # =====================================================================
+
+    "business analyst": {
+        "core_skills": [
+            "Business Requirements Gathering & Documentation", "Process Modeling (BPMN/UML)",
+            "Data Analysis & SQL", "Stakeholder Management & Communication",
+            "Use Case & User Story Writing", "Gap Analysis & Root Cause Analysis",
+            "Wireframing & Mockups (Basic)", "Cost-Benefit Analysis & ROI Calculation",
+            "Functional & Non-Functional Requirements", "UAT Planning & Execution",
+            "Business Process Reengineering", "SWOT & PESTLE Analysis",
+            "Agile/Scrum Methodology", "Change Management & Impact Analysis",
+            "Presentation & Report Writing"
+        ],
+        "advanced_skills": [
+            "Enterprise Architecture (TOGAF)", "Business Intelligence Strategy",
+            "Vendor Evaluation & Selection", "Digital Transformation Planning",
+            "Regulatory Compliance Analysis", "Product Ownership Skills"
+        ],
+        "tools_and_platforms": [
+            "Jira/Confluence", "Visio/Lucidchart/Draw.io", "Excel (Advanced/Macros)",
+            "SQL/Power BI/Tableau", "Balsamiq/Axure", "Microsoft Office Suite",
+            "ServiceNow", "SharePoint"
+        ],
+        "evaluation_focus": "requirements elicitation quality, stakeholder management, analytical rigor, process improvement impact, and documentation clarity",
+        "industry_context": "business analysis at consulting firms and enterprises (Deloitte, Accenture, McKinsey)"
+    },
+
+    "digital marketing specialist": {
+        "core_skills": [
+            "SEO (On-Page/Off-Page/Technical)", "SEM & PPC (Google Ads/Bing Ads)",
+            "Social Media Marketing (Organic/Paid)", "Content Marketing & Strategy",
+            "Email Marketing & Automation (Mailchimp/HubSpot)", "Google Analytics & GA4",
+            "Conversion Rate Optimization (CRO)", "Marketing Funnel Design",
+            "Copywriting & Content Creation", "A/B Testing & Experimentation",
+            "Marketing Automation (HubSpot/Marketo)", "Influencer & Partnership Marketing",
+            "Brand Strategy & Positioning", "Performance Marketing & ROAS",
+            "Video Marketing & YouTube Strategy"
+        ],
+        "advanced_skills": [
+            "Programmatic Advertising", "Marketing Attribution Modeling",
+            "Customer Data Platform (CDP) Strategy", "Growth Hacking Techniques",
+            "International/Multi-Market Campaigns", "AI-Powered Marketing Tools"
+        ],
+        "tools_and_platforms": [
+            "Google Analytics/GA4", "Google Ads/Meta Ads Manager",
+            "HubSpot/Mailchimp/Marketo", "SEMrush/Ahrefs/Moz",
+            "Canva/Adobe Creative Suite", "Hootsuite/Buffer/Sprout Social",
+            "WordPress/Webflow", "Google Tag Manager"
+        ],
+        "evaluation_focus": "campaign ROI, traffic growth metrics, conversion optimization results, multi-channel strategy, and data-driven marketing decisions",
+        "industry_context": "digital marketing at high-growth and D2C companies"
+    },
+
+    "growth hacker": {
+        "core_skills": [
+            "Growth Experimentation (AARRR/Pirate Metrics)", "A/B & Multivariate Testing",
+            "Funnel Optimization & Conversion Rate", "Product Analytics (Amplitude/Mixpanel)",
+            "SQL & Data Analysis for Growth", "Viral & Referral Loop Design",
+            "Landing Page Optimization", "Email & Lifecycle Marketing",
+            "SEO & Content-Led Growth", "Paid Acquisition (Facebook/Google Ads)",
+            "User Onboarding Optimization", "Retention & Churn Analysis",
+            "Pricing Experimentation", "Growth Modeling & Forecasting",
+            "Cross-Functional Collaboration (Product/Engineering/Marketing)"
+        ],
+        "advanced_skills": [
+            "Product-Led Growth (PLG) Strategy", "Marketplace Growth Mechanics",
+            "International Expansion Playbooks", "AI/ML for Personalization",
+            "Community-Led Growth", "Growth Team Building & Leadership"
+        ],
+        "tools_and_platforms": [
+            "Amplitude/Mixpanel/Heap", "Google Analytics/GA4", "Optimizely/VWO",
+            "HubSpot/Customer.io", "SQL/Python for Analysis", "Figma (Rapid Prototyping)",
+            "Zapier/Make (Automation)", "LaunchDarkly"
+        ],
+        "evaluation_focus": "experiment velocity, measurable growth metrics (MoM/YoY), creative acquisition channels, retention improvement, and data-driven iteration speed",
+        "industry_context": "growth roles at startups and scale-ups (Dropbox, Slack, Notion, Calendly)"
+    },
+
+    "sales engineer": {
+        "core_skills": [
+            "Technical Product Demonstrations", "Solution Architecture for Clients",
+            "Pre-Sales Technical Consultation", "RFP/RFI Response Writing",
+            "CRM & Sales Pipeline Management", "Technical Objection Handling",
+            "POC (Proof of Concept) Delivery", "API & Integration Knowledge",
+            "Industry Domain Expertise", "Competitive Technical Analysis",
+            "Customer Success & Relationship Building", "ROI & Business Case Development",
+            "Presentation & Public Speaking", "Cross-functional Collaboration (Sales/Product/Engineering)",
+            "Technical Documentation for Clients"
+        ],
+        "advanced_skills": [
+            "Enterprise Deal Architecture", "Partner & Channel Technical Enablement",
+            "Custom Solution Design at Scale", "Product Feedback Loop to Engineering",
+            "Strategic Account Planning", "Technical Community Building"
+        ],
+        "tools_and_platforms": [
+            "Salesforce/HubSpot CRM", "Gong/Chorus (Conversation Intelligence)",
+            "Zoom/Teams (Demo Tools)", "Postman/Swagger (API Demos)",
+            "Confluence/Notion", "LucidChart/Draw.io", "Slack/Teams",
+            "Demo Environments & Sandboxes"
+        ],
+        "evaluation_focus": "technical demo quality, deal support effectiveness, solution design accuracy, client relationship depth, and revenue impact",
+        "industry_context": "sales engineering at enterprise SaaS companies (Salesforce, Snowflake, Datadog, MongoDB)"
+    },
+
+    "management consultant": {
+        "core_skills": [
+            "Strategy & Problem-Solving Frameworks (MECE/Porter's Five Forces)",
+            "Business Case Development", "Financial Modeling & Analysis",
+            "Stakeholder Management & Executive Communication",
+            "Market Sizing & Competitive Landscape Analysis",
+            "Data Analysis & Insight Generation", "Project Management & Work Planning",
+            "Presentation Design (PowerPoint/Google Slides)", "Process Improvement & Lean Six Sigma",
+            "Change Management & Organizational Design", "Industry Research & Benchmarking",
+            "Client Relationship Management", "Workshop Facilitation",
+            "KPI Design & Performance Measurement", "Risk Assessment & Mitigation"
+        ],
+        "advanced_skills": [
+            "Digital Transformation Strategy", "M&A Due Diligence (Tech)",
+            "Operating Model Design", "Pricing & Revenue Strategy",
+            "AI/Data Strategy for Enterprises", "Organizational Restructuring"
+        ],
+        "tools_and_platforms": [
+            "PowerPoint/Google Slides", "Excel (Advanced Financial Modeling)",
+            "Tableau/Power BI", "Jira/Asana", "Miro/MURAL",
+            "Bloomberg/Capital IQ", "Alteryx/SQL", "Notion/Confluence"
+        ],
+        "evaluation_focus": "structured problem solving, analytical rigor, executive-level communication, measurable client impact, and strategic thinking",
+        "industry_context": "management consulting at top firms (McKinsey, BCG, Bain, Deloitte)"
+    },
+
+    # =====================================================================
+    #  CATEGORY 7: SPECIALIZED ROLES
+    # =====================================================================
+
+    "blockchain developer": {
+        "core_skills": [
+            "Solidity Smart Contract Development", "Ethereum & EVM Ecosystem",
+            "Web3.js/Ethers.js", "DeFi Protocols & Tokenomics",
+            "Smart Contract Security & Auditing", "Consensus Mechanisms (PoW/PoS/BFT)",
+            "Decentralized Application (dApp) Development", "IPFS & Decentralized Storage",
+            "Token Standards (ERC-20/ERC-721/ERC-1155)", "Testing (Hardhat/Foundry/Truffle)",
+            "Gas Optimization", "Cross-Chain Bridges & Interoperability",
+            "Cryptography & Hashing Algorithms", "NFT Marketplace Development",
+            "DAO & Governance Systems"
+        ],
+        "advanced_skills": [
+            "Layer 2 Solutions (Rollups/zk-SNARKs)", "MEV & Flash Loans",
+            "Formal Verification of Smart Contracts", "Protocol Design",
+            "Zero-Knowledge Proof Systems", "Blockchain Scalability Solutions"
+        ],
+        "tools_and_platforms": [
+            "Hardhat/Foundry/Truffle", "OpenZeppelin", "MetaMask/WalletConnect",
+            "The Graph (Subgraphs)", "Alchemy/Infura", "Remix IDE",
+            "Chainlink (Oracles)", "IPFS/Arweave"
+        ],
+        "evaluation_focus": "smart contract security, DeFi protocol understanding, gas optimization skills, auditing experience, and on-chain project portfolio",
+        "industry_context": "blockchain development at crypto/Web3 companies (Ethereum Foundation, Polygon, Uniswap, Aave)"
+    },
+
+    "iot engineer": {
+        "core_skills": [
+            "Embedded Systems & Microcontrollers", "IoT Communication Protocols (MQTT/CoAP/HTTP)",
+            "Sensor Integration & Data Acquisition", "Edge Computing & Processing",
+            "Cloud IoT Platforms (AWS IoT/Azure IoT/GCP IoT)", "Firmware Development (C/C++)",
+            "Wireless Technologies (BLE/Zigbee/LoRa/Wi-Fi)", "IoT Security & Encryption",
+            "Data Pipeline Design (Edge to Cloud)", "Real-Time Operating Systems (RTOS)",
+            "PCB Design Basics", "Power Management for IoT Devices",
+            "OTA (Over-The-Air) Update Systems", "Device Management & Provisioning",
+            "Python/Node.js for IoT Backend"
+        ],
+        "advanced_skills": [
+            "Digital Twin Technology", "Industrial IoT (IIoT) & Industry 4.0",
+            "TinyML & Edge AI", "IoT Standards & Interoperability",
+            "Fleet Management at Scale", "Predictive Maintenance Systems"
+        ],
+        "tools_and_platforms": [
+            "Raspberry Pi/Arduino/ESP32", "AWS IoT Core/Azure IoT Hub",
+            "MQTT Broker (Mosquitto/HiveMQ)", "Node-RED", "Grafana/InfluxDB",
+            "PlatformIO/Arduino IDE", "KiCad/Eagle", "ThingsBoard"
+        ],
+        "evaluation_focus": "end-to-end IoT system design, edge-to-cloud architecture, security implementation, power optimization, and scalable device management",
+        "industry_context": "IoT engineering at smart device and industrial companies (Siemens, Bosch, Amazon, Philips)"
+    },
+
+    "database administrator": {
+        "core_skills": [
+            "Database Design & Modeling (ER Diagrams)", "SQL Administration (PostgreSQL/MySQL/Oracle/SQL Server)",
+            "Performance Tuning & Query Optimization", "Backup & Recovery Strategies",
+            "Replication & High Availability (Master-Slave/Multi-Master)", "Database Security & Access Control",
+            "Index Design & Optimization", "Storage Management & Capacity Planning",
+            "Migration & Upgrade Planning", "Monitoring & Alerting for Databases",
+            "NoSQL Administration (MongoDB/Cassandra/Redis)", "Data Partitioning & Sharding",
+            "Transaction Management & Locking", "Disaster Recovery & RTO/RPO",
+            "Scripting for DB Automation (SQL/Python/Bash)"
+        ],
+        "advanced_skills": [
+            "Cloud Database Services (RDS/Cloud SQL/Cosmos DB)", "Database Consolidation & Rationalization",
+            "In-Memory Databases (Redis/Memcached/VoltDB)", "Time-Series Databases (InfluxDB/TimescaleDB)",
+            "Multi-Cloud Database Strategy", "Graph Databases (Neo4j/Neptune)"
+        ],
+        "tools_and_platforms": [
+            "PostgreSQL/MySQL/Oracle/SQL Server", "MongoDB/Cassandra/DynamoDB",
+            "Redis/Memcached", "pgAdmin/MySQL Workbench/SSMS", "Percona Toolkit",
+            "DataGrip/DBeaver", "Prometheus/Grafana for DB", "Liquibase/Flyway"
+        ],
+        "evaluation_focus": "database design quality, query performance optimization, high availability design, backup/recovery reliability, and security hardening",
+        "industry_context": "DBA roles at data-intensive enterprises and cloud companies"
+    },
+
+    "solutions architect": {
+        "core_skills": [
+            "Enterprise Architecture Design", "Cloud Architecture (AWS/GCP/Azure)",
+            "System Integration & Middleware", "API Strategy & Design",
+            "Security Architecture & Compliance", "Scalability & Performance Design",
+            "Technology Evaluation & Selection", "Stakeholder & Executive Communication",
+            "Cost Estimation & TCO Analysis", "Migration & Modernization Planning",
+            "High Availability & Disaster Recovery Design", "Microservices vs Monolith Strategy",
+            "Data Architecture & Flow Design", "DevOps & CI/CD Strategy",
+            "Technical Documentation & Architecture Decision Records (ADRs)"
+        ],
+        "advanced_skills": [
+            "Domain-Driven Design (DDD)", "Event-Driven Architecture at Scale",
+            "Multi-Cloud & Hybrid Strategy", "AI/ML Integration Architecture",
+            "Regulatory & Compliance Architecture (HIPAA/PCI/GDPR)",
+            "Platform Modernization (Legacy to Cloud-Native)"
+        ],
+        "tools_and_platforms": [
+            "AWS/GCP/Azure (Certified Architect)", "Terraform/Pulumi",
+            "Lucidchart/Draw.io/Miro", "Kubernetes/Docker", "Kafka/RabbitMQ",
+            "API Gateways (Kong/Apigee)", "Confluence/Notion", "ArchiMate/TOGAF"
+        ],
+        "evaluation_focus": "architectural breadth, technical depth, communication with non-technical stakeholders, trade-off analysis, and enterprise-scale design thinking",
+        "industry_context": "solutions architecture at cloud vendors and consulting firms (AWS, Google Cloud, Accenture, Deloitte)"
+    },
+
+    "erp consultant": {
+        "core_skills": [
+            "ERP System Configuration & Customization", "Business Process Mapping (Order-to-Cash/Procure-to-Pay)",
+            "Requirements Gathering & Gap Analysis", "Module Expertise (Finance/SCM/HR/Manufacturing)",
+            "Data Migration & Integration", "User Training & Change Management",
+            "Testing & UAT Coordination", "Report & Dashboard Development",
+            "Workflow & Approval Configuration", "System Administration & User Management",
+            "Vendor Management & Licensing", "Cut-Over Planning & Go-Live Support",
+            "Master Data Management", "Compliance & Regulatory Configuration",
+            "Post-Implementation Support & Optimization"
+        ],
+        "advanced_skills": [
+            "ERP Architecture & Multi-Entity Design", "Cloud ERP Migration (On-Prem to Cloud)",
+            "Integration Platform Design (iPaaS)", "Advanced Analytics & BI on ERP Data",
+            "RPA Integration with ERP", "Global Rollout Management"
+        ],
+        "tools_and_platforms": [
+            "SAP S/4HANA / SAP ECC", "Oracle ERP Cloud / NetSuite",
+            "Microsoft Dynamics 365", "Workday", "Infor/Epicor",
+            "MuleSoft/Boomi (Integration)", "Power BI/Tableau (Reporting)",
+            "ServiceNow"
+        ],
+        "evaluation_focus": "ERP domain expertise, business process understanding, implementation methodology, change management skills, and measurable client outcomes",
+        "industry_context": "ERP consulting at system integrators and enterprises (Deloitte, Accenture, TCS, Infosys)"
+    },
+
+    "sap consultant": {
+        "core_skills": [
+            "SAP Module Expertise (FICO/MM/SD/PP/HCM)", "SAP S/4HANA Configuration",
+            "ABAP Programming", "SAP Fiori/UI5 Development",
+            "Business Blueprint & Requirements Documentation", "SAP Integration (RFC/BAPI/IDoc/PI-PO)",
+            "Data Migration (LSMW/S/4HANA Migration Cockpit)", "SAP Security & Authorization (Roles/Profiles)",
+            "Custom Report Development (ALV/Smart Forms/Adobe Forms)", "SAP Testing & Transport Management",
+            "Master Data Governance (MDG)", "SAP Solution Manager",
+            "Business Process Configuration (IMG)", "SAP Workflow Design",
+            "End-User Training & Documentation"
+        ],
+        "advanced_skills": [
+            "SAP BTP (Business Technology Platform)", "SAP Analytics Cloud",
+            "SAP Integration Suite / CPI", "Greenfield S/4HANA Implementation",
+            "SAP RISE Migration", "SAP Activate Methodology"
+        ],
+        "tools_and_platforms": [
+            "SAP S/4HANA / ECC", "SAP GUI / Fiori Launchpad", "ABAP Workbench / Eclipse ADT",
+            "SAP BTP / Cloud Foundry", "SAP Solution Manager / Charm",
+            "SAP PI/PO / CPI", "SAP Analytics Cloud", "HP ALM / Tricentis Tosca"
+        ],
+        "evaluation_focus": "SAP module depth, implementation methodology, ABAP skills, integration expertise, and end-to-end project delivery",
+        "industry_context": "SAP consulting at global SIs and enterprises (SAP, Deloitte, Accenture, Capgemini, TCS)"
+    },
 }
+
