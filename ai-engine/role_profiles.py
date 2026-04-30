@@ -435,4 +435,214 @@ ROLE_PROFILES = {
         "evaluation_focus": "dashboard design quality, business impact of insights, SQL proficiency, stakeholder communication, and ability to translate data into actionable recommendations",
         "industry_context": "BI roles at enterprise and SaaS companies"
     },
+
+    # =====================================================================
+    #  CATEGORY 3: INFRASTRUCTURE & CLOUD
+    # =====================================================================
+
+    "devops engineer": {
+        "core_skills": [
+            "Docker & Containerization", "Kubernetes Orchestration",
+            "CI/CD Pipelines (Jenkins/GitHub Actions/GitLab CI)", "Infrastructure as Code (Terraform/Pulumi)",
+            "Cloud Platforms (AWS/GCP/Azure)", "Linux System Administration",
+            "Monitoring & Observability (Prometheus/Grafana/Datadog)", "Networking (TCP/IP/DNS/Load Balancing)",
+            "Security (IAM/Vault/Secrets Management)", "Scripting (Bash/Python/Go)",
+            "Configuration Management (Ansible/Chef/Puppet)", "GitOps (ArgoCD/Flux)",
+            "Log Management (ELK/Loki)", "Incident Response & On-Call Management",
+            "Release Management & Deployment Strategies (Blue-Green/Canary)"
+        ],
+        "advanced_skills": [
+            "Service Mesh (Istio/Linkerd)", "Chaos Engineering (Gremlin/Litmus)",
+            "FinOps & Cloud Cost Optimization", "Multi-Cloud Architecture",
+            "Platform Engineering & Internal Developer Platforms",
+            "Compliance Automation (SOC2/HIPAA)"
+        ],
+        "tools_and_platforms": [
+            "Docker/Kubernetes/Helm", "Terraform/Pulumi", "Jenkins/GitHub Actions/ArgoCD",
+            "Prometheus/Grafana/Datadog", "AWS/GCP/Azure", "Ansible/Chef",
+            "Vault/Secrets Manager", "ELK Stack/Loki", "PagerDuty/OpsGenie"
+        ],
+        "evaluation_focus": "infrastructure automation, reliability engineering, deployment pipelines, incident management, cloud architecture, and developer experience improvement",
+        "industry_context": "DevOps/Platform engineering at cloud-native companies (Netflix, Spotify, Datadog)"
+    },
+
+    "cloud architect": {
+        "core_skills": [
+            "Multi-Cloud Architecture (AWS/GCP/Azure)", "Cloud-Native Design Patterns",
+            "Infrastructure as Code (Terraform/CloudFormation/Pulumi)", "Networking (VPC/Subnets/VPN/Direct Connect)",
+            "Identity & Access Management (IAM)", "Serverless Architecture (Lambda/Cloud Functions)",
+            "Container Orchestration (EKS/GKE/AKS)", "Database Selection & Architecture",
+            "Cost Optimization & FinOps", "High Availability & Disaster Recovery",
+            "Security Architecture (Zero Trust/Encryption)", "Migration Strategy (Lift-Shift/Re-architect)",
+            "Compliance Frameworks (SOC2/HIPAA/PCI-DSS)", "API Gateway & Service Mesh Design",
+            "Performance Engineering & Scalability"
+        ],
+        "advanced_skills": [
+            "Multi-Region Architecture", "Hybrid Cloud Design",
+            "Cloud Governance & Landing Zones", "Edge Computing Architecture",
+            "Data Residency & Sovereignty", "Well-Architected Framework Reviews"
+        ],
+        "tools_and_platforms": [
+            "AWS/GCP/Azure (Certified)", "Terraform/Pulumi", "Kubernetes/ECS/Fargate",
+            "CloudWatch/Stackdriver/Azure Monitor", "Lambda/Cloud Functions/Azure Functions",
+            "RDS/DynamoDB/Cloud SQL/Cosmos DB", "CloudFront/Cloud CDN",
+            "AWS Organizations/GCP Resource Manager"
+        ],
+        "evaluation_focus": "architectural decision-making, cost-performance tradeoffs, security-first design, migration planning, and enterprise-scale cloud strategy",
+        "industry_context": "cloud architecture at enterprise and hyperscale companies (AWS, Google Cloud, Microsoft Azure)"
+    },
+
+    "site reliability engineer": {
+        "core_skills": [
+            "SRE Principles (SLOs/SLIs/Error Budgets)", "Incident Management & Post-Mortems",
+            "Monitoring & Alerting (Prometheus/Grafana/PagerDuty)", "Linux Systems (Advanced)",
+            "Distributed Systems Understanding", "Capacity Planning & Load Testing",
+            "Automation & Toil Reduction", "Kubernetes & Container Orchestration",
+            "Networking & DNS Management", "On-Call Best Practices",
+            "Change Management & Release Engineering", "Database Reliability",
+            "Performance Profiling & Optimization", "Runbook & Documentation Writing",
+            "Scripting (Python/Go/Bash)"
+        ],
+        "advanced_skills": [
+            "Chaos Engineering", "Large-Scale Distributed System Design",
+            "Custom Monitoring Solutions", "Traffic Management & Load Balancing at Scale",
+            "Reliability Consulting for Product Teams", "Global Infrastructure Management"
+        ],
+        "tools_and_platforms": [
+            "Prometheus/Grafana/Thanos", "PagerDuty/OpsGenie", "Kubernetes/Helm",
+            "Terraform", "Elasticsearch/Loki", "Jaeger/Zipkin (Tracing)",
+            "Statuspage", "Ansible/Puppet", "Go/Python"
+        ],
+        "evaluation_focus": "reliability mindset, SLO-driven operations, incident response effectiveness, automation impact, and toil reduction measurables",
+        "industry_context": "SRE at hyperscale companies (Google, LinkedIn, Dropbox, Twitter)"
+    },
+
+    "platform engineer": {
+        "core_skills": [
+            "Internal Developer Platform (IDP) Design", "Kubernetes & Cloud-Native Stack",
+            "CI/CD Pipeline Architecture", "Infrastructure as Code (Terraform/Crossplane)",
+            "Developer Experience (DX) Optimization", "Service Catalog & Self-Service Tooling",
+            "GitOps Workflows (ArgoCD/Flux)", "Containerization & Registry Management",
+            "Secrets Management & Security Guardrails", "Observability Stack Design",
+            "API Design for Platform Services", "Cost Management & Resource Governance",
+            "Multi-Tenancy & Namespace Management", "Documentation & Developer Onboarding",
+            "Scripting & Automation (Python/Go/Bash)"
+        ],
+        "advanced_skills": [
+            "Backstage / Port Developer Portals", "Custom Kubernetes Operators",
+            "Policy as Code (OPA/Kyverno)", "Supply Chain Security (SLSA/Sigstore)",
+            "Platform Metrics & Adoption Tracking", "Cloud-Native Buildpacks"
+        ],
+        "tools_and_platforms": [
+            "Kubernetes/Helm/Kustomize", "ArgoCD/Flux", "Terraform/Crossplane",
+            "Backstage", "Harbor/ECR/GCR", "Vault/External Secrets Operator",
+            "Prometheus/Grafana", "GitHub Actions/Tekton", "OPA/Kyverno"
+        ],
+        "evaluation_focus": "developer experience design, platform adoption metrics, infrastructure abstraction quality, self-service enablement, and engineering productivity improvement",
+        "industry_context": "platform engineering at developer-focused companies (Spotify, Atlassian, Shopify)"
+    },
+
+    "network engineer": {
+        "core_skills": [
+            "TCP/IP & OSI Model", "Routing Protocols (BGP/OSPF/EIGRP)",
+            "Switching & VLANs", "Firewall Configuration & Management",
+            "VPN Technologies (IPSec/SSL)", "DNS & DHCP Administration",
+            "Network Monitoring (SNMP/NetFlow/Wireshark)", "Load Balancing (F5/HAProxy/Nginx)",
+            "Wireless Networking (Wi-Fi 6/802.11)", "Network Security & ACLs",
+            "SD-WAN & SASE", "Cloud Networking (VPC/Transit Gateway)",
+            "Network Automation (Ansible/Netmiko/NAPALM)", "QoS & Traffic Shaping",
+            "IPv6 Implementation"
+        ],
+        "advanced_skills": [
+            "Software-Defined Networking (SDN)", "Intent-Based Networking",
+            "Multi-Cloud Networking", "Network Function Virtualization (NFV)",
+            "Zero Trust Network Architecture", "Large-Scale Data Center Networking"
+        ],
+        "tools_and_platforms": [
+            "Cisco/Juniper/Arista", "Palo Alto/Fortinet/Check Point",
+            "Wireshark/tcpdump", "Ansible/Terraform for Network", "SolarWinds/PRTG/Nagios",
+            "Meraki/Ubiquiti", "AWS/Azure Networking", "InfoBlox"
+        ],
+        "evaluation_focus": "network design expertise, troubleshooting methodology, automation adoption, security posture, and scalability planning",
+        "industry_context": "network engineering at ISPs, data centers, and enterprise companies (Cisco, Cloudflare, Akamai)"
+    },
+
+    # =====================================================================
+    #  CATEGORY 4: SECURITY
+    # =====================================================================
+
+    "cybersecurity analyst": {
+        "core_skills": [
+            "Network Security Fundamentals", "SIEM Tools (Splunk/QRadar/Sentinel)",
+            "Threat Detection & Analysis", "Incident Response & Handling",
+            "Vulnerability Assessment & Scanning", "Security Compliance (GDPR/SOC2/HIPAA/PCI-DSS)",
+            "Firewall & IDS/IPS Management", "Cryptography & PKI",
+            "Threat Modeling (STRIDE/DREAD)", "Malware Analysis Basics",
+            "Security Information & Event Management", "Log Analysis & Forensics",
+            "Phishing & Social Engineering Awareness", "Identity & Access Management",
+            "Risk Assessment & Management"
+        ],
+        "advanced_skills": [
+            "Threat Hunting (Proactive)", "SOAR Platform Automation",
+            "Advanced Persistent Threat (APT) Analysis", "Digital Forensics (DFIR)",
+            "Cyber Threat Intelligence (CTI)", "Red Team vs Blue Team Operations"
+        ],
+        "tools_and_platforms": [
+            "Splunk/QRadar/Microsoft Sentinel", "Nessus/Qualys/Rapid7",
+            "CrowdStrike/Carbon Black", "Wireshark/tcpdump", "MITRE ATT&CK Framework",
+            "Palo Alto/Fortinet", "VirusTotal/Any.run", "TheHive/MISP"
+        ],
+        "evaluation_focus": "threat detection capability, incident response speed, compliance knowledge, forensic investigation skills, and security awareness program design",
+        "industry_context": "cybersecurity at enterprise and fintech companies (CrowdStrike, Palo Alto Networks, banks)"
+    },
+
+    "security engineer": {
+        "core_skills": [
+            "Application Security (OWASP Top 10)", "Secure Code Review",
+            "Penetration Testing (Web/Network/API)", "Cloud Security (AWS/GCP/Azure Security Services)",
+            "Identity & Access Management (OAuth/SAML/OIDC)", "Secrets Management (Vault/KMS)",
+            "Container Security (Falco/Trivy/Aqua)", "CI/CD Security (SAST/DAST/SCA)",
+            "Infrastructure Security (Hardening/CIS Benchmarks)", "Network Security (Firewalls/WAF/DDoS)",
+            "Security Architecture & Design", "Compliance Engineering (SOC2/HIPAA Automation)",
+            "Incident Response Planning", "Logging & Monitoring for Security",
+            "Scripting for Security Automation (Python/Go)"
+        ],
+        "advanced_skills": [
+            "Zero Trust Architecture", "Supply Chain Security",
+            "Bug Bounty Program Management", "Threat Modeling at Scale",
+            "Security Data Engineering", "Red Teaming & Adversary Simulation"
+        ],
+        "tools_and_platforms": [
+            "Burp Suite/ZAP", "Vault/AWS KMS", "Snyk/Dependabot/Trivy",
+            "Falco/Sysdig", "Terraform Sentinel/OPA", "Semgrep/SonarQube",
+            "AWS Security Hub/GuardDuty", "Okta/Auth0", "Splunk/Datadog Security"
+        ],
+        "evaluation_focus": "security engineering depth, shift-left security adoption, cloud security architecture, automation of security controls, and incident response readiness",
+        "industry_context": "security engineering at tech companies (Google, Netflix, Coinbase, Stripe)"
+    },
+
+    "penetration tester": {
+        "core_skills": [
+            "Web Application Penetration Testing (OWASP)", "Network Penetration Testing",
+            "API Security Testing", "Vulnerability Assessment & Exploitation",
+            "Social Engineering Techniques", "Wireless Network Testing",
+            "Active Directory Exploitation", "Privilege Escalation (Linux/Windows)",
+            "Report Writing & Risk Scoring (CVSS)", "Scripting (Python/Bash/PowerShell)",
+            "OSINT (Open-Source Intelligence)", "Post-Exploitation Techniques",
+            "Cloud Penetration Testing (AWS/Azure/GCP)", "Mobile App Security Testing",
+            "Red Team Operations"
+        ],
+        "advanced_skills": [
+            "Custom Exploit Development", "Reverse Engineering & Binary Analysis",
+            "Advanced Evasion Techniques", "Physical Security Testing",
+            "IoT/OT Penetration Testing", "Purple Team Exercises"
+        ],
+        "tools_and_platforms": [
+            "Burp Suite Pro", "Metasploit/Cobalt Strike", "Nmap/Masscan",
+            "Kali Linux", "BloodHound/SharpHound", "Hashcat/John the Ripper",
+            "Nessus/OpenVAS", "Wireshark", "OWASP ZAP/Nikto"
+        ],
+        "evaluation_focus": "offensive security expertise, finding and exploiting real vulnerabilities, methodology and documentation quality, and client communication skills",
+        "industry_context": "penetration testing at security firms and red teams (Mandiant, CrowdStrike, NCC Group)"
+    },
 }
