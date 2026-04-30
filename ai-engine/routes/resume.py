@@ -6,6 +6,8 @@ Role-specific AI evaluation engine with Google-grade accuracy.
 import json
 import re
 import io
+import sys
+import os
 
 import PyPDF2
 from fastapi import APIRouter, UploadFile, File, Form
@@ -14,119 +16,13 @@ from config import groq_client, SELECTED_MODEL
 from models import FixRequest
 from helpers import is_valid_resume
 
+# Import expanded role profiles (35+ roles, 100+ keyword mappings)
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+from role_profiles import get_role_profile
+
 router = APIRouter()
 
 
-# ---------------------------------------------------------------------------
-# Role-specific skill databases — the AI uses these as evaluation anchors.
-# Each role has core skills, nice-to-haves, and evaluation focus areas.
-# ---------------------------------------------------------------------------
-ROLE_PROFILES = {
-    "default": {
-        "core_skills": ["Communication", "Problem Solving", "Teamwork", "Adaptability", "Critical Thinking"],
-        "evaluation_focus": "general professional competence and transferable skills",
-        "industry_context": "general industry"
-    },
-    "software engineer": {
-        "core_skills": ["Data Structures & Algorithms", "System Design", "REST APIs", "Git/Version Control",
-                        "SQL/Databases", "OOP Principles", "Testing/TDD", "CI/CD", "Cloud (AWS/GCP/Azure)"],
-        "evaluation_focus": "coding proficiency, system design thinking, scalable architecture, code quality, and engineering rigor",
-        "industry_context": "software engineering at top tech companies (Google, Meta, Apple, Amazon)"
-    },
-    "data scientist": {
-        "core_skills": ["Python/R", "Machine Learning", "Statistics & Probability", "SQL",
-                        "Data Visualization (Matplotlib/Tableau)", "Pandas/NumPy", "Deep Learning",
-                        "Feature Engineering", "A/B Testing", "Model Deployment"],
-        "evaluation_focus": "statistical rigor, ML model selection, experiment design, data storytelling, and business impact of analyses",
-        "industry_context": "data science at top tech and analytics companies"
-    },
-    "data analyst": {
-        "core_skills": ["SQL (Advanced)", "Excel/Google Sheets", "Data Visualization (Tableau/Power BI)",
-                        "Python/R for analysis", "Statistics", "ETL Pipelines", "Business Acumen",
-                        "Dashboard Design", "A/B Testing"],
-        "evaluation_focus": "analytical thinking, dashboard design, data-driven decision making, and translating data into business insights",
-        "industry_context": "data analytics at product companies"
-    },
-    "product manager": {
-        "core_skills": ["Product Strategy", "User Research", "A/B Testing", "Roadmapping",
-                        "Stakeholder Management", "Metrics (KPIs/OKRs)", "Wireframing",
-                        "Competitive Analysis", "Go-to-Market Strategy"],
-        "evaluation_focus": "product thinking, user empathy, metrics-driven decisions, cross-functional leadership, and business outcomes",
-        "industry_context": "product management at consumer and enterprise tech companies"
-    },
-    "frontend developer": {
-        "core_skills": ["JavaScript/TypeScript", "React/Vue/Angular", "HTML5/CSS3", "Responsive Design",
-                        "State Management", "Web Performance", "Accessibility (a11y)",
-                        "RESTful APIs", "Testing (Jest/Cypress)"],
-        "evaluation_focus": "UI/UX sensibility, component architecture, performance optimization, cross-browser compatibility, and modern frontend patterns",
-        "industry_context": "frontend engineering at design-forward companies"
-    },
-    "backend developer": {
-        "core_skills": ["Node.js/Python/Java/Go", "REST/GraphQL APIs", "Database Design (SQL/NoSQL)",
-                        "Authentication/Authorization", "Caching (Redis)", "Message Queues",
-                        "Microservices", "Docker/Kubernetes", "System Design"],
-        "evaluation_focus": "API design, database optimization, scalability patterns, security best practices, and distributed systems thinking",
-        "industry_context": "backend engineering at high-scale companies"
-    },
-    "devops engineer": {
-        "core_skills": ["Docker/Kubernetes", "CI/CD (Jenkins/GitHub Actions)", "Terraform/IaC",
-                        "AWS/GCP/Azure", "Linux Administration", "Monitoring (Prometheus/Grafana)",
-                        "Networking", "Security (IAM/Vault)", "Scripting (Bash/Python)"],
-        "evaluation_focus": "infrastructure automation, reliability engineering, deployment pipelines, incident management, and cloud architecture",
-        "industry_context": "DevOps/SRE at cloud-native companies"
-    },
-    "machine learning engineer": {
-        "core_skills": ["Python", "TensorFlow/PyTorch", "ML Pipelines", "Model Optimization",
-                        "MLOps (MLflow/Kubeflow)", "Feature Stores", "Distributed Training",
-                        "Model Serving", "Data Engineering"],
-        "evaluation_focus": "ML system design, model training at scale, production ML pipelines, model monitoring, and bridging research to production",
-        "industry_context": "ML engineering at AI-first companies"
-    },
-    "ui/ux designer": {
-        "core_skills": ["Figma/Sketch", "User Research", "Wireframing/Prototyping", "Design Systems",
-                        "Usability Testing", "Information Architecture", "Interaction Design",
-                        "Visual Design", "Accessibility"],
-        "evaluation_focus": "design thinking, user empathy, visual hierarchy, interaction patterns, and measurable UX improvements",
-        "industry_context": "product design at design-led companies (Apple, Airbnb, Stripe)"
-    },
-    "cybersecurity analyst": {
-        "core_skills": ["Network Security", "SIEM Tools", "Penetration Testing", "Incident Response",
-                        "Vulnerability Assessment", "Compliance (GDPR/SOC2)", "Firewalls/IDS",
-                        "Cryptography", "Threat Modeling"],
-        "evaluation_focus": "threat detection, vulnerability analysis, security architecture, incident response time, and compliance adherence",
-        "industry_context": "cybersecurity at enterprise and fintech companies"
-    }
-}
-
-
-def get_role_profile(job_role: str) -> dict:
-    """Match the user's job role input to the closest profile."""
-    role_lower = job_role.lower().strip()
-    # Direct match
-    if role_lower in ROLE_PROFILES:
-        return ROLE_PROFILES[role_lower]
-    # Partial match
-    for key, profile in ROLE_PROFILES.items():
-        if key in role_lower or role_lower in key:
-            return profile
-    # Keyword match
-    keyword_map = {
-        "sde": "software engineer", "swe": "software engineer", "developer": "software engineer",
-        "full stack": "software engineer", "fullstack": "software engineer",
-        "data sci": "data scientist", "ml": "machine learning engineer",
-        "ai engineer": "machine learning engineer",
-        "frontend": "frontend developer", "front end": "frontend developer", "react": "frontend developer",
-        "backend": "backend developer", "back end": "backend developer",
-        "devops": "devops engineer", "sre": "devops engineer", "infrastructure": "devops engineer",
-        "product": "product manager", "pm": "product manager",
-        "analyst": "data analyst", "business analyst": "data analyst",
-        "designer": "ui/ux designer", "ux": "ui/ux designer", "ui": "ui/ux designer",
-        "security": "cybersecurity analyst", "cyber": "cybersecurity analyst",
-    }
-    for keyword, mapped_role in keyword_map.items():
-        if keyword in role_lower:
-            return ROLE_PROFILES[mapped_role]
-    return ROLE_PROFILES["default"]
 
 
 @router.post("/api/analyze-resume")
@@ -149,6 +45,8 @@ async def analyze(file: UploadFile = File(...), job_role: str = Form(...)):
     # Get role-specific evaluation profile
     role_profile = get_role_profile(job_role)
     core_skills_str = ", ".join(role_profile["core_skills"])
+    advanced_skills_str = ", ".join(role_profile.get("advanced_skills", []))
+    tools_str = ", ".join(role_profile.get("tools_and_platforms", []))
 
     # Default structure — role-aware fallback
     final = {
@@ -192,6 +90,8 @@ TARGET ROLE: {job_role}
 ROLE CONTEXT: Evaluate against standards in {role_profile['industry_context']}.
 EVALUATION FOCUS: {role_profile['evaluation_focus']}.
 MUST-HAVE SKILLS FOR THIS ROLE: {core_skills_str}
+ADVANCED/SENIOR-LEVEL SKILLS: {advanced_skills_str}
+INDUSTRY TOOLS & PLATFORMS: {tools_str}
 
 RESUME TEXT:
 {text[:4000]}
@@ -205,7 +105,7 @@ SCORING RULES (STRICT):
   * 81-100: Exceptional, ready for senior {job_role} at a top company
 - sub_scores.role_alignment: How well does this resume align with {job_role}? If someone has web dev experience but applies for Data Scientist, this should be LOW (20-35).
 - sub_scores.technical_depth: Rate depth of skills RELEVANT to {job_role} only. Irrelevant skills don't count.
-- missing_basic_skills: List skills from [{core_skills_str}] that are ABSENT or weak in the resume. Only list truly missing ones.
+- missing_basic_skills: List skills from [{core_skills_str}, {advanced_skills_str}] that are ABSENT or weak in the resume. Only list truly missing ones. Include both core AND advanced skills that are missing.
 - skill_importance_data: Rate skills FOUND in the resume by their importance TO {job_role} specifically.
 
 Return ONLY a valid JSON object. No markdown, no explanation, no code blocks.
