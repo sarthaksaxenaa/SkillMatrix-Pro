@@ -1,12 +1,13 @@
 """
 Comprehensive Role Profiles Database for SkillMatrix Pro.
-Each role contains core skills, advanced skills, tools/platforms,
+Each role contains 15-18 core skills, 6-7 advanced skills, 8+ tools/platforms,
 evaluation focus, and industry context for world-class resume analysis.
+55+ roles across 14 industry categories with 200+ keyword mappings.
 """
 
 
 # ---------------------------------------------------------------------------
-# ROLE PROFILES — 35+ roles across 7 industry categories
+# ROLE PROFILES — 55+ roles across 14 industry categories
 # ---------------------------------------------------------------------------
 ROLE_PROFILES = {
 
@@ -1037,28 +1038,608 @@ ROLE_PROFILES = {
         "evaluation_focus": "SAP module depth, implementation methodology, ABAP skills, integration expertise, and end-to-end project delivery",
         "industry_context": "SAP consulting at global SIs and enterprises (SAP, Deloitte, Accenture, Capgemini, TCS)"
     },
+
+    # =====================================================================
+    #  CATEGORY 8: ENGINEERING LEADERSHIP & MANAGEMENT
+    # =====================================================================
+
+    "engineering manager": {
+        "core_skills": [
+            "Team Leadership & People Management", "Technical Architecture Decision Making",
+            "Sprint Planning & Agile Execution", "Performance Reviews & Career Development",
+            "Hiring & Interview Process Design", "Cross-Functional Stakeholder Management",
+            "Technical Roadmap Planning", "Code Review & Engineering Standards",
+            "Incident Management & Escalation", "Budget & Resource Allocation",
+            "1:1 Coaching & Mentoring", "OKR/KPI Setting & Tracking",
+            "Conflict Resolution & Team Dynamics", "Technical Debt Prioritization",
+            "Engineering Culture & Process Improvement", "Risk Assessment & Mitigation",
+            "Vendor & Contractor Management", "Diversity & Inclusion in Hiring"
+        ],
+        "advanced_skills": [
+            "Organizational Design & Team Topology", "Engineering Strategy at VP Level",
+            "M&A Technical Due Diligence", "Build vs Buy Decision Frameworks",
+            "Developer Productivity Measurement (DORA/SPACE)", "Multi-Team Program Execution",
+            "Executive Communication & Board Reporting"
+        ],
+        "tools_and_platforms": [
+            "Jira/Linear/Shortcut", "GitHub/GitLab", "Slack/Teams",
+            "Lattice/Culture Amp (Performance)", "Lever/Greenhouse (Hiring)",
+            "Confluence/Notion", "Datadog/PagerDuty", "Google Workspace"
+        ],
+        "evaluation_focus": "leadership maturity, technical credibility, team scaling experience, delivery track record, hiring quality, and engineering culture building",
+        "industry_context": "engineering management at scaling tech companies (Google, Meta, Stripe, Airbnb, Series B-D startups)"
+    },
+
+    "technical program manager": {
+        "core_skills": [
+            "Program Planning & Execution", "Cross-Team Dependency Management",
+            "Technical Architecture Understanding", "Risk Management & Mitigation",
+            "Stakeholder Communication & Alignment", "Project Scheduling (Gantt/Critical Path)",
+            "Release Coordination & Launch Readiness", "Agile/Scrum/Kanban at Scale",
+            "Resource Planning & Capacity Management", "Vendor Management & Procurement",
+            "Status Reporting & Executive Dashboards", "Process Design & Optimization",
+            "Change Management & Impact Assessment", "Technical Debt Tracking & Prioritization",
+            "Post-Mortem & Lessons Learned Facilitation", "Budget Tracking & Forecasting",
+            "Compliance & Regulatory Coordination"
+        ],
+        "advanced_skills": [
+            "Portfolio Management & Prioritization", "SAFe/LeSS Program Increment Planning",
+            "Platform Migration Program Management", "Data Center / Cloud Migration Programs",
+            "Security & Compliance Program Ownership", "IPO / SOX Readiness Programs",
+            "Global Team Coordination Across Time Zones"
+        ],
+        "tools_and_platforms": [
+            "Jira/Jira Align/Asana", "Microsoft Project/Smartsheet", "Confluence/Notion",
+            "Slack/Teams", "Google Sheets/Excel (Advanced)", "Miro/Lucidchart",
+            "PagerDuty/Statuspage", "Tableau/Looker (Reporting)"
+        ],
+        "evaluation_focus": "program execution at scale, cross-functional leadership, risk management, delivery predictability, and technical fluency without being an IC",
+        "industry_context": "TPM roles at FAANG and large-scale tech companies (Google, Amazon, Microsoft, Meta)"
+    },
+
+    # =====================================================================
+    #  CATEGORY 9: EXPANDED INFRASTRUCTURE & SECURITY
+    # =====================================================================
+
+    "devsecops engineer": {
+        "core_skills": [
+            "CI/CD Security Integration (SAST/DAST/SCA)", "Container Security (Trivy/Falco/Aqua)",
+            "Infrastructure as Code Security (Terraform/CloudFormation)", "Secrets Management (Vault/AWS Secrets Manager)",
+            "Kubernetes Security (RBAC/Network Policies/Pod Security)", "Cloud Security Posture Management (CSPM)",
+            "Supply Chain Security (SBOM/SLSA/Sigstore)", "Vulnerability Management & Remediation",
+            "Compliance as Code (OPA/Sentinel/Kyverno)", "Security Monitoring & SIEM Integration",
+            "Identity & Access Management (IAM/OIDC/SAML)", "Threat Modeling for DevOps Pipelines",
+            "GitOps Security (Signed Commits/Branch Protection)", "Incident Response Automation",
+            "Scripting & Automation (Python/Go/Bash)", "API Security Testing & Gateway Configuration",
+            "Image Scanning & Registry Security"
+        ],
+        "advanced_skills": [
+            "Zero Trust Architecture Implementation", "Runtime Application Self-Protection (RASP)",
+            "eBPF for Security Observability", "Chaos Engineering for Security",
+            "Cloud-Native Application Protection (CNAPP)", "Security Data Lake Engineering",
+            "FedRAMP/SOC2 Automation Pipelines"
+        ],
+        "tools_and_platforms": [
+            "Snyk/Checkmarx/Veracode", "Trivy/Grype/Syft", "HashiCorp Vault",
+            "Falco/Sysdig/Aqua", "OPA/Kyverno", "GitHub Advanced Security/GitLab SAST",
+            "AWS Security Hub/GuardDuty", "Terraform/Pulumi", "ArgoCD/Flux"
+        ],
+        "evaluation_focus": "shift-left security implementation, pipeline security automation, vulnerability remediation speed, compliance automation, and security-developer experience balance",
+        "industry_context": "DevSecOps at security-conscious companies (Coinbase, Stripe, Netflix, financial institutions)"
+    },
+
+    "systems administrator": {
+        "core_skills": [
+            "Linux System Administration (RHEL/Ubuntu/CentOS)", "Windows Server Administration (AD/GPO/DNS/DHCP)",
+            "Shell Scripting (Bash/PowerShell)", "User & Group Management",
+            "Network Configuration & Troubleshooting", "Backup & Disaster Recovery",
+            "Patch Management & Security Updates", "Virtualization (VMware/Hyper-V/KVM)",
+            "Storage Management (SAN/NAS/RAID)", "Monitoring & Alerting (Nagios/Zabbix/PRTG)",
+            "Email Server Administration (Exchange/Postfix)", "DNS/DHCP/LDAP Administration",
+            "SSL/TLS Certificate Management", "Performance Tuning & Capacity Planning",
+            "Documentation & SOPs", "Configuration Management (Ansible/Puppet/Chef)",
+            "Cloud Infrastructure Basics (AWS/Azure)"
+        ],
+        "advanced_skills": [
+            "Infrastructure Automation at Scale", "Hybrid Cloud Management",
+            "High Availability Clustering", "Containerization & Orchestration",
+            "Compliance Auditing (CIS Benchmarks)", "Zero Downtime Migration",
+            "ITIL Service Management"
+        ],
+        "tools_and_platforms": [
+            "Linux (RHEL/Ubuntu)", "Windows Server", "VMware vSphere/ESXi",
+            "Active Directory/LDAP", "Ansible/Puppet", "Nagios/Zabbix/Datadog",
+            "Veeam/Commvault (Backup)", "ServiceNow/Jira (Ticketing)"
+        ],
+        "evaluation_focus": "system uptime track record, automation adoption, security hardening skills, troubleshooting methodology, and documentation quality",
+        "industry_context": "sysadmin roles at enterprises and managed service providers"
+    },
+
+    # =====================================================================
+    #  CATEGORY 10: EXPANDED DATA & ANALYTICS
+    # =====================================================================
+
+    "data architect": {
+        "core_skills": [
+            "Enterprise Data Modeling (Conceptual/Logical/Physical)", "Data Warehouse Architecture (Kimball/Inmon)",
+            "Data Lake & Lakehouse Design (Delta Lake/Iceberg)", "Cloud Data Platform Architecture (Snowflake/BigQuery/Redshift)",
+            "ETL/ELT Pipeline Architecture", "Data Governance & Cataloging (Collibra/Alation/DataHub)",
+            "Master Data Management (MDM)", "Data Quality Frameworks & Monitoring",
+            "Metadata Management & Lineage Tracking", "Stream Processing Architecture (Kafka/Flink/Kinesis)",
+            "Data Security & Privacy by Design (GDPR/CCPA)", "API-First Data Architecture",
+            "Schema Evolution & Versioning Strategy", "Cost Optimization for Data Infrastructure",
+            "Cross-functional Stakeholder Communication", "SQL (Expert Level)",
+            "Data Mesh & Domain-Oriented Architecture"
+        ],
+        "advanced_skills": [
+            "Multi-Cloud Data Strategy", "Real-Time Analytics Architecture",
+            "ML Feature Store Architecture (Feast/Tecton)", "Data Fabric Implementation",
+            "Semantic Layer Design (dbt Metrics/Cube.js)", "Regulatory Data Architecture (Basel/SOX/HIPAA)",
+            "Graph Data Modeling (Neo4j/Neptune)"
+        ],
+        "tools_and_platforms": [
+            "Snowflake/BigQuery/Redshift/Databricks", "dbt/Airflow/Dagster",
+            "Kafka/Confluent", "Collibra/Alation/DataHub", "Terraform/Pulumi",
+            "Delta Lake/Apache Iceberg", "Erwin/SqlDBM (Data Modeling)", "Great Expectations/Soda"
+        ],
+        "evaluation_focus": "enterprise data strategy, scalable architecture design, governance framework implementation, cross-team alignment, and measurable data quality improvement",
+        "industry_context": "data architecture at data-intensive enterprises (Netflix, Uber, Airbnb, Fortune 500)"
+    },
+
+    "quantitative analyst": {
+        "core_skills": [
+            "Stochastic Calculus & Financial Mathematics", "Statistical Modeling & Time Series Analysis",
+            "Python/R/MATLAB for Quantitative Analysis", "Options Pricing (Black-Scholes/Monte Carlo/Binomial)",
+            "Risk Management (VaR/CVaR/Stress Testing)", "Machine Learning for Finance",
+            "Portfolio Optimization (Markowitz/Black-Litterman)", "Fixed Income Analytics",
+            "Algorithmic Trading Strategy Development", "Backtesting & Strategy Validation",
+            "SQL & Database Querying for Financial Data", "C++ for Low-Latency Systems",
+            "Market Microstructure Understanding", "Derivatives Pricing & Greeks",
+            "Regression Analysis & Factor Models", "Signal Processing & Feature Engineering",
+            "Bloomberg Terminal & Market Data APIs"
+        ],
+        "advanced_skills": [
+            "High-Frequency Trading (HFT) Infrastructure", "Exotic Derivatives Pricing",
+            "Deep Learning for Alpha Generation", "Alternative Data Analysis (NLP/Satellite/Web Scraping)",
+            "Bayesian Methods in Finance", "Crypto Quantitative Strategies",
+            "Reinforcement Learning for Optimal Execution"
+        ],
+        "tools_and_platforms": [
+            "Python (NumPy/SciPy/Pandas/QuantLib)", "R/MATLAB", "C++ (Boost/STL)",
+            "Bloomberg/Reuters Terminal", "Kdb+/q (Time Series DB)", "Git/SVN",
+            "Jupyter/Colab", "AWS/GCP for Compute"
+        ],
+        "evaluation_focus": "mathematical rigor, trading strategy P&L, risk modeling accuracy, coding proficiency in C++/Python, and publication or research contributions",
+        "industry_context": "quant roles at hedge funds and investment banks (Citadel, Two Sigma, Jane Street, Goldman Sachs, DE Shaw)"
+    },
+
+    # =====================================================================
+    #  CATEGORY 11: EMERGING TECH
+    # =====================================================================
+
+    "robotics engineer": {
+        "core_skills": [
+            "ROS/ROS2 (Robot Operating System)", "C++/Python for Robotics",
+            "Control Systems (PID/MPC/Kalman Filters)", "SLAM (Simultaneous Localization & Mapping)",
+            "Computer Vision for Robotics", "Kinematics & Dynamics Modeling",
+            "Sensor Fusion (LiDAR/Camera/IMU)", "Motion Planning & Path Planning (RRT/A*)",
+            "Embedded Systems & Microcontrollers (ARM/STM32)", "Simulation (Gazebo/Isaac Sim/MuJoCo)",
+            "Actuator & Motor Control", "PCB Design & Hardware Integration",
+            "Real-Time Systems & RTOS", "3D Perception & Point Cloud Processing",
+            "Safety Systems & Functional Safety (ISO 13482)", "Communication Protocols (CAN/EtherCAT/I2C/SPI)",
+            "CAD/CAM (SolidWorks/Fusion 360)"
+        ],
+        "advanced_skills": [
+            "Reinforcement Learning for Robot Control", "Autonomous Navigation & SLAM at Scale",
+            "Multi-Robot Coordination & Swarm Intelligence", "Human-Robot Interaction (HRI)",
+            "Soft Robotics & Novel Actuators", "Digital Twin for Robotics",
+            "Manipulation & Grasping (Deep Learning-Based)"
+        ],
+        "tools_and_platforms": [
+            "ROS/ROS2", "Gazebo/Isaac Sim/MuJoCo", "OpenCV/PCL",
+            "MATLAB/Simulink", "SolidWorks/Fusion 360", "NVIDIA Jetson/Isaac",
+            "Arduino/Raspberry Pi/STM32", "Git/Docker"
+        ],
+        "evaluation_focus": "end-to-end robotics system design, real-world deployment experience, sensor fusion expertise, control system tuning, and safety certification knowledge",
+        "industry_context": "robotics engineering at leading companies (Boston Dynamics, Tesla, Amazon Robotics, Agility, NVIDIA)"
+    },
+
+    "ar/vr developer": {
+        "core_skills": [
+            "Unity 3D / Unreal Engine for XR", "C#/C++ for XR Development",
+            "3D Mathematics (Quaternions/Matrices/Spatial Geometry)", "Spatial Computing & Tracking",
+            "Hand Tracking & Gesture Recognition", "3D UI/UX Design for Immersive Environments",
+            "Shader Programming (HLSL/GLSL/ShaderGraph)", "Performance Optimization for XR (90fps+)",
+            "Spatial Audio & Haptics Integration", "Cross-Platform XR (Quest/Vision Pro/HoloLens)",
+            "AR Foundation / ARKit / ARCore", "Photogrammetry & 3D Scanning",
+            "Multiplayer Networking for XR (Photon/Normcore)", "Asset Pipeline & LOD Optimization",
+            "Eye Tracking & Foveated Rendering", "WebXR Development",
+            "Physics Simulation & Interaction Systems"
+        ],
+        "advanced_skills": [
+            "Mixed Reality Cloud Anchors & Persistence", "Neural Radiance Fields (NeRF) for XR",
+            "AI-Driven Avatar & Body Tracking", "Enterprise XR Solutions (Training/Visualization)",
+            "Custom Render Pipeline Development", "Volumetric Video Capture & Playback",
+            "Digital Twin Visualization"
+        ],
+        "tools_and_platforms": [
+            "Unity/Unreal Engine 5", "Meta Quest SDK/OpenXR", "Apple Vision Pro (visionOS/RealityKit)",
+            "ARKit/ARCore/AR Foundation", "Blender/Maya (3D Assets)", "Plastic SCM/Git LFS",
+            "Oculus Developer Hub", "MRTK (Mixed Reality Toolkit)"
+        ],
+        "evaluation_focus": "immersive experience quality, performance optimization for XR hardware, spatial interaction design, cross-platform deployment, and shipped XR project portfolio",
+        "industry_context": "XR development at spatial computing companies (Meta Reality Labs, Apple Vision Pro, Magic Leap, Niantic, Unity)"
+    },
+
+    "automation engineer": {
+        "core_skills": [
+            "RPA Development (UiPath/Automation Anywhere/Blue Prism)", "Process Mining & Analysis",
+            "Python Scripting for Automation", "Workflow Design & Orchestration",
+            "API Integration & Automation", "Database Automation (SQL/NoSQL)",
+            "Web Scraping & Data Extraction (Selenium/Scrapy)", "Excel/VBA Automation",
+            "Business Process Mapping (BPMN)", "Error Handling & Exception Management",
+            "Scheduled Task Management (Cron/Task Scheduler)", "Cloud Automation (AWS Lambda/Azure Functions)",
+            "Document Processing & OCR (Intelligent Automation)", "Testing & Validation of Automated Workflows",
+            "Change Management & User Training", "PowerShell/Bash Scripting",
+            "Low-Code/No-Code Platform Development (Power Automate/Zapier)"
+        ],
+        "advanced_skills": [
+            "Intelligent Process Automation (IPA/AI+RPA)", "Natural Language Processing for Document AI",
+            "Computer Vision for Automation", "Process Intelligence & Analytics",
+            "Chatbot & Conversational AI Development", "Hyperautomation Strategy",
+            "Center of Excellence (CoE) Design"
+        ],
+        "tools_and_platforms": [
+            "UiPath/Automation Anywhere/Blue Prism", "Power Automate/Zapier/Make",
+            "Python (Selenium/BeautifulSoup/Scrapy)", "ABBYY/Google Document AI",
+            "Jira/ServiceNow", "AWS Step Functions/Azure Logic Apps",
+            "Orchestrator/Control Room", "Git/Version Control"
+        ],
+        "evaluation_focus": "process optimization impact (hours saved/ROI), automation architecture quality, error handling robustness, scalability of solutions, and stakeholder management",
+        "industry_context": "automation/RPA at enterprises and consulting firms (Deloitte, Accenture, UiPath, Automation Anywhere)"
+    },
+
+    "financial analyst": {
+        "core_skills": [
+            "Financial Modeling & Valuation (DCF/Comps/Precedents)", "Excel & Spreadsheet Mastery (Advanced Formulas/Macros/VBA)",
+            "Financial Statement Analysis (Income Statement/Balance Sheet/Cash Flow)", "Budgeting & Forecasting",
+            "Variance Analysis & Management Reporting", "Data Visualization (Power BI/Tableau)",
+            "SQL for Financial Data Querying", "Accounting Principles (GAAP/IFRS)",
+            "Capital Budgeting & Investment Analysis", "KPI Design & Dashboard Development",
+            "Scenario & Sensitivity Analysis", "Working Capital Management",
+            "Revenue Recognition & Cost Allocation", "Mergers & Acquisitions Analysis Basics",
+            "Presentation & Stakeholder Communication", "Financial Planning & Analysis (FP&A)",
+            "Python/R for Financial Analytics"
+        ],
+        "advanced_skills": [
+            "LBO Modeling & Private Equity Analysis", "IPO & Equity Research",
+            "Treasury & Cash Management", "Transfer Pricing & Tax Strategy",
+            "Predictive Financial Modeling (ML-Based)", "Board Reporting & Investor Relations",
+            "ERP Financial Module Expertise (SAP/Oracle)"
+        ],
+        "tools_and_platforms": [
+            "Excel/Google Sheets (Expert)", "Power BI/Tableau", "SAP/Oracle Financials",
+            "Bloomberg/Capital IQ/PitchBook", "Adaptive Insights/Anaplan",
+            "SQL/Python", "QuickBooks/NetSuite", "PowerPoint/Google Slides"
+        ],
+        "evaluation_focus": "financial modeling accuracy, analytical rigor, business acumen, forecasting precision, stakeholder communication, and data-driven decision support",
+        "industry_context": "financial analyst roles at banks, corporates, and consulting firms (Goldman Sachs, JP Morgan, McKinsey, Fortune 500 FP&A)"
+    },
+
+    # =====================================================================
+    #  CATEGORY 12: PROJECT & OPERATIONS MANAGEMENT
+    # =====================================================================
+
+    "project manager": {
+        "core_skills": [
+            "Project Planning & Scheduling (WBS/Gantt/Critical Path)", "Scope Management & Requirements Definition",
+            "Risk Management & Mitigation Planning", "Budget Management & Cost Control",
+            "Stakeholder Communication & Reporting", "Agile/Scrum/Kanban Methodology",
+            "Waterfall & Hybrid Methodologies", "Resource Allocation & Capacity Planning",
+            "Quality Management & Assurance", "Change Request Management",
+            "Vendor & Contract Management", "Team Leadership & Motivation",
+            "Status Reporting & Executive Dashboards", "Issue & Conflict Resolution",
+            "Lessons Learned & Continuous Improvement", "Procurement & Contract Negotiation",
+            "PMP/PRINCE2 Methodology"
+        ],
+        "advanced_skills": [
+            "Portfolio & Program Management", "PMO Setup & Governance",
+            "Earned Value Management (EVM)", "Organizational Change Management",
+            "Strategic Initiative Alignment", "Multi-Vendor Program Coordination",
+            "Digital Transformation Project Leadership"
+        ],
+        "tools_and_platforms": [
+            "Jira/Asana/Monday.com", "Microsoft Project/Smartsheet", "Confluence/Notion",
+            "Slack/Teams", "Miro/Lucidchart", "Power BI/Tableau (Reporting)",
+            "ServiceNow", "Trello/ClickUp"
+        ],
+        "evaluation_focus": "project delivery track record, budget adherence, risk management effectiveness, stakeholder satisfaction, and methodology expertise",
+        "industry_context": "project management across IT, construction, consulting, and enterprise companies"
+    },
+
+    "operations manager": {
+        "core_skills": [
+            "Operations Strategy & Planning", "Process Optimization & Lean Six Sigma",
+            "Supply Chain & Logistics Management", "Team Management & Workforce Planning",
+            "Budget Management & P&L Responsibility", "Quality Control & Assurance (ISO 9001)",
+            "KPI Design & Performance Monitoring", "Vendor & Supplier Relationship Management",
+            "Inventory Management & Demand Forecasting", "Health & Safety Compliance",
+            "Facilities & Equipment Management", "Data-Driven Decision Making",
+            "SLA Management & Service Delivery", "Change Management & Continuous Improvement",
+            "Cross-Departmental Coordination", "Crisis Management & Business Continuity",
+            "Customer Experience Optimization"
+        ],
+        "advanced_skills": [
+            "Digital Transformation in Operations", "Robotic Process Automation (RPA) Strategy",
+            "Global Operations Scaling", "Mergers & Acquisitions Integration",
+            "Sustainability & ESG Operations", "AI/ML for Demand Forecasting",
+            "Multi-Site Operations Management"
+        ],
+        "tools_and_platforms": [
+            "SAP/Oracle ERP", "Tableau/Power BI", "Excel (Advanced/Macros)",
+            "Jira/Asana", "Salesforce", "ServiceNow",
+            "Slack/Teams", "Microsoft Office Suite"
+        ],
+        "evaluation_focus": "operational efficiency improvements (%), cost reduction impact, team scaling, process optimization measurables, and P&L management track record",
+        "industry_context": "operations management at logistics, manufacturing, tech, and retail companies (Amazon, FedEx, Walmart)"
+    },
+
+    "supply chain analyst": {
+        "core_skills": [
+            "Demand Planning & Forecasting", "Inventory Optimization & Safety Stock Calculation",
+            "Supply Chain Analytics & Modeling", "Procurement & Vendor Management",
+            "Logistics & Transportation Planning", "ERP Systems (SAP SCM/Oracle SCM)",
+            "SQL & Data Analysis", "Excel (Advanced — Solver/VBA/Pivot Tables)",
+            "S&OP (Sales & Operations Planning)", "Cost-to-Serve Analysis",
+            "Lean/Six Sigma Principles", "Warehouse Management & WMS",
+            "Trade Compliance & Customs", "Supplier Scorecard & KPI Tracking",
+            "Data Visualization (Tableau/Power BI)", "Risk Management & Disruption Mitigation",
+            "Category Management & Strategic Sourcing"
+        ],
+        "advanced_skills": [
+            "AI/ML for Demand Sensing", "Digital Twin for Supply Chain",
+            "Blockchain for Supply Chain Traceability", "Network Optimization & Simulation",
+            "Sustainability & Carbon Footprint Analysis", "Multi-Echelon Inventory Optimization",
+            "Global Supply Chain Strategy"
+        ],
+        "tools_and_platforms": [
+            "SAP SCM/APO/IBP", "Oracle SCM Cloud", "Kinaxis/o9 Solutions",
+            "Tableau/Power BI", "Excel (Expert)", "SQL/Python",
+            "Blue Yonder/Manhattan Associates", "Coupa/Ariba (Procurement)"
+        ],
+        "evaluation_focus": "supply chain optimization impact, cost reduction metrics, forecast accuracy improvement, inventory turnover improvement, and data-driven decision making",
+        "industry_context": "supply chain roles at logistics and consumer goods companies (Amazon, Unilever, P&G, FedEx, Walmart)"
+    },
+
+    # =====================================================================
+    #  CATEGORY 13: CONTENT & MARKETING (EXPANDED)
+    # =====================================================================
+
+    "content strategist": {
+        "core_skills": [
+            "Content Strategy & Planning", "Content Audit & Gap Analysis",
+            "Editorial Calendar Management", "SEO Content Optimization",
+            "Audience Research & Persona Development", "Brand Voice & Tone Guidelines",
+            "Content Performance Analytics (GA4/Amplitude)", "Copywriting & Long-Form Content",
+            "Content Distribution Strategy", "Social Media Content Strategy",
+            "A/B Testing for Content", "Content Governance & Taxonomy",
+            "Video & Multimedia Content Planning", "Content Localization & i18n",
+            "Stakeholder Alignment & Content Workshops", "Competitive Content Analysis",
+            "Content ROI Measurement & Attribution"
+        ],
+        "advanced_skills": [
+            "AI-Generated Content Strategy & Governance", "Thought Leadership Program Design",
+            "Content-Led Growth (CLG) Strategy", "Developer Content & Documentation Strategy",
+            "Community Content Programs", "Content Operations & Team Scaling",
+            "Podcast & Webinar Strategy"
+        ],
+        "tools_and_platforms": [
+            "WordPress/Webflow/Ghost", "Google Analytics/GA4", "SEMrush/Ahrefs/Clearscope",
+            "HubSpot/Contentful CMS", "Figma/Canva (Visual Content)", "Notion/Airtable (Planning)",
+            "Grammarly/Hemingway", "Buffer/Hootsuite (Distribution)"
+        ],
+        "evaluation_focus": "content strategy impact on growth, organic traffic growth metrics, audience engagement improvement, content-to-conversion pipeline, and brand consistency",
+        "industry_context": "content strategy at SaaS, media, and D2C companies (HubSpot, Notion, Stripe, Intercom)"
+    },
+
+    # =====================================================================
+    #  CATEGORY 14: AI & EMERGING SPECIALIZATIONS
+    # =====================================================================
+
+    "cloud security engineer": {
+        "core_skills": [
+            "Cloud Security Architecture (AWS/GCP/Azure)", "Identity & Access Management (IAM/SSO/MFA)",
+            "Network Security in Cloud (VPC/Security Groups/NACLs)", "Encryption & Key Management (KMS/HSM)",
+            "Security Compliance (SOC2/HIPAA/PCI-DSS/FedRAMP)", "Cloud Security Posture Management (CSPM)",
+            "Container & Kubernetes Security", "Infrastructure as Code Security Review",
+            "Cloud Audit & Logging (CloudTrail/Stackdriver/Azure Monitor)", "Vulnerability Scanning & Patch Management",
+            "DDoS Protection & WAF Configuration", "Secrets Management & Rotation",
+            "Data Loss Prevention (DLP)", "Threat Detection & Response in Cloud",
+            "Security Automation & Orchestration", "Multi-Account/Multi-Project Security Strategy",
+            "Cloud Forensics & Incident Investigation"
+        ],
+        "advanced_skills": [
+            "Zero Trust Cloud Architecture", "Cloud-Native Application Protection (CNAPP)",
+            "Multi-Cloud Security Governance", "Security Data Lake (SIEM in Cloud)",
+            "eBPF-Based Runtime Security", "Cloud Workload Protection Platforms (CWPP)",
+            "Regulatory Automation (Compliance-as-Code)"
+        ],
+        "tools_and_platforms": [
+            "AWS Security Hub/GuardDuty/Config", "GCP Security Command Center/Chronicle",
+            "Azure Sentinel/Defender", "Prisma Cloud/Lacework/Wiz", "HashiCorp Vault/AWS KMS",
+            "Terraform/Pulumi", "CrowdStrike Falcon/SentinelOne", "Splunk/Elastic SIEM"
+        ],
+        "evaluation_focus": "cloud security architecture design, compliance automation, incident response in cloud, vulnerability management, and security-at-scale implementation",
+        "industry_context": "cloud security at tech and fintech companies (Google, AWS, Palo Alto Networks, CrowdStrike, Wiz)"
+    },
+
+    "it support engineer": {
+        "core_skills": [
+            "Help Desk & Ticketing Systems (ServiceNow/Zendesk/Freshdesk)", "Windows/macOS/Linux Desktop Support",
+            "Active Directory & User Account Management", "Network Troubleshooting (TCP/IP/DNS/DHCP)",
+            "Hardware Troubleshooting & Setup", "Email Administration (Exchange/Google Workspace)",
+            "Remote Desktop & VPN Support", "Printer/Peripheral Device Management",
+            "Software Installation & Configuration", "Security Awareness & Incident Reporting",
+            "ITIL Service Management Basics", "Asset Management & Inventory Tracking",
+            "Knowledge Base & Documentation Writing", "Customer Service & Communication",
+            "Backup & Data Recovery Assistance", "Mobile Device Management (MDM/Intune)",
+            "SLA Adherence & Escalation Procedures"
+        ],
+        "advanced_skills": [
+            "Endpoint Detection & Response (EDR)", "Automation with PowerShell/Bash",
+            "MDM Platform Administration (Jamf/Intune)", "Identity Provider Management (Okta/Azure AD)",
+            "IT Onboarding/Offboarding Automation", "Tier 3 Advanced Troubleshooting",
+            "IT Project Management"
+        ],
+        "tools_and_platforms": [
+            "ServiceNow/Zendesk/Freshdesk", "Active Directory/Okta/Azure AD",
+            "Jamf/Intune (MDM)", "TeamViewer/AnyDesk/LogMeIn",
+            "SCCM/ManageEngine", "Slack/Teams", "Jira Service Management",
+            "Office 365/Google Workspace Admin"
+        ],
+        "evaluation_focus": "ticket resolution speed, customer satisfaction scores, SLA adherence, knowledge base contributions, and automation initiatives",
+        "industry_context": "IT support at tech companies and enterprises"
+    },
+
+    "prompt engineer": {
+        "core_skills": [
+            "Prompt Design & Optimization", "LLM Behavior Understanding (GPT/Claude/Gemini/Llama)",
+            "Chain-of-Thought & Few-Shot Prompting", "System Prompt Architecture",
+            "Retrieval-Augmented Generation (RAG) Design", "Output Parsing & Structured Generation",
+            "Prompt Testing & Evaluation Frameworks", "Token Optimization & Cost Management",
+            "Guardrails & Safety Prompt Design", "Multi-Modal Prompting (Text/Image/Code)",
+            "Instruction Tuning Data Curation", "Prompt Versioning & A/B Testing",
+            "Domain-Specific Prompt Libraries", "Hallucination Detection & Mitigation",
+            "Function Calling & Tool Use Prompting", "Context Window Management & Chunking",
+            "LLM API Integration (OpenAI/Anthropic/Google)"
+        ],
+        "advanced_skills": [
+            "Fine-Tuning Data Preparation", "Constitutional AI & RLHF Principles",
+            "Multi-Agent Prompt Orchestration", "Autonomous Agent Design (AutoGPT/CrewAI)",
+            "Evaluation Metrics for LLM Outputs (BLEU/ROUGE/Human Eval)", "Red Teaming & Adversarial Prompting",
+            "Enterprise LLM Governance"
+        ],
+        "tools_and_platforms": [
+            "OpenAI API/Anthropic API/Google AI Studio", "LangChain/LlamaIndex",
+            "Weights & Biases (Prompt Tracking)", "PromptLayer/Humanloop",
+            "Pinecone/ChromaDB/Weaviate (Vector DB)", "Python/TypeScript",
+            "Streamlit/Gradio (Demo Apps)", "GitHub/GitLab"
+        ],
+        "evaluation_focus": "prompt engineering methodology, measurable improvement in LLM outputs, RAG system design, safety implementation, and production-grade prompt systems",
+        "industry_context": "prompt engineering at AI companies and enterprises adopting LLMs (OpenAI, Anthropic, Google, enterprises)"
+    },
+
+    "generative ai engineer": {
+        "core_skills": [
+            "LLM Integration & Application Development", "RAG Architecture Design & Implementation",
+            "Vector Database Management (Pinecone/ChromaDB/Weaviate)", "LLM Fine-Tuning (LoRA/QLoRA/Full Fine-Tune)",
+            "Embedding Models & Semantic Search", "LangChain/LlamaIndex Framework Development",
+            "Prompt Engineering (Advanced)", "AI Agent & Multi-Agent Systems",
+            "Streaming & Real-Time LLM Applications", "Evaluation & Benchmarking of AI Models",
+            "AI Safety & Content Moderation", "Token Management & Cost Optimization",
+            "API Design for AI Services", "Model Selection & Comparison",
+            "Python (Advanced) & FastAPI/Flask", "Docker & Cloud Deployment for AI Apps",
+            "Observability for LLM Applications (LangSmith/Arize)"
+        ],
+        "advanced_skills": [
+            "Custom Model Training & RLHF", "Multi-Modal AI Applications (Vision+Language)",
+            "Knowledge Graph + LLM Hybrid Systems", "Distributed Inference & Model Serving (vLLM/TGI)",
+            "AI Governance & Enterprise Compliance", "Autonomous AI Agent Frameworks",
+            "Synthetic Data Generation"
+        ],
+        "tools_and_platforms": [
+            "OpenAI/Anthropic/Google/AWS Bedrock APIs", "LangChain/LlamaIndex/Haystack",
+            "Pinecone/ChromaDB/Weaviate/Qdrant", "Hugging Face Transformers",
+            "FastAPI/Flask", "Docker/Kubernetes", "LangSmith/Arize (Observability)",
+            "Streamlit/Gradio/Chainlit"
+        ],
+        "evaluation_focus": "end-to-end GenAI application delivery, RAG system quality, model evaluation rigor, production reliability, and AI safety implementation",
+        "industry_context": "GenAI engineering at AI-first companies (OpenAI, Anthropic, Google, Cohere, enterprise AI teams)"
+    },
+
+    "cyber forensics analyst": {
+        "core_skills": [
+            "Digital Evidence Collection & Preservation", "Disk & Memory Forensics",
+            "Network Forensics & Packet Analysis", "Incident Response & Investigation",
+            "Malware Analysis & Reverse Engineering", "Log Analysis & Timeline Reconstruction",
+            "Chain of Custody Documentation", "Windows/Linux/macOS Forensics",
+            "Mobile Device Forensics (iOS/Android)", "Email & Communication Forensics",
+            "Registry & Artifact Analysis (Windows)", "File System Analysis (NTFS/ext4/APFS)",
+            "Forensic Report Writing & Expert Testimony", "Cloud Forensics (AWS/Azure/GCP)",
+            "Encryption & Password Cracking Techniques", "Steganography Detection",
+            "Legal & Regulatory Framework Knowledge (CFAA/GDPR)"
+        ],
+        "advanced_skills": [
+            "Advanced Persistent Threat (APT) Investigation", "Cryptocurrency Forensics & Blockchain Analysis",
+            "IoT/OT Forensics", "Anti-Forensics Detection",
+            "Threat Intelligence Integration", "Automated Forensic Pipeline Development",
+            "Large-Scale Breach Investigation"
+        ],
+        "tools_and_platforms": [
+            "EnCase/FTK/X-Ways", "Autopsy/Sleuth Kit", "Volatility (Memory Forensics)",
+            "Wireshark/NetworkMiner", "IDA Pro/Ghidra (Reverse Engineering)",
+            "Cellebrite/Oxygen (Mobile Forensics)", "Splunk/ELK (Log Analysis)",
+            "YARA/Sigma Rules"
+        ],
+        "evaluation_focus": "investigation methodology, evidence handling quality, forensic tool expertise, report writing clarity, and case resolution track record",
+        "industry_context": "digital forensics at law enforcement, consulting firms, and enterprise security teams (Mandiant, CrowdStrike, FBI, Big 4)"
+    },
+
+    "hr tech specialist": {
+        "core_skills": [
+            "HRIS Administration (Workday/SAP SuccessFactors/BambooHR)", "HR Data Analytics & Reporting",
+            "Payroll Systems Management", "Applicant Tracking Systems (ATS — Greenhouse/Lever/iCIMS)",
+            "Benefits Administration Platforms", "Employee Onboarding Workflow Automation",
+            "Compliance & Labor Law Data Management", "Performance Management Systems (Lattice/Culture Amp)",
+            "Learning Management Systems (LMS)", "HR Process Automation (Workflows/Approvals)",
+            "Workforce Planning & Analytics", "Employee Self-Service Portal Design",
+            "Integration Between HR Systems (APIs/iPaaS)", "Data Privacy & GDPR Compliance for HR",
+            "Vendor Evaluation & Implementation", "SQL & Data Querying for HR Analytics",
+            "Change Management for HR Technology Adoption"
+        ],
+        "advanced_skills": [
+            "People Analytics & Predictive HR", "AI in Recruitment (Screening/Matching)",
+            "Employee Experience Platform Design", "Compensation Benchmarking & Analytics",
+            "HR Data Warehouse & BI Strategy", "Global HRIS Rollout & Multi-Country Compliance",
+            "DEI Analytics & Reporting"
+        ],
+        "tools_and_platforms": [
+            "Workday/SAP SuccessFactors/Oracle HCM", "BambooHR/Gusto/Rippling",
+            "Greenhouse/Lever/iCIMS (ATS)", "Lattice/Culture Amp/15Five",
+            "Tableau/Power BI (HR Dashboards)", "Excel/Google Sheets",
+            "Slack/Teams", "MuleSoft/Workato (Integration)"
+        ],
+        "evaluation_focus": "HRIS implementation experience, HR process automation impact, data analytics maturity, vendor management, and employee experience improvement",
+        "industry_context": "HR technology at enterprises and high-growth companies"
+    },
 }
 
 
 # ---------------------------------------------------------------------------
-# KEYWORD MAP — 100+ keyword → role mappings for fuzzy matching
+# KEYWORD MAP — 200+ keyword → role mappings for fuzzy matching
 # ---------------------------------------------------------------------------
 KEYWORD_MAP = {
     # Software Engineer aliases
     "sde": "software engineer", "swe": "software engineer", "developer": "software engineer",
     "programmer": "software engineer", "coder": "software engineer", "software dev": "software engineer",
     "application developer": "software engineer", "software development": "software engineer",
+    "coding": "software engineer", "sde1": "software engineer", "sde2": "software engineer",
+    "sde 1": "software engineer", "sde 2": "software engineer", "sde 3": "software engineer",
 
     # Full Stack aliases
     "full stack": "full stack developer", "fullstack": "full stack developer",
     "mern": "full stack developer", "mean": "full stack developer",
     "full-stack": "full stack developer", "web developer": "full stack developer",
+    "mevn stack": "full stack developer", "lamp stack": "full stack developer",
+    "t-shaped developer": "full stack developer",
 
     # Frontend aliases
     "frontend": "frontend developer", "front end": "frontend developer",
     "front-end": "frontend developer", "react developer": "frontend developer",
     "vue developer": "frontend developer", "angular developer": "frontend developer",
     "ui developer": "frontend developer", "web ui": "frontend developer",
+    "next.js developer": "frontend developer", "svelte developer": "frontend developer",
+    "html css": "frontend developer", "css developer": "frontend developer",
 
     # Backend aliases
     "backend": "backend developer", "back end": "backend developer",
@@ -1066,68 +1647,121 @@ KEYWORD_MAP = {
     "api developer": "backend developer", "node developer": "backend developer",
     "java developer": "backend developer", "python developer": "backend developer",
     "golang": "backend developer", "go developer": "backend developer",
+    "django developer": "backend developer", "spring developer": "backend developer",
+    "rails developer": "backend developer", "ruby developer": "backend developer",
+    "php developer": "backend developer", "laravel developer": "backend developer",
+    ".net developer": "backend developer", "c# developer": "backend developer",
+    "rust developer": "backend developer",
 
     # Mobile aliases
     "mobile": "mobile developer", "ios developer": "mobile developer",
     "android developer": "mobile developer", "flutter developer": "mobile developer",
     "react native": "mobile developer", "swift developer": "mobile developer",
     "kotlin developer": "mobile developer", "mobile app": "mobile developer",
+    "swiftui": "mobile developer", "jetpack compose": "mobile developer",
+    "xamarin": "mobile developer", "ionic developer": "mobile developer",
 
     # Data Science aliases
     "data sci": "data scientist", "data science": "data scientist",
-    "research scientist": "data scientist",
+    "research scientist": "data scientist", "applied scientist": "data scientist",
+    "ml scientist": "data scientist", "statistical analyst": "data scientist",
 
     # Data Analyst aliases
     "analyst": "data analyst", "data analytics": "data analyst",
     "reporting analyst": "data analyst", "analytics": "data analyst",
+    "analytics engineer": "data analyst", "insight analyst": "data analyst",
+    "product analyst": "data analyst",
 
     # Data Engineer aliases
     "data eng": "data engineer", "etl developer": "data engineer",
     "data pipeline": "data engineer", "big data": "data engineer",
-    "spark developer": "data engineer",
+    "spark developer": "data engineer", "hadoop developer": "data engineer",
+    "airflow developer": "data engineer", "dbt developer": "data engineer",
+
+    # Data Architect aliases
+    "data architect": "data architect", "data modeling": "data architect",
+    "data architecture": "data architect", "data governance": "data architect",
+    "chief data officer": "data architect",
 
     # ML Engineer aliases
     "ml": "machine learning engineer", "ml engineer": "machine learning engineer",
     "mle": "machine learning engineer", "machine learning": "machine learning engineer",
     "deep learning engineer": "machine learning engineer",
+    "mlops engineer": "machine learning engineer", "ml ops": "machine learning engineer",
 
     # AI Research aliases
     "ai research": "ai research scientist", "research": "ai research scientist",
-    "ai scientist": "ai research scientist",
+    "ai scientist": "ai research scientist", "research engineer": "ai research scientist",
 
     # AI/NLP/CV Engineer aliases
     "ai engineer": "machine learning engineer", "ai developer": "machine learning engineer",
     "nlp": "nlp engineer", "natural language": "nlp engineer",
     "llm engineer": "nlp engineer", "chatbot developer": "nlp engineer",
+    "conversational ai": "nlp engineer", "text mining": "nlp engineer",
     "computer vision": "computer vision engineer", "cv engineer": "computer vision engineer",
     "image processing": "computer vision engineer", "perception engineer": "computer vision engineer",
+    "vision engineer": "computer vision engineer",
+
+    # Generative AI / Prompt Engineer aliases
+    "generative ai": "generative ai engineer", "genai": "generative ai engineer",
+    "gen ai": "generative ai engineer", "llm developer": "generative ai engineer",
+    "ai application developer": "generative ai engineer", "rag engineer": "generative ai engineer",
+    "langchain developer": "generative ai engineer",
+    "prompt engineer": "prompt engineer", "prompt": "prompt engineer",
+    "prompt designer": "prompt engineer", "prompt specialist": "prompt engineer",
 
     # BI Analyst aliases
     "bi analyst": "business intelligence analyst", "bi developer": "business intelligence analyst",
     "tableau developer": "business intelligence analyst", "power bi": "business intelligence analyst",
-    "reporting": "business intelligence analyst",
+    "reporting": "business intelligence analyst", "looker developer": "business intelligence analyst",
+    "qlik developer": "business intelligence analyst",
 
     # DevOps aliases
     "devops": "devops engineer", "dev ops": "devops engineer",
     "infrastructure engineer": "devops engineer", "ci/cd": "devops engineer",
     "release engineer": "devops engineer", "build engineer": "devops engineer",
+    "cicd engineer": "devops engineer",
+
+    # DevSecOps aliases
+    "devsecops": "devsecops engineer", "dev sec ops": "devsecops engineer",
+    "security devops": "devsecops engineer", "secops": "devsecops engineer",
 
     # Cloud Architect aliases
     "cloud": "cloud architect", "cloud engineer": "cloud architect",
     "aws architect": "cloud architect", "azure architect": "cloud architect",
     "gcp architect": "cloud architect", "cloud consultant": "cloud architect",
+    "aws engineer": "cloud architect", "azure engineer": "cloud architect",
+    "gcp engineer": "cloud architect", "cloud developer": "cloud architect",
+
+    # Cloud Security aliases
+    "cloud security": "cloud security engineer", "cloud sec": "cloud security engineer",
+    "aws security": "cloud security engineer", "azure security": "cloud security engineer",
 
     # SRE aliases
     "sre": "site reliability engineer", "reliability": "site reliability engineer",
-    "site reliability": "site reliability engineer",
+    "site reliability": "site reliability engineer", "reliability engineer": "site reliability engineer",
 
     # Platform Engineer aliases
     "platform": "platform engineer", "platform eng": "platform engineer",
-    "developer platform": "platform engineer",
+    "developer platform": "platform engineer", "idp engineer": "platform engineer",
 
     # Network Engineer aliases
     "network": "network engineer", "network admin": "network engineer",
     "ccna": "network engineer", "ccnp": "network engineer",
+    "network administrator": "network engineer", "noc engineer": "network engineer",
+
+    # Systems Administrator aliases
+    "sysadmin": "systems administrator", "sys admin": "systems administrator",
+    "system administrator": "systems administrator", "linux admin": "systems administrator",
+    "windows admin": "systems administrator", "server admin": "systems administrator",
+    "it administrator": "systems administrator", "infrastructure admin": "systems administrator",
+
+    # IT Support aliases
+    "it support": "it support engineer", "help desk": "it support engineer",
+    "desktop support": "it support engineer", "technical support": "it support engineer",
+    "it helpdesk": "it support engineer", "service desk": "it support engineer",
+    "it technician": "it support engineer", "tier 1": "it support engineer",
+    "tier 2": "it support engineer",
 
     # Security aliases
     "security": "cybersecurity analyst", "cyber": "cybersecurity analyst",
@@ -1137,90 +1771,182 @@ KEYWORD_MAP = {
     "application security": "security engineer", "devsecops": "security engineer",
     "pentester": "penetration tester", "pen tester": "penetration tester",
     "ethical hacker": "penetration tester", "offensive security": "penetration tester",
-    "red team": "penetration tester",
+    "red team": "penetration tester", "bug bounty": "penetration tester",
+    "vapt": "penetration tester",
+
+    # Cyber Forensics aliases
+    "forensics": "cyber forensics analyst", "digital forensics": "cyber forensics analyst",
+    "dfir": "cyber forensics analyst", "incident investigator": "cyber forensics analyst",
+    "malware analyst": "cyber forensics analyst", "forensic analyst": "cyber forensics analyst",
+    "computer forensics": "cyber forensics analyst",
 
     # Product Manager aliases
     "product": "product manager", "pm": "product manager",
     "product owner": "product manager", "apm": "product manager",
-    "associate product manager": "product manager", "tpm": "product manager",
-    "technical program manager": "product manager",
+    "associate product manager": "product manager",
+
+    # Technical Program Manager aliases
+    "tpm": "technical program manager", "technical program manager": "technical program manager",
+    "program manager": "technical program manager", "pgm": "technical program manager",
+    "it program manager": "technical program manager",
+
+    # Engineering Manager aliases
+    "engineering manager": "engineering manager", "eng manager": "engineering manager",
+    "em": "engineering manager", "tech lead manager": "engineering manager",
+    "director of engineering": "engineering manager", "vp engineering": "engineering manager",
+    "head of engineering": "engineering manager", "dev manager": "engineering manager",
+    "development manager": "engineering manager",
 
     # UI/UX Designer aliases
     "designer": "ui/ux designer", "ux": "ui/ux designer", "ui": "ui/ux designer",
     "ux designer": "ui/ux designer", "ui designer": "ui/ux designer",
     "product designer": "ui/ux designer", "visual designer": "ui/ux designer",
     "interaction designer": "ui/ux designer", "ux researcher": "ui/ux designer",
+    "graphic designer": "ui/ux designer", "web designer": "ui/ux designer",
 
     # Technical Writer aliases
     "tech writer": "technical writer", "documentation": "technical writer",
     "content developer": "technical writer", "api writer": "technical writer",
+    "documentation engineer": "technical writer",
 
     # Scrum Master aliases
     "scrum": "scrum master", "agile coach": "scrum master",
     "agile": "scrum master", "scrum master": "scrum master",
+    "agile lead": "scrum master",
+
+    # Project Manager aliases
+    "project manager": "project manager", "pmp": "project manager",
+    "prince2": "project manager", "it project manager": "project manager",
+    "construction project manager": "project manager",
+
+    # Operations Manager aliases
+    "operations": "operations manager", "ops manager": "operations manager",
+    "operations manager": "operations manager", "chief operating officer": "operations manager",
+    "coo": "operations manager", "operations director": "operations manager",
 
     # Business Analyst aliases
     "business analyst": "business analyst", "ba": "business analyst",
     "systems analyst": "business analyst", "requirements analyst": "business analyst",
-    "functional analyst": "business analyst",
+    "functional analyst": "business analyst", "process analyst": "business analyst",
+
+    # Financial Analyst aliases
+    "financial analyst": "financial analyst", "finance analyst": "financial analyst",
+    "fp&a": "financial analyst", "fpa": "financial analyst",
+    "investment analyst": "financial analyst", "equity research": "financial analyst",
+    "financial modeling": "financial analyst", "corporate finance": "financial analyst",
+
+    # Quantitative Analyst aliases
+    "quant": "quantitative analyst", "quantitative": "quantitative analyst",
+    "quant developer": "quantitative analyst", "quant trader": "quantitative analyst",
+    "quantitative researcher": "quantitative analyst", "algo trader": "quantitative analyst",
+    "algorithmic trading": "quantitative analyst", "quant analyst": "quantitative analyst",
+
+    # Supply Chain aliases
+    "supply chain": "supply chain analyst", "logistics": "supply chain analyst",
+    "procurement": "supply chain analyst", "supply chain analyst": "supply chain analyst",
+    "demand planner": "supply chain analyst", "logistics analyst": "supply chain analyst",
+    "inventory analyst": "supply chain analyst",
 
     # Digital Marketing aliases
     "marketing": "digital marketing specialist", "digital marketing": "digital marketing specialist",
     "seo specialist": "digital marketing specialist", "sem": "digital marketing specialist",
     "social media": "digital marketing specialist", "content marketing": "digital marketing specialist",
-    "performance marketing": "digital marketing specialist",
+    "performance marketing": "digital marketing specialist", "ppc specialist": "digital marketing specialist",
+    "email marketing": "digital marketing specialist",
+
+    # Content Strategist aliases
+    "content strategist": "content strategist", "content strategy": "content strategist",
+    "editorial": "content strategist", "content lead": "content strategist",
+    "content manager": "content strategist",
 
     # Growth aliases
     "growth": "growth hacker", "growth marketer": "growth hacker",
     "growth pm": "growth hacker", "growth analyst": "growth hacker",
+    "growth engineer": "growth hacker", "growth lead": "growth hacker",
 
     # Sales Engineer aliases
     "sales engineer": "sales engineer", "pre-sales": "sales engineer",
     "presales": "sales engineer", "solutions consultant": "sales engineer",
-    "technical account manager": "sales engineer",
+    "technical account manager": "sales engineer", "se": "sales engineer",
 
     # Management Consultant aliases
     "consultant": "management consultant", "management consulting": "management consultant",
-    "strategy consultant": "management consultant",
+    "strategy consultant": "management consultant", "mbb": "management consultant",
+    "mckinsey": "management consultant", "bcg": "management consultant",
+    "bain": "management consultant",
 
     # Embedded aliases
     "embedded": "embedded systems engineer", "firmware": "embedded systems engineer",
     "embedded software": "embedded systems engineer", "rtos": "embedded systems engineer",
+    "embedded c": "embedded systems engineer", "microcontroller": "embedded systems engineer",
+
+    # Robotics aliases
+    "robotics": "robotics engineer", "robot": "robotics engineer",
+    "ros developer": "robotics engineer", "autonomous": "robotics engineer",
+    "robotics software": "robotics engineer", "mechatronics": "robotics engineer",
+    "ros2": "robotics engineer",
+
+    # AR/VR aliases
+    "ar developer": "ar/vr developer", "vr developer": "ar/vr developer",
+    "xr developer": "ar/vr developer", "mixed reality": "ar/vr developer",
+    "augmented reality": "ar/vr developer", "virtual reality": "ar/vr developer",
+    "spatial computing": "ar/vr developer", "metaverse": "ar/vr developer",
+    "ar/vr": "ar/vr developer", "arvr": "ar/vr developer",
 
     # Game Dev aliases
     "game": "game developer", "game dev": "game developer",
     "unity developer": "game developer", "unreal developer": "game developer",
-    "game programmer": "game developer",
+    "game programmer": "game developer", "game designer": "game developer",
+    "gameplay engineer": "game developer",
 
     # QA aliases
     "qa": "qa engineer", "tester": "qa engineer", "sdet": "qa engineer",
     "test engineer": "qa engineer", "quality assurance": "qa engineer",
     "test automation": "qa engineer", "qa analyst": "qa engineer",
+    "automation tester": "qa engineer", "performance tester": "qa engineer",
+
+    # Automation/RPA Engineer aliases
+    "rpa": "automation engineer", "rpa developer": "automation engineer",
+    "uipath": "automation engineer", "automation anywhere": "automation engineer",
+    "blue prism": "automation engineer", "process automation": "automation engineer",
+    "hyperautomation": "automation engineer", "rpa engineer": "automation engineer",
 
     # Blockchain aliases
     "blockchain": "blockchain developer", "web3": "blockchain developer",
     "smart contract": "blockchain developer", "solidity": "blockchain developer",
     "defi": "blockchain developer", "crypto": "blockchain developer",
+    "ethereum developer": "blockchain developer", "web3 developer": "blockchain developer",
 
     # IoT aliases
     "iot": "iot engineer", "internet of things": "iot engineer",
-    "smart devices": "iot engineer",
+    "smart devices": "iot engineer", "edge computing": "iot engineer",
+    "industrial iot": "iot engineer", "iiot": "iot engineer",
 
     # DBA aliases
     "dba": "database administrator", "database admin": "database administrator",
     "db admin": "database administrator", "database": "database administrator",
+    "database engineer": "database administrator", "sql developer": "database administrator",
 
     # Solutions Architect aliases
     "solutions architect": "solutions architect", "architect": "solutions architect",
     "technical architect": "solutions architect", "enterprise architect": "solutions architect",
+    "system architect": "solutions architect", "software architect": "solutions architect",
 
     # ERP/SAP aliases
     "erp": "erp consultant", "erp consultant": "erp consultant",
     "oracle erp": "erp consultant", "dynamics": "erp consultant",
+    "netsuite": "erp consultant", "dynamics 365": "erp consultant",
     "sap": "sap consultant", "sap consultant": "sap consultant",
     "abap": "sap consultant", "sap fico": "sap consultant",
     "sap mm": "sap consultant", "sap sd": "sap consultant",
     "s4hana": "sap consultant", "sap hana": "sap consultant",
+    "sap basis": "sap consultant", "sap bw": "sap consultant",
+
+    # HR Tech aliases
+    "hr tech": "hr tech specialist", "hris": "hr tech specialist",
+    "hr analyst": "hr tech specialist", "people analytics": "hr tech specialist",
+    "workday consultant": "hr tech specialist", "successfactors": "hr tech specialist",
+    "hr systems": "hr tech specialist", "people operations": "hr tech specialist",
 }
 
 

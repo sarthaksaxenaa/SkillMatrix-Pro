@@ -16,7 +16,7 @@ from config import groq_client, SELECTED_MODEL
 from models import FixRequest
 from helpers import is_valid_resume
 
-# Import expanded role profiles (35+ roles, 100+ keyword mappings)
+# Import expanded role profiles (55+ roles, 200+ keyword mappings)
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from role_profiles import get_role_profile
 
