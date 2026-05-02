@@ -796,23 +796,216 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
           })()}
 
           {/* --- INTERVIEWS VIEW --- */}
-          {viewState === 'interviews' && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 animate-enter delay-1">
-              {[
-                { title: 'Resume-based', desc: 'Questions from your projects and experience.', action: () => { if(!file) return alert("Upload a resume first!"); onStartInterview(targetRole || 'Software Engineer', 'text'); }, accent: 'blue' },
-                { title: 'Field-based', desc: 'Standard industry questions for your role.', action: () => { const role = targetRole || prompt("Enter your role:", "Software Engineer"); if(role) onStartInterview(role, 'text'); }, accent: 'violet' },
-                { title: 'Voice interview', desc: 'Real-time voice combining resume and theory.', action: () => onStartInterview(targetRole || 'Software Engineer', 'voice'), accent: 'blue', primary: true },
-              ].map((card, i) => (
-                <div key={i} onClick={card.action} className={`surface-interactive p-6 group ${card.primary ? 'border-blue-500/20' : ''}`}>
-                  <p className="text-sm font-medium mb-2">{card.title}</p>
-                  <p className="text-xs text-zinc-500 mb-6 leading-relaxed">{card.desc}</p>
-                  <span className={`text-xs font-medium ${card.primary ? 'text-blue-400' : 'text-zinc-500 group-hover:text-zinc-300'} transition-colors`}>
-                    Start →
-                  </span>
+          {viewState === 'interviews' && (() => {
+            const interviewCards = [
+              {
+                title: 'Resume-based',
+                subtitle: 'Project Deep-Dive',
+                desc: 'AI interrogates your resume — drilling into projects, tech stack decisions, and impact metrics. Expect follow-ups on every claim you made.',
+                action: () => { if(!file) { showToast("Upload a resume first from Career Coach!"); return; } onStartInterview(targetRole || 'Software Engineer', 'text'); },
+                gradient: 'linear-gradient(135deg, #3b82f6, #6366f1)',
+                glowColor: '#3b82f680',
+                iconBg: 'rgba(59,130,246,0.12)',
+                iconColor: '#60a5fa',
+                icon: (<><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></>),
+                tags: ['Behavioral', 'Technical', 'Situational'],
+                difficulty: 'Adaptive',
+                duration: '15–25 min',
+                badge: 'MOST POPULAR',
+                badgeColor: '#3b82f6',
+              },
+              {
+                title: 'Field-based',
+                subtitle: 'Industry Standard',
+                desc: 'Classic technical interview covering DSA, system design, and domain concepts. Calibrated to real questions from FAANG, startups, and Fortune 500.',
+                action: () => { const role = targetRole || prompt("Enter your target role:", "Software Engineer"); if(role) onStartInterview(role, 'text'); },
+                gradient: 'linear-gradient(135deg, #8b5cf6, #a855f7)',
+                glowColor: '#8b5cf680',
+                iconBg: 'rgba(139,92,246,0.12)',
+                iconColor: '#a78bfa',
+                icon: (<><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></>),
+                tags: ['DSA', 'System Design', 'Concepts'],
+                difficulty: 'Progressive',
+                duration: '20–30 min',
+                badge: null,
+                badgeColor: null,
+              },
+              {
+                title: 'Voice Interview',
+                subtitle: 'Live Simulation',
+                desc: 'Real-time voice conversation with AI interviewer. Combines resume analysis with theory questions — exactly like a real phone screen.',
+                action: () => onStartInterview(targetRole || 'Software Engineer', 'voice'),
+                gradient: 'linear-gradient(135deg, #059669, #10b981)',
+                glowColor: '#10b98180',
+                iconBg: 'rgba(16,185,129,0.12)',
+                iconColor: '#34d399',
+                icon: (<><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></>),
+                tags: ['Voice', 'Real-time', 'Comprehensive'],
+                difficulty: 'Realistic',
+                duration: '25–40 min',
+                badge: 'PREMIUM',
+                badgeColor: '#10b981',
+              },
+            ];
+
+            return (
+            <div className="animate-enter delay-1">
+
+              {/* ═══ FLOATING ORBS BACKGROUND ═══ */}
+              <div className="interview-arena-bg">
+                <div className="arena-orb arena-orb-1" />
+                <div className="arena-orb arena-orb-2" />
+                <div className="arena-orb arena-orb-3" />
+              </div>
+
+              {/* ═══ HERO INTRO ═══ */}
+              <div className="text-center mb-14 analytics-card stagger-1">
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border mb-6" style={{ borderColor: 'rgba(59,130,246,0.2)', background: 'rgba(59,130,246,0.05)' }}>
+                  <span className="arena-live-dot" />
+                  <span className="text-[11px] font-semibold text-blue-400 tracking-wider uppercase">Live AI Interviewer</span>
                 </div>
-              ))}
+                <h2 className="heading-display text-5xl mb-4">
+                  Practice makes <span className="heading-serif text-5xl">perfect.</span>
+                </h2>
+                <p className="text-zinc-500 text-base max-w-lg mx-auto leading-relaxed">
+                  Step into our AI-powered interview room. Get asked real questions, receive instant feedback, and build the confidence to ace any interview.
+                </p>
+              </div>
+
+              {/* ═══ INTERVIEW CARDS ═══ */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-14">
+                {interviewCards.map((card, i) => (
+                  <div
+                    key={i}
+                    onClick={card.action}
+                    className={`interview-card analytics-card stagger-${i + 2}`}
+                    style={{ '--card-gradient': card.gradient, '--card-glow': card.glowColor }}
+                  >
+                    {/* Gradient border top */}
+                    <div className="interview-card-border" style={{ background: card.gradient }} />
+
+                    {/* Badge */}
+                    {card.badge && (
+                      <div className="interview-card-badge" style={{ background: `${card.badgeColor}18`, color: card.badgeColor, borderColor: `${card.badgeColor}30` }}>
+                        {card.badge}
+                      </div>
+                    )}
+
+                    {/* Icon */}
+                    <div className="interview-card-icon" style={{ background: card.iconBg }}>
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={card.iconColor} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        {card.icon}
+                      </svg>
+                    </div>
+
+                    {/* Title block */}
+                    <div className="mb-4">
+                      <h3 className="text-lg font-bold text-zinc-100 tracking-tight mb-0.5">{card.title}</h3>
+                      <p className="text-[11px] font-medium uppercase tracking-widest" style={{ color: card.iconColor }}>{card.subtitle}</p>
+                    </div>
+
+                    {/* Description */}
+                    <p className="text-[13px] text-zinc-500 leading-relaxed mb-5">{card.desc}</p>
+
+                    {/* Tags */}
+                    <div className="flex flex-wrap gap-2 mb-5">
+                      {card.tags.map((tag, ti) => (
+                        <span key={ti} className="interview-tag">{tag}</span>
+                      ))}
+                    </div>
+
+                    {/* Meta row */}
+                    <div className="flex items-center justify-between text-[11px] text-zinc-600 mb-6 px-1">
+                      <span className="flex items-center gap-1.5">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        {card.duration}
+                      </span>
+                      <span className="flex items-center gap-1.5">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                        {card.difficulty}
+                      </span>
+                    </div>
+
+                    {/* CTA Button */}
+                    <button className="interview-card-cta group/btn" style={{ background: card.gradient }}>
+                      <span>Start Interview</span>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="group-hover/btn:translate-x-1 transition-transform">
+                        <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                      </svg>
+                    </button>
+
+                    {/* Hover glow */}
+                    <div className="interview-card-glow" />
+                  </div>
+                ))}
+              </div>
+
+              {/* ═══ STATS RIBBON ═══ */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-14 analytics-card stagger-5">
+                {[
+                  { value: '50k+', label: 'Mock interviews completed', icon: (<><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></>) },
+                  { value: '4.9★', label: 'Average rating', icon: (<><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></>) },
+                  { value: '92%', label: 'Feel more confident', icon: (<><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></>) },
+                  { value: '< 2s', label: 'AI response time', icon: (<><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></>) },
+                ].map((stat, i) => (
+                  <div key={i} className="surface p-5 text-center interview-stat-card">
+                    <div className="w-10 h-10 rounded-xl mx-auto mb-3 flex items-center justify-center" style={{ background: 'rgba(59,130,246,0.08)' }}>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        {stat.icon}
+                      </svg>
+                    </div>
+                    <p className="text-2xl font-bold text-white tracking-tight mb-1">{stat.value}</p>
+                    <p className="text-[11px] text-zinc-600">{stat.label}</p>
+                  </div>
+                ))}
+              </div>
+
+              {/* ═══ HOW IT WORKS ═══ */}
+              <div className="analytics-card stagger-6">
+                <div className="text-center mb-10">
+                  <p className="label mb-3">How it works</p>
+                  <h3 className="heading-display text-2xl">Three steps to <span className="heading-serif text-2xl">interview mastery.</span></h3>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {[
+                    { step: '01', title: 'Choose your format', desc: 'Pick resume-based, field-specific, or voice mode based on what you want to practice.', color: '#3b82f6' },
+                    { step: '02', title: 'Face the AI interviewer', desc: 'Answer questions in real-time. The AI adapts difficulty based on your responses — just like a real interview.', color: '#8b5cf6' },
+                    { step: '03', title: 'Get instant feedback', desc: 'Receive detailed scoring, areas of improvement, and personalized tips to level up before the real thing.', color: '#10b981' },
+                  ].map((item, i) => (
+                    <div key={i} className="interview-step-card">
+                      <div className="interview-step-number" style={{ color: item.color, background: `${item.color}10`, borderColor: `${item.color}25` }}>
+                        {item.step}
+                      </div>
+                      <h4 className="text-[15px] font-bold text-zinc-200 mb-2 tracking-tight">{item.title}</h4>
+                      <p className="text-[13px] text-zinc-500 leading-relaxed">{item.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* ═══ PRO TIPS ═══ */}
+              <div className="mt-12 analytics-card stagger-7">
+                <div className="surface p-8" style={{ background: 'linear-gradient(135deg, rgba(59,130,246,0.03), rgba(139,92,246,0.03))' }}>
+                  <div className="flex items-start gap-4">
+                    <div className="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'rgba(251,191,36,0.1)' }}>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" strokeWidth="1.5"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+                    </div>
+                    <div>
+                      <h4 className="text-[15px] font-bold text-zinc-200 mb-2">Pro tip: Maximize your session</h4>
+                      <p className="text-[13px] text-zinc-500 leading-relaxed">
+                        Upload your resume in <span className="text-zinc-300 font-medium cursor-pointer hover:text-blue-400 transition-colors" onClick={() => setViewState('input')}>Career Coach</span> first, 
+                        then use <span className="text-zinc-300 font-medium">Resume-based interview</span> for the most realistic experience. 
+                        The AI will reference your actual projects, technologies, and achievements — just like a real interviewer would.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
             </div>
-          )}
+            );
+          })()}
 
           {/* --- LOADING --- */}
           {viewState === 'analyzing' && (

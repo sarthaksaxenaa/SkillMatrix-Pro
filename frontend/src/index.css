@@ -708,3 +708,286 @@ button:active {
   display: inline-block;
   flex-shrink: 0;
 }
+
+/* ============================================
+   INTERVIEW ARENA — World-Class Redesign
+   ============================================ */
+
+/* --- Floating Orbs Background --- */
+.interview-arena-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.arena-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.08;
+  animation: arena-float 20s ease-in-out infinite;
+}
+
+.arena-orb-1 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, #3b82f6, transparent 70%);
+  top: -10%;
+  right: -5%;
+  animation-delay: 0s;
+}
+
+.arena-orb-2 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, #8b5cf6, transparent 70%);
+  bottom: 10%;
+  left: -8%;
+  animation-delay: -7s;
+}
+
+.arena-orb-3 {
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, #10b981, transparent 70%);
+  top: 40%;
+  right: 20%;
+  animation-delay: -14s;
+}
+
+@keyframes arena-float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(30px, -20px) scale(1.05); }
+  50% { transform: translate(-20px, 30px) scale(0.95); }
+  75% { transform: translate(15px, 15px) scale(1.02); }
+}
+
+/* --- Live Dot Pulse --- */
+.arena-live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #22c55e;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.arena-live-dot::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background: #22c55e;
+  animation: live-pulse 2s ease-in-out infinite;
+}
+
+@keyframes live-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.4; }
+  50% { transform: scale(1.8); opacity: 0; }
+}
+
+/* --- Interview Cards --- */
+.interview-card {
+  position: relative;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
+}
+
+.interview-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-6px);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.interview-card-border {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: 20px 20px 0 0;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.interview-card:hover .interview-card-border {
+  opacity: 1;
+}
+
+.interview-card-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid;
+  font-family: var(--sans);
+}
+
+.interview-card-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.interview-card:hover .interview-card-icon {
+  transform: scale(1.08) rotate(-2deg);
+}
+
+.interview-card-glow {
+  position: absolute;
+  bottom: -80px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  background: var(--card-glow, rgba(59,130,246,0.5));
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+  filter: blur(80px);
+  z-index: -1;
+}
+
+.interview-card:hover .interview-card-glow {
+  opacity: 0.12;
+}
+
+/* --- Interview Tags --- */
+.interview-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 500;
+  font-family: var(--sans);
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  transition: all 0.2s ease;
+}
+
+.interview-card:hover .interview-tag {
+  border-color: var(--border-hover);
+  color: var(--text-secondary);
+}
+
+/* --- Interview Card CTA --- */
+.interview-card-cta {
+  width: 100%;
+  padding: 12px 20px !important;
+  border-radius: 12px !important;
+  border: none !important;
+  color: white !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  opacity: 0.85;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.interview-card-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.interview-card:hover .interview-card-cta {
+  opacity: 1;
+  transform: none;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.interview-card-cta:hover::before {
+  opacity: 1;
+}
+
+/* --- Stat Cards --- */
+.interview-stat-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.interview-stat-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--border-hover) !important;
+}
+
+/* --- Step Cards --- */
+.interview-step-card {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.interview-step-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+}
+
+.interview-step-number {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 800;
+  font-family: var(--sans);
+  letter-spacing: -0.02em;
+  border: 1px solid;
+  margin-bottom: 16px;
+  transition: transform 0.3s ease;
+}
+
+.interview-step-card:hover .interview-step-number {
+  transform: scale(1.05);
+}
+
+/* --- Connecting line between steps (desktop only) --- */
+@media (min-width: 768px) {
+  .interview-step-card:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 48px;
+    right: -24px;
+    width: 24px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--border), transparent);
+  }
+}

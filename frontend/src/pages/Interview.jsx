@@ -16,6 +16,8 @@ const AlertTriangle = (p) => <I {...p} d={<><path d="M10.29 3.86L1.82 18a2 2 0 0
 const Eye = (p) => <I {...p} d={<><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></>}/>;
 const ShieldAlert = (p) => <I {...p} d={<><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></>}/>;
 
+const MAX_QUESTIONS = 10;
+
 const Interview = ({ jobRole, mode, onEnd }) => {
   const [question, setQuestion] = useState("Initializing interview environment...");
   const [answer, setAnswer] = useState("");
@@ -25,6 +27,12 @@ const Interview = ({ jobRole, mode, onEnd }) => {
   const [isListening, setIsListening] = useState(false);
   const [aiSpeaking, setAiSpeaking] = useState(false);
   
+  // Question tracking
+  const [questionNumber, setQuestionNumber] = useState(0);
+  const [interviewHistory, setInterviewHistory] = useState([]);
+  const [showResults, setShowResults] = useState(false);
+  const [expandedResult, setExpandedResult] = useState(null);
+
   // Proctoring
   const [warningCount, setWarningCount] = useState(0);
   const [isCheating, setIsCheating] = useState(false);
@@ -32,7 +40,7 @@ const Interview = ({ jobRole, mode, onEnd }) => {
 
   const recognitionRef = useRef(null);
   const videoRef = useRef(null);
-  const streamRef = useRef(null); // Keep track of the stream to kill it later
+  const streamRef = useRef(null);
 
   // --- 1. PROCTORING ---
   useEffect(() => {
@@ -151,6 +159,8 @@ const Interview = ({ jobRole, mode, onEnd }) => {
 
   const fetchNewQuestion = async () => {
     setLoading(true); setFeedback(null); setAnswer("");
+    const nextNum = questionNumber + 1;
+    setQuestionNumber(nextNum);
     try {
       const res = await fetch(`${API_BASE_URL}/get-question`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -159,7 +169,7 @@ const Interview = ({ jobRole, mode, onEnd }) => {
       const data = await res.json();
       setQuestion(data.question);
       speakText(data.question);
-    } catch (e) { setQuestion("Tell me about your experience."); }
+    } catch (e) { setQuestion("Describe a challenging technical problem you solved recently and the approach you took."); }
     finally { setLoading(false); }
   };
 
@@ -174,10 +184,24 @@ const Interview = ({ jobRole, mode, onEnd }) => {
       });
       const data = await res.json();
       setFeedback(data);
-      speakText(`You scored ${data.score}. ${data.feedback}`);
-    } catch (e) { alert("Error grading answer."); }
+      setInterviewHistory(prev => [...prev, { question, answer, feedback: data, questionNum: questionNumber }]);
+      speakText(`You scored ${data.score} out of 10. ${data.feedback}`);
+    } catch (e) {
+      const fallback = { score: 5, feedback: "Could not grade. Try again.", optimal_answer: "", key_points_missed: [] };
+      setFeedback(fallback);
+      setInterviewHistory(prev => [...prev, { question, answer, feedback: fallback, questionNum: questionNumber }]);
+    }
     finally { setLoading(false); }
   };
+
+  const finishInterview = () => {
+    stopEverything();
+    setShowResults(true);
+  };
+
+  const avgScore = interviewHistory.length > 0
+    ? (interviewHistory.reduce((s, h) => s + (h.feedback?.score || 0), 0) / interviewHistory.length).toFixed(1)
+    : 0;
 
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
@@ -185,11 +209,122 @@ const Interview = ({ jobRole, mode, onEnd }) => {
     return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
   };
 
+  // --- RESULTS SCREEN ---
+  if (showResults) {
+    const totalQ = interviewHistory.length;
+    const scoreColor = avgScore >= 7 ? '#22c55e' : avgScore >= 5 ? '#f59e0b' : '#ef4444';
+    const verdict = avgScore >= 8 ? 'Outstanding' : avgScore >= 7 ? 'Strong Candidate' : avgScore >= 5 ? 'Developing' : 'Needs Improvement';
+    return (
+      <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
+        <header className="h-16 border-b flex items-center justify-between px-8" style={{ borderColor: 'var(--border)' }}>
+          <div className="flex items-center gap-3">
+            <CheckCircle className="text-emerald-400" size={18}/>
+            <div>
+              <h1 className="font-medium text-sm">Interview Complete</h1>
+              <p className="text-xs text-zinc-500 uppercase tracking-widest mt-0.5">{jobRole} · {formatTime(timer)}</p>
+            </div>
+          </div>
+          <button onClick={onEnd} className="btn-primary px-5 py-2 text-sm">Back to Dashboard</button>
+        </header>
+
+        <div className="max-w-4xl mx-auto px-8 py-10">
+          {/* Summary Cards */}
+          <div className="text-center mb-10 animate-enter">
+            <p className="label mb-3">PERFORMANCE SUMMARY</p>
+            <h2 className="heading-display text-4xl mb-2">Interview <span className="heading-serif text-4xl">Results</span></h2>
+          </div>
+
+          <div className="grid grid-cols-4 gap-4 mb-8 animate-enter delay-1">
+            <div className="surface p-5 text-center">
+              <p className="text-3xl font-bold" style={{ color: scoreColor }}>{avgScore}</p>
+              <p className="text-[11px] text-zinc-500 mt-1">Avg Score</p>
+            </div>
+            <div className="surface p-5 text-center">
+              <p className="text-3xl font-bold text-white">{totalQ}</p>
+              <p className="text-[11px] text-zinc-500 mt-1">Questions</p>
+            </div>
+            <div className="surface p-5 text-center">
+              <p className="text-3xl font-bold text-white">{formatTime(timer)}</p>
+              <p className="text-[11px] text-zinc-500 mt-1">Duration</p>
+            </div>
+            <div className="surface p-5 text-center">
+              <p className="text-lg font-bold" style={{ color: scoreColor }}>{verdict}</p>
+              <p className="text-[11px] text-zinc-500 mt-1">Verdict</p>
+            </div>
+          </div>
+
+          {warningCount > 0 && (
+            <div className="surface p-4 mb-6 flex items-center gap-3 animate-enter delay-2" style={{ borderColor: 'rgba(239,68,68,0.2)', background: 'rgba(239,68,68,0.04)' }}>
+              <ShieldAlert size={16} className="text-red-400"/>
+              <p className="text-sm text-red-400"><span className="font-bold">{warningCount} flag{warningCount > 1 ? 's' : ''}</span> detected during session — tab switches or focus loss.</p>
+            </div>
+          )}
+
+          {/* Per-question breakdown */}
+          <p className="label mb-4">QUESTION-BY-QUESTION BREAKDOWN</p>
+          <div className="space-y-3 animate-enter delay-2">
+            {interviewHistory.map((h, i) => {
+              const sc = h.feedback?.score || 0;
+              const sColor = sc >= 7 ? '#22c55e' : sc >= 5 ? '#f59e0b' : '#ef4444';
+              const isExpanded = expandedResult === i;
+              return (
+                <div key={i} className="surface overflow-hidden transition-all" style={{ borderLeftWidth: 3, borderLeftColor: sColor }}>
+                  <div className="p-5 cursor-pointer flex items-center justify-between" onClick={() => setExpandedResult(isExpanded ? null : i)}>
+                    <div className="flex items-center gap-4 flex-1 min-w-0">
+                      <div className="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold shrink-0" style={{ background: `${sColor}15`, color: sColor }}>
+                        {sc}/10
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-sm font-medium text-zinc-200 truncate">Q{i+1}: {h.question}</p>
+                        <p className="text-xs text-zinc-600 mt-0.5 truncate">{h.feedback?.feedback}</p>
+                      </div>
+                    </div>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#52525b" strokeWidth="2" className={`shrink-0 ml-3 transition-transform ${isExpanded ? 'rotate-90' : ''}`}><polyline points="9 18 15 12 9 6"/></svg>
+                  </div>
+
+                  {isExpanded && (
+                    <div className="px-5 pb-5 space-y-4 animate-enter" style={{ borderTop: '1px solid var(--border)' }}>
+                      <div className="pt-4">
+                        <p className="label mb-2">YOUR ANSWER</p>
+                        <p className="text-[13px] text-zinc-400 leading-relaxed bg-white/[0.02] p-3 rounded-lg">{h.answer}</p>
+                      </div>
+                      {h.feedback?.optimal_answer && (
+                        <div>
+                          <p className="label mb-2" style={{ color: '#22c55e80' }}>✦ OPTIMAL ANSWER</p>
+                          <p className="text-[13px] text-emerald-300/80 leading-relaxed bg-emerald-500/[0.04] p-3 rounded-lg border border-emerald-500/10">{h.feedback.optimal_answer}</p>
+                        </div>
+                      )}
+                      {h.feedback?.key_points_missed?.length > 0 && (
+                        <div>
+                          <p className="label mb-2" style={{ color: '#f59e0b80' }}>KEY POINTS MISSED</p>
+                          <div className="flex flex-wrap gap-2">
+                            {h.feedback.key_points_missed.map((pt, pi) => (
+                              <span key={pi} className="px-3 py-1 rounded-full text-xs text-amber-400 bg-amber-500/[0.08] border border-amber-500/20">{pt}</span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="text-center mt-8">
+            <button onClick={onEnd} className="btn-primary px-8 py-3 text-sm font-semibold">Return to Dashboard</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // --- LIVE INTERVIEW SCREEN ---
   return (
     <div className={`min-h-screen flex flex-col transition-colors duration-500`} style={{ background: isCheating ? '#1a0505' : 'var(--bg)' }}>
       
       {/* HEADER */}
-      <header className={`h-16 border-b flex items-center justify-between px-8 backdrop-blur-md transition-colors`} style={{ borderColor: isCheating ? 'rgba(239,68,68,0.2)' : 'var(--border)', background: isCheating ? 'transparent' : 'var(--bg)' }}>
+      <header className={`border-b flex items-center justify-between px-8 py-3 backdrop-blur-md transition-colors`} style={{ borderColor: isCheating ? 'rgba(239,68,68,0.2)' : 'var(--border)', background: isCheating ? 'transparent' : 'var(--bg)' }}>
         <div className="flex items-center gap-3">
           <div className="flex items-center justify-center">
             {isCheating ? <AlertTriangle className="text-red-500" size={18}/> : <Video size={16} className="text-zinc-400"/>}
@@ -202,20 +337,34 @@ const Interview = ({ jobRole, mode, onEnd }) => {
           </div>
         </div>
         
-        <div className="flex items-center gap-6">
-            <div className={`flex items-center gap-2 text-xs font-medium ${warningCount > 0 ? 'text-red-400' : 'text-zinc-500'}`}>
-                <ShieldAlert size={14} /> FLAGS: {warningCount}
+        <div className="flex items-center gap-4">
+            {/* Question Counter */}
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg" style={{ background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(59,130,246,0.15)' }}>
+              <span className="text-xs font-bold text-blue-400">Q{questionNumber}</span>
+              <span className="text-xs text-zinc-600">/ {MAX_QUESTIONS}</span>
+            </div>
+
+            {/* Flag Badge - PROMINENT */}
+            <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg font-semibold ${warningCount > 0 ? 'text-red-400' : 'text-zinc-500'}`}
+              style={{ background: warningCount > 0 ? 'rgba(239,68,68,0.1)' : 'rgba(255,255,255,0.03)', border: `1px solid ${warningCount > 0 ? 'rgba(239,68,68,0.3)' : 'var(--border)'}` }}>
+                <ShieldAlert size={14} />
+                <span className="text-xs">{warningCount} FLAG{warningCount !== 1 ? 'S' : ''}</span>
             </div>
           
             <div className="flex items-center gap-2 text-xs font-mono text-zinc-400">
                 <Clock size={14} /> {formatTime(timer)}
             </div>
             
-            <button onClick={handleEndSession} className="text-zinc-500 hover:text-zinc-300 text-sm transition-colors bg-transparent border-none">
+            <button onClick={finishInterview} className="text-zinc-500 hover:text-zinc-300 text-sm transition-colors bg-transparent border-none">
                 End session
             </button>
         </div>
       </header>
+
+      {/* Progress Bar */}
+      <div className="h-1 w-full" style={{ background: 'var(--border)' }}>
+        <div className="h-full transition-all duration-700 ease-out rounded-r-full" style={{ width: `${(questionNumber / MAX_QUESTIONS) * 100}%`, background: 'linear-gradient(90deg, #3b82f6, #6366f1)' }} />
+      </div>
 
       {/* MAIN ARENA */}
       <div className="flex-1 flex gap-6 p-8 max-w-7xl mx-auto w-full">
@@ -225,7 +374,7 @@ const Interview = ({ jobRole, mode, onEnd }) => {
           <div className={`surface p-10 flex flex-col justify-center min-h-[200px] transition-all duration-300 ${isCheating ? 'border-red-500/30' : ''}`}>
             <div className="flex justify-between items-center mb-6">
                 <h2 className={`label ${isCheating ? 'text-red-400/80' : 'text-zinc-500'}`}>
-                    {isCheating ? "Proctoring Alert" : "Current Question"}
+                    {isCheating ? "Proctoring Alert" : `Question ${questionNumber} of ${MAX_QUESTIONS}`}
                 </h2>
                 {aiSpeaking && <Volume2 className="text-blue-400" size={16} />}
             </div>
@@ -240,7 +389,7 @@ const Interview = ({ jobRole, mode, onEnd }) => {
              <textarea 
                value={answer}
                onChange={(e) => setAnswer(e.target.value)}
-               placeholder={mode === 'voice' ? "Listening..." : "Type your answer..."}
+               placeholder={mode === 'voice' ? "Listening... speak your answer" : "Type your answer here..."}
                className="flex-1 bg-transparent resize-none outline-none text-base text-zinc-300 placeholder-zinc-600 border-none"
                style={{ border: 'none', background: 'transparent' }}
                disabled={feedback !== null || isCheating}
@@ -260,19 +409,49 @@ const Interview = ({ jobRole, mode, onEnd }) => {
           </div>
         </div>
 
-        {/* RIGHT: REAL WEBCAM + PROCTOR OVERLAY */}
+        {/* RIGHT: WEBCAM or FEEDBACK */}
         {feedback ? (
-            <div className="w-[340px] surface p-8 flex flex-col animate-enter">
-               <h3 className="label mb-8 flex items-center gap-2"><CheckCircle className="text-emerald-500" size={14}/> AI Evaluation</h3>
-               <div className="flex items-center justify-center mb-10">
-                  <div className={`w-32 h-32 rounded-full border flex items-center justify-center text-4xl font-bold ${feedback.score >= 7 ? 'border-emerald-500/30 text-emerald-400' : 'border-amber-500/30 text-amber-400'}`}>
+            <div className="w-[340px] surface p-6 flex flex-col animate-enter overflow-y-auto">
+               <h3 className="label mb-5 flex items-center gap-2"><CheckCircle className="text-emerald-500" size={14}/> AI Evaluation</h3>
+               <div className="flex items-center justify-center mb-6">
+                  <div className={`w-28 h-28 rounded-full border-2 flex items-center justify-center text-4xl font-bold ${feedback.score >= 7 ? 'border-emerald-500/40 text-emerald-400' : feedback.score >= 5 ? 'border-amber-500/40 text-amber-400' : 'border-red-500/40 text-red-400'}`}>
                     {feedback.score}<span className="text-lg text-zinc-600">/10</span>
                   </div>
                </div>
-               <div className="flex-1 overflow-y-auto mb-8">
-                 <p className="text-zinc-400 text-sm leading-relaxed">"{feedback.feedback}"</p>
-               </div>
-               <button onClick={fetchNewQuestion} className="w-full btn-secondary py-3 text-sm flex items-center justify-center gap-2">Next question <ChevronRight size={16}/></button>
+               <p className="text-zinc-400 text-sm leading-relaxed mb-4">"{feedback.feedback}"</p>
+
+               {/* Optimal Answer */}
+               {feedback.optimal_answer && (
+                 <div className="mb-4">
+                   <p className="label mb-2" style={{ color: '#22c55e90' }}>✦ IDEAL ANSWER</p>
+                   <p className="text-xs text-emerald-300/70 leading-relaxed p-3 rounded-lg" style={{ background: 'rgba(34,197,94,0.04)', border: '1px solid rgba(34,197,94,0.1)' }}>{feedback.optimal_answer}</p>
+                 </div>
+               )}
+
+               {/* Key Points Missed */}
+               {feedback.key_points_missed?.length > 0 && (
+                 <div className="mb-5">
+                   <p className="label mb-2" style={{ color: '#f59e0b90' }}>MISSED POINTS</p>
+                   <div className="space-y-1.5">
+                     {feedback.key_points_missed.map((pt, i) => (
+                       <div key={i} className="flex items-start gap-2 text-xs text-amber-400/80">
+                         <span className="mt-0.5 shrink-0 w-1 h-1 rounded-full bg-amber-500/50" />
+                         {pt}
+                       </div>
+                     ))}
+                   </div>
+                 </div>
+               )}
+
+               {questionNumber >= MAX_QUESTIONS ? (
+                 <button onClick={finishInterview} className="w-full btn-primary py-3 text-sm flex items-center justify-center gap-2 font-semibold">
+                   View Results <CheckCircle size={14}/>
+                 </button>
+               ) : (
+                 <button onClick={fetchNewQuestion} className="w-full btn-secondary py-3 text-sm flex items-center justify-center gap-2 mt-auto">
+                   Next question ({questionNumber}/{MAX_QUESTIONS}) <ChevronRight size={16}/>
+                 </button>
+               )}
             </div>
         ) : (
             <div className={`w-[340px] surface relative overflow-hidden flex items-center justify-center transition-all duration-300 ${isCheating ? 'border-red-500/50' : ''}`}>
