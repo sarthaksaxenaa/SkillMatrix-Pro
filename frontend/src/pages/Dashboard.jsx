@@ -1178,6 +1178,10 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
                   <div className="px-3 py-1.5 rounded-full border text-[10px] font-mono text-zinc-500 tracking-wider" style={{ borderColor: 'var(--border)' }}>
                     {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                   </div>
+                  <button onClick={() => { setViewState('input'); setFile(null); setAnalysisData(null); }} className="px-3 py-1.5 rounded-full text-[11px] font-medium text-blue-400 hover:text-white hover:bg-blue-500/10 border transition-colors flex items-center gap-1.5" style={{ borderColor: 'rgba(59,130,246,0.2)', background: 'transparent' }}>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    New Analysis
+                  </button>
                 </div>
               </div>
 
