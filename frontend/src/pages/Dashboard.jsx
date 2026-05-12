@@ -298,6 +298,13 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
 
         <div className="p-6 pt-0">
           <div className="divider mb-4" />
+          <button onClick={() => { setShowCommandPalette(true); setCommandSearch(''); }} className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.03] transition-colors mb-2" style={{ background: 'transparent' }}>
+            <span className="flex items-center gap-2">
+              <SearchIcon size={14} />
+              Search
+            </span>
+            <kbd className="text-[10px] font-mono text-zinc-600 bg-zinc-800/50 px-1.5 py-0.5 rounded border border-zinc-700/50">⌘K</kbd>
+          </button>
           <button onClick={onLogout} className="text-zinc-600 text-sm hover:text-zinc-400 transition-colors" style={{ background: 'transparent' }}>
             Sign out
           </button>
