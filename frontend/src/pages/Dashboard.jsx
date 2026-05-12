@@ -54,6 +54,10 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
   // --- NEW: Toast State ---
   const [toast, setToast] = useState({ message: '', visible: false, isLeaving: false });
 
+  // --- NEW: Command Palette State ---
+  const [showCommandPalette, setShowCommandPalette] = useState(false);
+  const [commandSearch, setCommandSearch] = useState('');
+
   const showToast = (message) => {
     setToast({ message, visible: true, isLeaving: false });
     setTimeout(() => {
@@ -74,6 +78,25 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
       }
     }
   }, []);
+
+  // --- Keyboard Shortcuts ---
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Ctrl+K or Cmd+K — toggle command palette
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        setShowCommandPalette(prev => !prev);
+        setCommandSearch('');
+      }
+      // Escape — close command palette
+      if (e.key === 'Escape' && showCommandPalette) {
+        setShowCommandPalette(false);
+        setCommandSearch('');
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showCommandPalette]);
 
   useEffect(() => {
     let interval;
@@ -1441,6 +1464,74 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
               </div>
             </div>
           )}
+
+          {/* --- COMMAND PALETTE (Ctrl+K) --- */}
+          {showCommandPalette && (() => {
+            const commands = [
+              { label: 'Go to Career Coach', desc: 'Analyze your resume', action: () => { setViewState('input'); setShowCommandPalette(false); } },
+              { label: 'Go to My Resumes', desc: 'View analysis history', action: () => { setViewState('history'); setShowCommandPalette(false); } },
+              { label: 'Go to Interviews', desc: 'Practice mock interviews', action: () => { setViewState('interviews'); setShowCommandPalette(false); } },
+              { label: 'Start Text Interview', desc: 'Begin a text-based mock interview', action: () => { onStartInterview(targetRole || 'Software Engineer', 'text'); setShowCommandPalette(false); } },
+              { label: 'Start Voice Interview', desc: 'Begin a voice-based mock interview', action: () => { onStartInterview(targetRole || 'Software Engineer', 'voice'); setShowCommandPalette(false); } },
+              { label: 'Sign Out', desc: 'Log out of your account', action: () => { onLogout(); setShowCommandPalette(false); } },
+            ];
+            const filtered = commandSearch
+              ? commands.filter(c => c.label.toLowerCase().includes(commandSearch.toLowerCase()) || c.desc.toLowerCase().includes(commandSearch.toLowerCase()))
+              : commands;
+
+            return (
+              <div className="fixed inset-0 z-[200] flex items-start justify-center pt-[20vh]" onClick={() => setShowCommandPalette(false)}>
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" />
+                <div className="relative w-full max-w-lg rounded-2xl border overflow-hidden animate-enter" style={{ background: 'var(--bg-raised)', borderColor: 'var(--border)' }} onClick={e => e.stopPropagation()}>
+                  {/* Search Input */}
+                  <div className="flex items-center gap-3 px-5 py-4 border-b" style={{ borderColor: 'var(--border)' }}>
+                    <SearchIcon size={18} className="text-zinc-500 shrink-0" />
+                    <input
+                      type="text"
+                      value={commandSearch}
+                      onChange={e => setCommandSearch(e.target.value)}
+                      placeholder="Type a command..."
+                      className="flex-1 bg-transparent text-sm text-white placeholder-zinc-500 outline-none border-none"
+                      style={{ background: 'transparent', border: 'none' }}
+                      autoFocus
+                    />
+                    <kbd className="hidden sm:inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono text-zinc-500 bg-zinc-800/50 border border-zinc-700/50">ESC</kbd>
+                  </div>
+                  {/* Command List */}
+                  <div className="max-h-[300px] overflow-y-auto py-2">
+                    {filtered.length === 0 ? (
+                      <div className="px-5 py-8 text-center text-zinc-500 text-sm">No matching commands</div>
+                    ) : (
+                      filtered.map((cmd, i) => (
+                        <button
+                          key={i}
+                          onClick={cmd.action}
+                          className="w-full text-left px-5 py-3 flex items-center justify-between hover:bg-white/[0.04] transition-colors group"
+                          style={{ background: 'transparent' }}
+                        >
+                          <div>
+                            <p className="text-sm font-medium text-zinc-200 group-hover:text-white">{cmd.label}</p>
+                            <p className="text-xs text-zinc-600 mt-0.5">{cmd.desc}</p>
+                          </div>
+                          <ChevronRightIcon size={14} className="text-zinc-700 group-hover:text-zinc-400" />
+                        </button>
+                      ))
+                    )}
+                  </div>
+                  {/* Footer */}
+                  <div className="px-5 py-3 border-t flex items-center justify-between" style={{ borderColor: 'var(--border)' }}>
+                    <span className="text-[10px] text-zinc-600">Navigate with keyboard</span>
+                    <div className="flex items-center gap-2">
+                      <kbd className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-mono text-zinc-500 bg-zinc-800/50 border border-zinc-700/50">↑↓</kbd>
+                      <span className="text-[10px] text-zinc-600">to move</span>
+                      <kbd className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-mono text-zinc-500 bg-zinc-800/50 border border-zinc-700/50">↵</kbd>
+                      <span className="text-[10px] text-zinc-600">to select</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
 
           {/* --- CUSTOM TOAST NOTIFICATION --- */}
           {toast.visible && (
