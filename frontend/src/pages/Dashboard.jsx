@@ -41,8 +41,10 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
   const [historyRoleFilter, setHistoryRoleFilter] = useState('all');
   const [sparklineHover, setSparklineHover] = useState(null);
 
-  // --- Gamification State ---
-  const [streak, setStreak] = useState(3);
+  // --- Computed Stats ---
+  const bestScore = resumeHistory.length > 0 ? Math.max(...resumeHistory.map(h => h.score)) : 0;
+  const avgHistoryScore = resumeHistory.length > 0 ? Math.round(resumeHistory.reduce((s, h) => s + h.score, 0) / resumeHistory.length) : 0;
+  const uniqueRolesCount = new Set(resumeHistory.map(h => h.role)).size;
 
   // --- NEW: Fixer State ---
   const [showFixModal, setShowFixModal] = useState(false);
@@ -395,13 +397,18 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
                         {/* Stats Ribbon */}
                         <div className="flex justify-between items-center px-2">
                             <div>
-                                <div className="text-2xl font-bold text-white">12k+</div>
-                                <div className="text-xs text-zinc-500 mt-0.5">Resumes analyzed</div>
+                                <div className="text-2xl font-bold text-white">{resumeHistory.length}</div>
+                                <div className="text-xs text-zinc-500 mt-0.5">{resumeHistory.length === 1 ? 'Resume analyzed' : 'Resumes analyzed'}</div>
+                            </div>
+                            <div className="w-px h-8 bg-zinc-800"></div>
+                            <div className="text-center">
+                                <div className="text-2xl font-bold text-blue-400">{uniqueRolesCount}</div>
+                                <div className="text-xs text-zinc-500 mt-0.5">{uniqueRolesCount === 1 ? 'Role explored' : 'Roles explored'}</div>
                             </div>
                             <div className="w-px h-8 bg-zinc-800"></div>
                             <div className="text-right">
-                                <div className="text-2xl font-bold text-emerald-400">98%</div>
-                                <div className="text-xs text-zinc-500 mt-0.5">Extraction accuracy</div>
+                                <div className="text-2xl font-bold text-emerald-400">{bestScore || '—'}</div>
+                                <div className="text-xs text-zinc-500 mt-0.5">Best score</div>
                             </div>
                         </div>
 
@@ -943,9 +950,9 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
               {/* ═══ STATS RIBBON ═══ */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-14 analytics-card stagger-5">
                 {[
-                  { value: '50k+', label: 'Mock interviews completed', icon: (<><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></>) },
-                  { value: '4.9★', label: 'Average rating', icon: (<><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></>) },
-                  { value: '92%', label: 'Feel more confident', icon: (<><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></>) },
+                  { value: `${resumeHistory.length}`, label: 'Analyses completed', icon: (<><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></>) },
+                  { value: bestScore ? `${bestScore}` : '—', label: 'Best readiness score', icon: (<><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></>) },
+                  { value: avgHistoryScore ? `${avgHistoryScore}%` : '—', label: 'Average score', icon: (<><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></>) },
                   { value: '< 2s', label: 'AI response time', icon: (<><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></>) },
                 ].map((stat, i) => (
                   <div key={i} className="surface p-5 text-center interview-stat-card">
