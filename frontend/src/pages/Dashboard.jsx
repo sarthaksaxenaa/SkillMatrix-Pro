@@ -342,9 +342,15 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
           {/* Header */}
           <div className="flex justify-between items-start mb-16 animate-enter">
             <div>
-              <p className="label mb-3">
-                {viewState === 'interviews' ? 'PRACTICE' : viewState === 'history' ? 'HISTORY' : 'DASHBOARD'}
-              </p>
+              <div className="flex items-center gap-1.5 mb-3 text-[11px] font-medium tracking-wider uppercase">
+                <span className="text-zinc-600 cursor-pointer hover:text-zinc-400 transition-colors" onClick={() => setViewState('input')}>SkillMatrix</span>
+                <span className="text-zinc-700">/</span>
+                <span className={viewState === 'results' || viewState === 'analyzing' ? 'text-zinc-600 cursor-pointer hover:text-zinc-400 transition-colors' : 'text-zinc-400'} onClick={() => { if (viewState === 'results' || viewState === 'analyzing') setViewState('input'); }}>
+                  {viewState === 'interviews' ? 'Interviews' : viewState === 'history' ? 'My Resumes' : 'Career Coach'}
+                </span>
+                {viewState === 'results' && <><span className="text-zinc-700">/</span><span className="text-zinc-400">Results</span></>}
+                {viewState === 'analyzing' && <><span className="text-zinc-700">/</span><span className="text-zinc-400">Analyzing</span></>}
+              </div>
               <h1 className="heading-display text-4xl mb-2">
                 {viewState === 'interviews' ? 'Interview' : viewState === 'history' ? 'Your' : 'Career'}
                 {' '}
