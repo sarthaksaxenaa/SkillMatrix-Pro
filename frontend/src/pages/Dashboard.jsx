@@ -281,8 +281,32 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
         </div>
       </aside>
 
+      {/* --- MOBILE BOTTOM NAV --- */}
+      <nav className="fixed bottom-0 left-0 right-0 z-30 md:hidden flex items-center justify-around border-t backdrop-blur-xl" style={{ borderColor: 'var(--border)', background: 'rgba(5,5,16,0.92)', height: '60px' }}>
+        {[
+          { key: 'input', label: 'Coach', keys: ['input', 'results', 'analyzing'],
+            icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg> },
+          { key: 'history', label: 'Resumes', keys: ['history'],
+            icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> },
+          { key: 'interviews', label: 'Interview', keys: ['interviews'],
+            icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg> },
+        ].map(item => (
+          <button
+            key={item.key}
+            onClick={() => setViewState(item.key)}
+            className={`flex flex-col items-center gap-1 py-2 px-4 rounded-lg transition-colors ${
+              item.keys.includes(viewState) ? 'text-blue-400' : 'text-zinc-600'
+            }`}
+            style={{ background: 'transparent' }}
+          >
+            {item.icon}
+            <span className="text-[10px] font-medium tracking-wide">{item.label}</span>
+          </button>
+        ))}
+      </nav>
+
       {/* --- MAIN --- */}
-      <main className="flex-1 md:ml-60 min-h-screen">
+      <main className="flex-1 md:ml-60 min-h-screen pb-20 md:pb-0">
         <div className="max-w-5xl mx-auto px-8 py-12">
 
           {/* Header */}
