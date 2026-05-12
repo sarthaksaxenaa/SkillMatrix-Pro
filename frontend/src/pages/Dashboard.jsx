@@ -58,6 +58,14 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
   const [showCommandPalette, setShowCommandPalette] = useState(false);
   const [commandSearch, setCommandSearch] = useState('');
 
+  // --- NEW: Confetti State ---
+  const [showConfetti, setShowConfetti] = useState(false);
+
+  const triggerConfetti = () => {
+    setShowConfetti(true);
+    setTimeout(() => setShowConfetti(false), 3500);
+  };
+
   const showToast = (message, type = 'error') => {
     setToast({ message, visible: true, isLeaving: false, type });
     setTimeout(() => {
@@ -217,9 +225,11 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
       const isValidResponse = data.readiness_score !== undefined && data.roast;
 
       setTimeout(() => {
-        setAnalysisData(isValidResponse ? data : fallbackData);
-        saveToHistory(targetRole, file.name, isValidResponse ? data : fallbackData);
+        const resultData = isValidResponse ? data : fallbackData;
+        setAnalysisData(resultData);
+        saveToHistory(targetRole, file.name, resultData);
         setViewState('results');
+        if (resultData.readiness_score >= 80) triggerConfetti();
       }, 4000);
 
     } catch (error) {
@@ -1545,6 +1555,44 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
               </div>
             );
           })()}
+
+          {/* --- CONFETTI CELEBRATION --- */}
+          {showConfetti && (
+            <div className="fixed inset-0 z-[150] pointer-events-none overflow-hidden">
+              {Array.from({ length: 30 }).map((_, i) => {
+                const colors = ['#3b82f6', '#22c55e', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4'];
+                const left = Math.random() * 100;
+                const delay = Math.random() * 1.5;
+                const duration = 2 + Math.random() * 2;
+                const size = 6 + Math.random() * 6;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const rotation = Math.random() * 360;
+                return (
+                  <div
+                    key={i}
+                    style={{
+                      position: 'absolute',
+                      left: `${left}%`,
+                      top: '-10px',
+                      width: `${size}px`,
+                      height: `${size * (Math.random() > 0.5 ? 1 : 0.6)}px`,
+                      background: color,
+                      borderRadius: Math.random() > 0.5 ? '50%' : '2px',
+                      transform: `rotate(${rotation}deg)`,
+                      animation: `confettiFall ${duration}s ease-in ${delay}s forwards`,
+                      opacity: 0.9,
+                    }}
+                  />
+                );
+              })}
+              <style>{`
+                @keyframes confettiFall {
+                  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+                  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+                }
+              `}</style>
+            </div>
+          )}
 
           {/* --- CUSTOM TOAST NOTIFICATION --- */}
           {toast.visible && (() => {
