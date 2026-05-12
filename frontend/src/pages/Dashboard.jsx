@@ -52,18 +52,18 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
   const [isFixing, setIsFixing] = useState(false);
 
   // --- NEW: Toast State ---
-  const [toast, setToast] = useState({ message: '', visible: false, isLeaving: false });
+  const [toast, setToast] = useState({ message: '', visible: false, isLeaving: false, type: 'error' });
 
   // --- NEW: Command Palette State ---
   const [showCommandPalette, setShowCommandPalette] = useState(false);
   const [commandSearch, setCommandSearch] = useState('');
 
-  const showToast = (message) => {
-    setToast({ message, visible: true, isLeaving: false });
+  const showToast = (message, type = 'error') => {
+    setToast({ message, visible: true, isLeaving: false, type });
     setTimeout(() => {
         setToast(prev => ({ ...prev, isLeaving: true }));
         setTimeout(() => {
-            setToast({ message: '', visible: false, isLeaving: false });
+            setToast({ message: '', visible: false, isLeaving: false, type: 'error' });
         }, 600); // Matches the fold-out CSS duration
     }, 3000);
   };
@@ -158,7 +158,7 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
 
   const handleAnalyze = async () => {
     if (!file || !targetRole) {
-      return showToast("Please enter a role and upload a resume!");
+      return showToast("Please enter a role and upload a resume!", 'warning');
     }
 
     setViewState('analyzing');
@@ -228,7 +228,7 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
       setTimeout(() => {
         setAnalysisData(fallbackData);
         saveToHistory(targetRole, file.name, fallbackData);
-        showToast("AI engine offline. Showing estimated analysis.");
+        showToast("AI engine offline. Showing estimated analysis.", 'warning');
         setViewState('results');
       }, 3000);
     }
@@ -863,7 +863,7 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
                 title: 'Resume-based',
                 subtitle: 'Project Deep-Dive',
                 desc: 'AI interrogates your resume — drilling into projects, tech stack decisions, and impact metrics. Expect follow-ups on every claim you made.',
-                action: () => { if(!file) { showToast("Upload a resume first from Career Coach!"); return; } onStartInterview(targetRole || 'Software Engineer', 'text'); },
+                action: () => { if(!file) { showToast("Upload a resume first from Career Coach!", 'info'); return; } onStartInterview(targetRole || 'Software Engineer', 'text'); },
                 gradient: 'linear-gradient(135deg, #3b82f6, #6366f1)',
                 glowColor: '#3b82f680',
                 iconBg: 'rgba(59,130,246,0.12)',
@@ -1541,20 +1541,29 @@ const Dashboard = ({ onStartInterview, onLogout }) => {
           })()}
 
           {/* --- CUSTOM TOAST NOTIFICATION --- */}
-          {toast.visible && (
-              <div className={`fixed bottom-8 right-8 z-[100] max-w-sm w-full bg-zinc-900 border border-zinc-800 text-white px-5 py-4 rounded-xl shadow-2xl flex items-start gap-3 ${toast.isLeaving ? 'animate-toast-fold-out' : 'animate-toast-fly-in'}`} style={{ perspective: '1000px', transformOrigin: 'bottom right' }}>
-                  <div className="mt-0.5 shrink-0 text-red-400">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          {toast.visible && (() => {
+            const variants = {
+              error: { title: 'Action Required', color: 'text-red-400', borderColor: 'border-red-500/20', icon: <><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></> },
+              success: { title: 'Success', color: 'text-emerald-400', borderColor: 'border-emerald-500/20', icon: <><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></> },
+              warning: { title: 'Warning', color: 'text-amber-400', borderColor: 'border-amber-500/20', icon: <><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></> },
+              info: { title: 'Info', color: 'text-blue-400', borderColor: 'border-blue-500/20', icon: <><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></> },
+            };
+            const v = variants[toast.type] || variants.error;
+            return (
+              <div className={`fixed bottom-8 right-8 z-[100] max-w-sm w-full bg-zinc-900 border ${v.borderColor} text-white px-5 py-4 rounded-xl shadow-2xl flex items-start gap-3 ${toast.isLeaving ? 'animate-toast-fold-out' : 'animate-toast-fly-in'}`} style={{ perspective: '1000px', transformOrigin: 'bottom right' }}>
+                  <div className={`mt-0.5 shrink-0 ${v.color}`}>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">{v.icon}</svg>
                   </div>
                   <div>
-                      <h4 className="text-sm font-semibold text-zinc-100 mb-0.5">Action Required</h4>
+                      <h4 className="text-sm font-semibold text-zinc-100 mb-0.5">{v.title}</h4>
                       <p className="text-xs text-zinc-400 leading-relaxed">{toast.message}</p>
                   </div>
                   <button onClick={() => setToast({ ...toast, isLeaving: true })} className="ml-auto text-zinc-500 hover:text-white transition-colors">
                       <Icon d="M18 6L6 18M6 6l12 12" size={16} />
                   </button>
               </div>
-          )}
+            );
+          })()}
 
         </div>
       </main>
