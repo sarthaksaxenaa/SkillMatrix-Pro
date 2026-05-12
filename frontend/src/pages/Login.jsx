@@ -160,9 +160,25 @@ const Login = ({ onLogin }) => {
         </div>
 
         {/* Footer */}
-        <p className="text-center text-xs text-zinc-600 mt-8 animate-enter delay-3">
-          Powered by Groq AI  ·  Built for builders
-        </p>
+        <div className="mt-10 animate-enter delay-3 space-y-4">
+          <div className="flex items-center justify-center gap-5 text-[11px] text-zinc-600">
+            <span className="flex items-center gap-1.5">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              Encrypted
+            </span>
+            <span className="flex items-center gap-1.5">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Privacy-first
+            </span>
+            <span className="flex items-center gap-1.5">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+              Open source
+            </span>
+          </div>
+          <p className="text-center text-[10px] text-zinc-700">
+            Powered by Groq AI · Built with React + FastAPI
+          </p>
+        </div>
       </div>
     </div>
   );
